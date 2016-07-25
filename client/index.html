@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" ng-app>
+  <head>
+    <title>Lantern</title>
+
+    <link href="/css/jquery.terminal.css" rel="stylesheet" />
+  </head>
+  <body>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="/js/jquery.mousewheel-min.js"></script>
+    <script src="/js/jquery.terminal-min.js"></script>
+    
+    <script>
+    
+        var socket = io.connect();
+
+        socket.on('message', function(data) {
+          if(data['mask'] !== undefined) {
+            if(data['mask'] === 'true') {
+              $('body').terminal(this).set_mask(true);
+            }
+            else {
+              $('body').terminal(this).set_mask(false);
+            }
+          }
+          else {
+            $('body').terminal(this).set_mask(false);
+          }
+
+          if(data['prompt'] !== undefined) {
+            console.log(data['prompt']);
+            $('body').terminal(this).set_prompt(data['prompt']);
+          }
+          
+          if(data['color'] !== undefined) {
+            $('body').terminal(this).echo(data['message'], { 
+              finalize: function (div) {
+                div.css('color', data['color']);
+              }
+            });
+          }
+          else {
+            $('body').terminal(this).echo(data['message']);
+          }
+        });
+
+        socket.on('disconnect', function() {
+          $('body').terminal(this).clear();
+          $('body').terminal(this).destroy();
+        });
+
+        jQuery(document).ready(function ($) {
+            $('body').terminal(function (command, terminal) {
+                socket.emit('message', { input: command });
+            }, {
+                greetings: false,
+                prompt: '> '
+            });
+        });
+        
+    </script>
+  </body>
+</html>
