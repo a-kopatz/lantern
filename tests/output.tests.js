@@ -103,6 +103,7 @@ exports.output_emitSendsMessageToActor = function(test) {
     output.toActor = [ { text: 'Accuse who??' } ];
     
     var result = output.emit();
+    
     test.equal(result[0], 'Accuse who??');
     test.done();
 };

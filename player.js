@@ -38,9 +38,7 @@ playerSchema.methods.enterGame = function(world) {
 	var output = room.showRoomToCharacter(this);
 	console.log(output);
 	
-	
-	// FIXME
-	// output.toRoom.push( { roomId: room.id, textArray: [ { text: this.name + " has entered the game." } ] } );
+	output.toRoom.push( { roomId: room.id, textArray: [ { text: this.name + " has entered the game." } ] } );
 	output.emit();
 
 	this.keywords = [];

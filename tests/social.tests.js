@@ -46,18 +46,17 @@ exports.social_accuseWorksAsExpectedWhenTarget = function(test) {
     var target = getSocialTarget();
 
     var room = new Room();
+    room.id = 3001;
     room.addCharacter(actor);
     room.addCharacter(target);
 
     var thisSocial = new social(socialDefinition, target.name, actor);
     
     var output = thisSocial.getOutput();
-    
-    
-    console.log(output);
     test.equal(output.toActor[0].text, "You look accusingly at TARGET_PRONOUN_OBJECT.");
     test.equal(output.toTarget[0].text, "ACTOR_NAME looks accusingly at you.");
-    test.equal(output.toRoom[0].text, "ACTOR_NAME looks accusingly at TARGET_NAME.");
+    test.equal(output.toRoom[0].roomId, 3001);
+    test.equal(output.toRoom[0].textArray[0].text, "ACTOR_NAME looks accusingly at TARGET_NAME.");
     test.equal(output.toWorld.length, 0);
     test.done();
 };
@@ -68,6 +67,7 @@ exports.social_accuseWorksAsExpectedWhenTargetMissing = function(test) {
     var actor = getSocialActor();
 
     var room = new Room();
+    room.id = 3001;
     room.addCharacter(actor);
 
     var thisSocial = new social(socialDefinition, 'MissingFella', actor);
@@ -86,6 +86,7 @@ exports.social_accuseWorksAsExpectedWhenTargetIsSelf = function(test) {
     var actor = getSocialActor();
     
     var room = new Room();
+    room.id = 3001;
     room.addCharacter(actor);
 
     var thisSocial = new social(socialDefinition, actor.name, actor);
@@ -93,7 +94,8 @@ exports.social_accuseWorksAsExpectedWhenTargetIsSelf = function(test) {
     var output = thisSocial.getOutput();
     test.equal(output.toActor[0].text, "You accuse yourself.");
     test.equal(output.toTarget.length, 0);
-    test.equal(output.toRoom[0].text, "ACTOR_NAME seems to have a bad conscience.");
+    test.equal(output.toRoom[0].roomId, 3001);
+    test.equal(output.toRoom[0].textArray[0].text, "ACTOR_NAME seems to have a bad conscience.");
     test.equal(output.toWorld.length, 0);
     test.done();
 };
