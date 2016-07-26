@@ -220,7 +220,7 @@ var COMMAND_LIST = [
 //           { command: "wear"     , minimumPosition: global.POS_RESTING , functionPointer: do_wear       , minimumLevel: 0, subCommand: 0 },
           { command: "whine"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WHINE },
           { command: "whistle"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WHISTLE },
-        //   { command: "who"      , minimumPosition: global.POS_DEAD    , functionPointer: do_who        , minimumLevel: 0, subCommand: 0 },
+          { command: "who"      , minimumPosition: global.POS_DEAD    , functionPointer: do_who        , minimumLevel: 0, subCommand: 0 },
 //           //{ command: "whoami"   , minimumPosition: global.POS_DEAD    , functionPointer: do_whoami     , minimumLevel: 0, subCommand: 0 },
           { command: "wiggle"   , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WIGGLE },
           { command: "wink"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WINK },
@@ -363,7 +363,10 @@ Interpreter.prototype.handleInput = function(character, input) {
 function do_action(character, command) {
     var action = global.SOCIALS[command.subCommand];
     var social = new Social(action, command.subInput.trim(), character);
-    social.getOutput().emit();
+    
+    var output = social.getOutput();
+    console.log(output);
+    output.emit();
 }
 
 function do_move(character, command) {
@@ -713,22 +716,24 @@ function do_emote(character, command) {
 //     }
 // }
 
-// function do_who(character) {
-//     character.emitMessage("Players ---------------------");
+function do_who(character) {
+    character.emitMessage("Players ---------------------");
     
-//     var playerCount = 0;
-//     for(var i = 0; i < character.world.players.length; i++) {
-//         character.emitMessage(character.world.players[i].getNameAndTitle());
-//         playerCount++;
-//     }
+    var playerCount = 0;
     
-//     if(playerCount === 1) {
-//         character.emitMessage("One lonely player displayed.");
-//     }
-//     else {
-//         character.emitMessage(playerCount + " players displayed.");
-//     }
-// }
+    // TODO: What if character can't see players[i]?
+    for(var i = 0; i < character.world.players.length; i++) {
+        character.emitMessage(character.world.players[i].getNameAndTitle());
+        playerCount++;
+    }
+    
+    if(playerCount === 1) {
+        character.emitMessage("One lonely player displayed.");
+    }
+    else {
+        character.emitMessage(playerCount + " players displayed.");
+    }
+}
 
 function do_stardate(character) {
     character.emitMessage(character.world.stardate.pretty());

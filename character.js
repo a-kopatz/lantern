@@ -766,9 +766,9 @@ characterSchema.methods.eatItem = function(keyword) {
 		}
 	}
 	
-	if(fullnessIndex >= global.MAX_FULLNESS) {
-		this.position = global.POS_SLEEPING;
-	}
+	// if(fullnessIndex >= global.MAX_FULLNESS) {
+	// 	this.position = global.POS_SLEEPING;
+	// }
 	
 	return output;
 };

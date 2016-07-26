@@ -13,7 +13,10 @@ function Output(actor) {
 
 Output.prototype.format = function(text, textTarget) {
     // TODO: Stuff like textTarget can see that actor or target --> name else 'someone'
-    
+    // Use function character.canSee(target)
+
+    console.log(text);
+
     var returnMessage = text.replace(/ACTOR_NAME/g, this.actor.name)
         .replace(/ACTOR_PRONOUN_POSSESSIVE/g, this.actor.getPossessivePronoun())
         .replace(/ACTOR_PRONOUN_OBJECT/g, this.actor.getObjectPronoun())
@@ -34,14 +37,16 @@ Output.prototype.emit = function() {
     
     result.push(this.emitToActor());
     
-    if(this.target !== null) {
+    if(this.target !== null && this.toTarget.length > 0) {
         result.push(this.emitToTarget());
     }
 
-    result.push(this.emitToRoom());
+    if(this.toRoom.length > 0) {
+        result = result.concat(this.emitToRoom());
+    }
     
     if(this.toWorld.length > 0) {
-        result.push(this.emitToWorld());
+        result = result.concat(this.emitToWorld());
     }
 
     return result;
@@ -58,14 +63,16 @@ Output.prototype.__emit = function(target, textArray) {
 };
 
 Output.prototype.emitToActor = function() {
-    this.__emit(this.actor, this.toActor);
+    return this.__emit(this.actor, this.toActor);
 };
 
 Output.prototype.emitToTarget = function() {
-    this.__emit(this.target, this.toTarget);
+    return this.__emit(this.target, this.toTarget);
 };
 
 Output.prototype.emitToRoom = function() {
+    var result = [];
+    
     for(var i = 0; i < this.toRoom.length; i++) {
         var room = this.actor.world.getRoom(this.toRoom[i].roomId);
         var players = room.getPlayers();
@@ -74,10 +81,18 @@ Output.prototype.emitToRoom = function() {
             var textTarget = players[j];
         
             if (textTarget !== this.actor && textTarget !== this.target) {
-                this.__emit(textTarget, this.toRoom[i].textArray);
+                //this.__emit(textTarget, this.toRoom[i].textArray);
+                
+                // console.log('-----');
+                // console.log(this.toRoom[i].textArray);
+                // console.log('-----');
+                
+                result.push(this.__emit(textTarget, this.toRoom[i].text));
             }
         }
     }
+    
+    return result;
 };
 
 Output.prototype.emitToWorld = function() {

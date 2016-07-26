@@ -36,7 +36,11 @@ playerSchema.methods.enterGame = function(world) {
 	this.position = global.POS_STANDING;
 	
 	var output = room.showRoomToCharacter(this);
-	output.toRoom.push( { roomId: room.id, textArray: [ { text: this.name + " has entered the game." } ] } );
+	console.log(output);
+	
+	
+	// FIXME
+	// output.toRoom.push( { roomId: room.id, textArray: [ { text: this.name + " has entered the game." } ] } );
 	output.emit();
 
 	this.keywords = [];
@@ -183,7 +187,7 @@ playerSchema.methods.setTitle = function(title) {
 };
 
 playerSchema.methods.hourlyUpdate = function() {
-	this.emitMessage("Hour....");
+	// this.emitMessage("Hour....");
 	
 	this.bank = this.bank + global.HOURLY_DOLLAR_BONUS;
 
@@ -218,11 +222,11 @@ playerSchema.methods.hourlyUpdate = function() {
 };
 
 playerSchema.methods.dailyUpdate = function() {
-	this.emitMessage("Day....");
+	//this.emitMessage("Day....");
 	
-	if(this.caloriesConsumed.total() > global.CALORIES_TO_GAIN_ONE_POUND) {
-		this.weight++;
-	}
+	// if(this.caloriesConsumed.total() > global.CALORIES_TO_GAIN_ONE_POUND) {
+	// 	this.weight++;
+	// }
 	
 };
 
