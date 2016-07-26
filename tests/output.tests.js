@@ -112,7 +112,7 @@ exports.output_emitSendsMessageToActor = function(test) {
 
 
 
-
+// TODO: Rename this test
 exports.output_blah = function(test) {
     var actor = new Character();
     actor.name = 'Actur';

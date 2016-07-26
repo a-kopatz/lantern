@@ -1,4 +1,5 @@
 var Character = require("../character").character;
+var Room = require("../room").room;
 
 // /////////////////////////////////////////////////
 
@@ -95,3 +96,22 @@ exports.character_getBMI = function(test) {
 /////////////////////////////////////////////////
 
 
+/////////////////////////////////////////////////
+
+exports.character_emoteSendsIdenticalMessagesToActorAndRoom = function(test) {
+    var actor = new Character();
+    actor.name = "Ace";
+    
+    var room = new Room();
+    room.id = 3001;
+
+    room.addCharacter(actor);
+    
+    var actual = actor.emote("feels the love.");
+    
+    test.equal(actual.toActor[0].text, "Ace feels the love.");
+    test.equal(actual.toRoom[0].textArray[0].text, "Ace feels the love.");
+    test.done();
+};
+
+/////////////////////////////////////////////////
