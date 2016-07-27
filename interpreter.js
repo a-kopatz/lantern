@@ -118,7 +118,7 @@ var COMMAND_LIST = [
           { command: "lick"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_LICK },
 //           { command: "list"     , minimumPosition: global.POS_RESTING , functionPointer: do_list       , minimumLevel: 0, subCommand: 0 },
 
-//           { command: "lock"     , minimumPosition: global.POS_RESTING , functionPointer: do_lock_door  , minimumLevel: 0, subCommand: 0 },
+          { command: "lock"     , minimumPosition: global.POS_RESTING , functionPointer: do_lock_door  , minimumLevel: 0, subCommand: 0 },
           { command: "love"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_LOVE },
 
           { command: "massage"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_MASSAGE },
@@ -210,7 +210,7 @@ var COMMAND_LIST = [
           { command: "typo"     , minimumPosition: global.POS_DEAD    , functionPointer: do_report_typo, minimumLevel: 0, subCommand: 0 },
           
 //           { command: "ungroup"  , minimumPosition: global.POS_RESTING , functionPointer: do_ungroup    , minimumLevel: 0, subCommand: 0 },
-//           { command: "unlock"   , minimumPosition: global.POS_RESTING , functionPointer: do_unlock_door, minimumLevel: 0, subCommand: 0 },
+          { command: "unlock"   , minimumPosition: global.POS_RESTING , functionPointer: do_unlock_door, minimumLevel: 0, subCommand: 0 },
 
 //           { command: "value"    , minimumPosition: global.POS_RESTING , functionPointer: do_value,     minimumLevel: 0, subCommand: 0 },
 
@@ -762,6 +762,34 @@ function do_open_door(character, command) {
         // This is like 'open door west'
         // TODO Implement this function
         // character.openDoor(command.tokens[0], command.tokens[1]);
+    }
+}
+
+function do_unlock_door(character, command) {
+    if(command.tokens.length === 0) {
+        character.emitMessage("Unlock what?");
+    }
+    else if(command.tokens.length === 1) {
+        character.unlockDoor(command.tokens[0]);
+    }
+    else {
+        // This is like 'unlock door west'
+        // TODO: Implement this
+        // character.unlockDoor(command.tokens[0], command.tokens[1]);
+    }
+}
+
+function do_lock_door(character, command) {
+    if(command.tokens.length === 0) {
+        character.emitMessage("Lock what?");
+    }
+    else if(command.tokens.length === 1) {
+        character.lockDoor(command.tokens[0]);
+    }
+    else {
+        // This is like 'lock door west'
+        // TODO: Implement this
+        // character.lockDoor(command.tokens[0], command.tokens[1]);
     }
 }
 

@@ -990,7 +990,7 @@ characterSchema.methods.openCloseExit = function(exit, verb, mode) {
 	}
 	
 	return messages;
-};	
+};
 
 characterSchema.methods.openCloseDoor = function(keyword, mode) {
 	var output = new Output(this);
@@ -1026,13 +1026,14 @@ characterSchema.methods.openCloseDoor = function(keyword, mode) {
 	return output;
 };
 
-characterSchema.methods.openExit = function(exit) {
+
+characterSchema.methods.lockUnlockExit = function(exit, verb, mode) {
 	var messages = [];
+
+	messages.push("You " + verb + " the " + exit.keywords[0] + ".");
+	messages.push("ACTOR_NAME " + verb + "s the " + exit.keywords[0] + ".");
 	
-	messages.push("You open the " + exit.keywords[0] + ".");
-	messages.push("ACTOR_NAME opens the " + exit.keywords[0] + ".");
-	
-	exit.isClosed = false;
+	exit.isLocked = mode;
 
 	var oppositeRoom = this.world.getRoom(exit.toRoomId);
 	
@@ -1040,15 +1041,15 @@ characterSchema.methods.openExit = function(exit) {
 		var oppositeExit = oppositeRoom.getExit(utility.oppositeDirection(exit.direction));	
 
 		if(oppositeExit !== null) {
-			oppositeExit.isClosed = false;
-			messages.push("The " + oppositeExit.keywords[0] + " is opened from the other side.");
+			oppositeExit.isLocked = mode;
+			messages.push("The " + oppositeExit.keywords[0] + " is " + utility.getPastTenseOfWord(verb) + " from the other side.");
 		}
 	}
 	
 	return messages;
-};	
+};
 
-characterSchema.methods.openDoor = function(keyword) {
+characterSchema.methods.lockUnlockDoor = function(keyword, mode) {
 	var output = new Output(this);
 	var exits = this.room.exits.findByKeyword(keyword);
 	
@@ -1056,16 +1057,25 @@ characterSchema.methods.openDoor = function(keyword) {
 		output.toActor.push( { text: "There doesn't appear to be any '" + keyword + "' here." } );
 		return output;
 	}
+
+	var verb = 'unlock';
+	
+	if(mode == true) {
+		verb = 'lock';
+	}	
 	
 	for(var i = 0; i < exits.items.length; i++) {
-		if(!exits.items[i].isClosed) {
-			output.toActor.push( { text: "But it's already open." } );
+		if(exits.items[i].isClosed == false) {
+			output.toActor.push( { text: "But it's wide open..." } );
 		}
 		else if(!exits.items[i].isClosable) {
-			output.toActor.push( { text: "That can't be opened." } );
+			output.toActor.push( { text: "That can't be locked and unlocked." } );
+		}
+		else if(!this.inventory.containsItemById(exits.items[i].keyId)) {
+			output.toActor.push( { text: "You don't seem to have the right key for that." } );
 		}
 		else {
-			var messages = this.openExit(exits.items[i]);
+			var messages = this.lockUnlockExit(exits.items[i], verb, mode);
 			
 			output.toActor.push( { text: messages[0] } );
 			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );

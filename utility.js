@@ -51,6 +51,10 @@ function getPastTenseOfWord(word) {
 			return "opened";
 		case "CLOSE":
 			return "closed";
+	    case "LOCK":
+	    	return "locked";
+	    case "UNLOCK":
+	    	return "unlocked";
 	}
 }
 

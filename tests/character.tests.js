@@ -1070,4 +1070,186 @@ exports.character_openDoorWorks = function(test) {
     test.done();
 };
 
+///////////////////////////////////////////////////////////
+
+exports.character_lockUnlockDoorReturnsErrorWhenKeywordNotFound = function(test) {
+    var world = new World();
+    var room = new Room();
+    
+    var actor = new Character();
+    room.addCharacter(actor);
+    world.addCharacter(actor);
+    
+    var result = actor.lockUnlockDoor("door", true);
+    test.equal(result.toActor[0].text, "There doesn't appear to be any 'door' here.");
+    test.done();
+};
+
+exports.character_lockUnlockDoorReturnsErrorWhenDoorIsOpen = function(test) {
+    var world = new World();
+    var room = new Room();
+    
+    var exit = new Exit();
+    exit.isClosed = false;
+    exit.keywords.push("hatch");
+    
+    room.exits.push(exit);
+    
+    var actor = new Character();
+    room.addCharacter(actor);
+    world.addCharacter(actor);
+    
+    var result = actor.lockUnlockDoor("hatch", true);
+    test.equal(result.toActor[0].text, "But it's wide open...");
+    test.done();
+};
+
+exports.character_lockUnlockDoorReturnsErrorWhenDoorIsNotClosable = function(test) {
+    var world = new World();
+    var room = new Room();
+    
+    var exit = new Exit();
+    exit.isClosed = false;
+    exit.isClosable = false;
+    exit.keywords.push("hatch");
+    
+    room.exits.push(exit);
+    
+    var actor = new Character();
+    room.addCharacter(actor);
+    world.addCharacter(actor);
+    
+    var result = actor.lockUnlockDoor("hatch", true);
+    
+    // You can't get to the 'real' error condition
+    test.equal(result.toActor[0].text, "But it's wide open...");
+    test.done();
+};
+
+exports.character_lockUnlockDoorReturnsErrorWhenDoorIsNotClosable = function(test) {
+    var world = new World();
+    var room = new Room();
+    
+    var exit = new Exit();
+    exit.isClosed = true;
+    exit.isClosable = true;
+    exit.keyId = 99;
+    exit.keywords.push("hatch");
+    
+    room.exits.push(exit);
+    
+    var actor = new Character();
+    room.addCharacter(actor);
+    world.addCharacter(actor);
+    
+    var result = actor.lockUnlockDoor("hatch", true);
+    test.equal(result.toActor[0].text, "You don't seem to have the right key for that.");
+    test.done();
+};
+
+exports.character_lockUnlockDoorWorksForUnlock = function(test) {
+    var world = new World();
+    var room = new Room();
+    room.id = 1;
+    
+    var oppositeRoom = new Room();
+    oppositeRoom.id = 2;
+    
+    var exit = new Exit();
+    exit.isClosed = true;
+    exit.isClosable = true;
+    exit.isLocked = true;
+    exit.isLockable = true;
+    exit.toRoomId = 2;
+    exit.keyId = 5;
+    exit.direction = "U";
+    exit.keywords.push("hatch");
+
+    room.exits.push(exit);
+    
+    var oppositeExit = new Exit();
+    oppositeExit.isClosed = true;
+    oppositeExit.isLocked = true;
+    oppositeExit.toRoomId = 1;
+    oppositeExit.direction = "D";
+    oppositeExit.keywords.push("door");
+    
+    oppositeRoom.exits.push(oppositeExit);
+    
+    var actor = new Character();
+    room.addCharacter(actor);
+    world.addCharacter(actor);
+    
+    world.rooms.push(room);
+    world.rooms.push(oppositeRoom);
+    
+    var item = new Item();
+    item.id = 5;
+    actor.inventory.push(item);
+    
+    var result = actor.lockUnlockDoor("hatch", false);
+
+    test.equal(room.exits[0].isClosed, true);
+    test.equal(room.exits[0].isLocked, false);
+    test.equal(result.toActor[0].text, "You unlock the hatch.");
+    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME unlocks the hatch.");
+    test.equal(result.toRoom[0].roomId, 1);
+    test.equal(oppositeRoom.exits[0].isClosed, true);
+    test.equal(oppositeRoom.exits[0].isLocked, false);
+    test.equal(result.toRoom[1].textArray[0].text, "The door is unlocked from the other side.");
+    test.equal(result.toRoom[1].roomId, 2);
+    test.done();
+};
+
+exports.character_lockUnlockDoorWorksForLock = function(test) {
+    var world = new World();
+    var room = new Room();
+    room.id = 1;
+    
+    var oppositeRoom = new Room();
+    oppositeRoom.id = 2;
+    
+    var exit = new Exit();
+    exit.isClosed = true;
+    exit.isClosable = true;
+    exit.isLocked = false;
+    exit.isLockable = true;
+    exit.toRoomId = 2;
+    exit.keyId = 5;
+    exit.direction = "U";
+    exit.keywords.push("hatch");
+
+    room.exits.push(exit);
+    
+    var oppositeExit = new Exit();
+    oppositeExit.isLocked = false;
+    oppositeExit.toRoomId = 1;
+    oppositeExit.direction = "D";
+    oppositeExit.keywords.push("door");
+    
+    oppositeRoom.exits.push(oppositeExit);
+    
+    var actor = new Character();
+    room.addCharacter(actor);
+    world.addCharacter(actor);
+    
+    world.rooms.push(room);
+    world.rooms.push(oppositeRoom);
+    
+    var item = new Item();
+    item.id = 5;
+    actor.inventory.push(item);
+    
+    var result = actor.lockUnlockDoor("hatch", true);
+
+    test.equal(room.exits[0].isLocked, true);
+    test.equal(result.toActor[0].text, "You lock the hatch.");
+    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME locks the hatch.");
+    test.equal(result.toRoom[0].roomId, 1);
+    test.equal(oppositeRoom.exits[0].isLocked, true);
+    test.equal(result.toRoom[1].textArray[0].text, "The door is locked from the other side.");
+    test.equal(result.toRoom[1].roomId, 2);
+    test.done();
+};
+
 
