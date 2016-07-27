@@ -860,47 +860,53 @@ characterSchema.methods.eatItem = function(keyword) {
 // 	return messages;
 // };
 
-// characterSchema.methods.giveObject = function(object, target) {
-// 	var messages = [];
+characterSchema.methods.giveObject = function(object, target) {
+	var messages = [];
 	
-// 	messages[0] = this.emitMessage("You give " + object.shortDescription + " to " + target.name + ".");
-// 	messages[1] = target.emitMessage(this.name + " gives you " + object.shortDescription + ".");
-// 	messages[2] = this.emitObservedMessage(target, this.name + " gives " + object.shortDescription + " to " + target.name + ".");
+	messages[0] = "You give " + object.shortDescription + " to TARGET_NAME.";
+	messages[1] = "ACTOR_NAME gives you " + object.shortDescription + ".";
+	messages[2] = "ACTOR_NAME gives " + object.shortDescription + " to TARGET_NAME.";
 	
-// 	this.inventory.splice(this.inventory.indexOf(object), 1);
-// 	target.inventory.push(object);
+	this.inventory.splice(this.inventory.indexOf(object), 1);
+	target.inventory.push(object);
 	
-// 	return messages;
-// };
+	return messages;
+};
 
-// characterSchema.methods.giveItem = function(keyword, targetName) {
-// 	var messages = [];	
+characterSchema.methods.giveItem = function(keyword, targetName) {
+	var output = new Output(this);
 	
-// 	var result = this.inventory.findByKeyword(keyword);
+	var result = this.inventory.findByKeyword(keyword);
 
-// 	if(result.items.length === 0) {	
-// 		messages[0] = this.emitMessage("Give what?");
-// 		return messages;
-// 	}
+	if(result.items.length === 0) {	
+		output.toActor.push( { text: "Give what?" } );
+		return output;
+	}
 	
-// 	var target = this.room.getCharacter(targetName);
+	var target = this.room.getCharacter(targetName);
 	
-// 	if(target === null) {
-// 		messages[0] = this.emitMessage("No-one by that name here.");
-// 		return messages;
-// 	}
+	if(target === null) {
+		output.toActor.push( { text: "No-one by that name here." } );
+		return output;
+	}
 	
-// 	if(target === this) {
-// 		messages[0] = this.emitMessage("Give something to yourself?!?");
-// 		return messages;
-// 	}
+	if(target === this) {
+		output.toActor.push( { text: "Give something to yourself?!?" } );
+		return output;
+	}
+	
+	output.target = target;
 
-// 	for(var i = 0; i < result.items.length; i++) {
-// 		messages.push(this.giveObject(result.items[i], target));
-// 	}
+	for(var i = 0; i < result.items.length; i++) {
+		var messages = this.giveObject(result.items[i], target);
+		
+		output.toActor.push( { text: messages[0] } );
+		output.toTarget.push( { text: messages[1] } );
+		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[2] } ] } );
+	}
 	
-// 	return messages;
-// };
+	return output;
+};
 
 // /* Banking and money-related methods */
 

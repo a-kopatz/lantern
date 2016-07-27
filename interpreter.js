@@ -82,7 +82,7 @@ var COMMAND_LIST = [
           { command: "gasp"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_GASP },
           { command: "get"      , minimumPosition: global.POS_RESTING , functionPointer: do_take       , minimumLevel: 0, subCommand: 0 },          
           { command: "giggle"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_GIGGLE },
-        //   { command: "give"     , minimumPosition: global.POS_RESTING , functionPointer: do_give       , minimumLevel: 0, subCommand: 0 },
+          { command: "give"     , minimumPosition: global.POS_RESTING , functionPointer: do_give       , minimumLevel: 0, subCommand: 0 },
           { command: "glare"    , minimumPosition: global.POS_RESTING,  functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_GLARE },
 //           { command: "gold"     , minimumPosition: global.POS_SLEEPING, functionPointer: do_gold       , minimumLevel: 0, subCommand: 0 },
           { command: "gossip"   , minimumPosition: global.POS_SLEEPING, functionPointer: do_gen_comm   , minimumLevel: 0, subCommand: global.SCMD_GOSSIP },
@@ -189,7 +189,7 @@ var COMMAND_LIST = [
           { command: "spank"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SPANK },
           { command: "spit"     , minimumPosition: global.POS_SITTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SPIT },
           { command: "stand"    , minimumPosition: global.POS_RESTING , functionPointer: do_stand      , minimumLevel: 0, subCommand: 0 },
-          { command: "stardate" , minimumPosition: global.POS_DEAD    , functionPointer: do_stardate   , minimumLevel: 0, subCommand: 0 },
+        //   { command: "stardate" , minimumPosition: global.POS_DEAD    , functionPointer: do_stardate   , minimumLevel: 0, subCommand: 0 },
           { command: "stare"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_STARE },
           { command: "steam"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_STEAM },
           { command: "strut"    , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_STRUT},
@@ -602,6 +602,25 @@ function do_eat(character, command) {
 //     }
 // }
 
+function do_give(character, command) {
+    if(command.tokens.length < 2) {
+        character.emitMessage('Give what to who?');
+    }
+    else {
+        if(command.tokens[1].toLowerCase() !== 'to') {
+            character.giveItem(command.tokens[0], command.tokens[1]);
+        }
+        else {
+            if(command.tokens.length < 3) {
+                character.emitMessage('Give what to who?');
+            }
+            else {
+                character.giveItem(command.tokens[0], command.tokens[2]);
+            }
+        }
+    }
+}
+
 function do_score(character) {
     character.listScore().emit();
 }
@@ -735,9 +754,9 @@ function do_who(character) {
     }
 }
 
-function do_stardate(character) {
-    character.emitMessage(character.world.stardate.pretty());
-}
+// function do_stardate(character) {
+//     character.emitMessage(character.world.stardate.pretty());
+// }
 
 // Exports
 module.exports = Interpreter;
