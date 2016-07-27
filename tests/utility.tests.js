@@ -63,3 +63,14 @@ exports.utility_oppositeDirection = function(test) {
     test.equal("U", utility.oppositeDirection("D"));
     test.done();
 };
+
+exports.utility_getBmiDescription = function(test) {
+    test.equals(utility.getBmiDescription(15), "underweight");
+    test.equals(utility.getBmiDescription(19), "skinny");
+    test.equals(utility.getBmiDescription(23), "average");
+    test.equals(utility.getBmiDescription(27), "overweight");
+    test.equals(utility.getBmiDescription(35), "obese");
+    test.equals(utility.getBmiDescription(42), "extremely obese");
+    test.equals(utility.getBmiDescription(99), "morbidly obese");
+    test.done();
+};

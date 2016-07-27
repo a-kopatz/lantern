@@ -50,6 +50,10 @@ function getBmiDescription(bmi) {
 		return "underweight";
 	}
 	
+	if(bmi < 21) {
+		return "skinny";
+	}
+	
 	if(bmi < 25) {
 		return "average";
 	}

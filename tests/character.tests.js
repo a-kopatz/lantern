@@ -342,3 +342,67 @@ exports.character_sleepReturnsErrorWhenSleeping = function(test) {
     test.done();
 };
 
+///////////////////////////////////////////////////////////
+
+exports.character_wakeReturnsErrorWhenNotSleeping = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_RESTING;
+    
+    var actual = actor.wake();
+    
+    test.equal(actual.toActor[0].text, "You are already awake...");
+    test.equal(actor.position, global.POS_RESTING);
+    test.done();
+};
+
+exports.character_wakeReturnsErrorWhenDead = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_DEAD;
+    
+    var actual = actor.wake();
+    
+    test.equal(actual.toActor[0].text, "You can't wake up! You're in pretty bad shape!");
+    test.equal(actor.position, global.POS_DEAD);
+    test.done();
+};
+
+exports.character_wakeWorksWhenSleeping = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_SLEEPING;
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var actual = actor.wake();
+    
+    test.equal(actual.toActor[0].text, "You awaken, and sit up.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME awakens and sits up.");
+    test.equal(actor.position, global.POS_SITTING);
+    test.done();
+};
+
+///////////////////////////////////////////////////////////
+
+exports.character_sayReturnsErrorWhenNoParameter = function(test) {
+    var actor = new Character();
+
+    var actual = actor.say('');
+    
+    test.equal(actual.toActor[0].text, 'Yes, but WHAT do you want to say?');
+    test.done();
+};
+
+exports.character_saySendsExpectedMessage = function(test) {
+    var actor = new Character();
+
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var actual = actor.say('Something everyone should hear!');
+    
+    test.equal(actual.toActor[0].text, "You say, 'Something everyone should hear!'");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME says, 'Something everyone should hear!'");
+    test.done();
+};
