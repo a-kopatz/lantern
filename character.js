@@ -4,6 +4,7 @@ var arrayExtensions = require('./arrayExtensions');
 var extend = require('mongoose-schema-extend');
 var constants = require("./constants");
 var Social =  require("./social");
+var utility = require("./utility");
 var Output = require("./output");
 
 var characterSchema = new schema({
@@ -969,6 +970,55 @@ characterSchema.methods.withdrawMoney = function(amount) {
 	return output;
 };
 
+characterSchema.methods.closeExit = function(exit) {
+	var messages = [];
+	
+	messages.push("You close the " + exit.keywords[0] + ".");
+	messages.push("ACTOR_NAME closes the " + exit.keywords[0] + ".");
+	
+	exit.isClosed = true;
+
+	var oppositeRoom = this.world.getRoom(exit.toRoomId);
+	
+	if(oppositeRoom !== null) {
+		var oppositeExit = oppositeRoom.getExit(utility.oppositeDirection(exit.direction));	
+
+		if(oppositeExit !== null) {
+			oppositeExit.isClosed = true;
+			messages.push("The " + oppositeExit.keywords[0] + " is closed from the other side.");
+		}
+	}
+	
+	return messages;
+};	
+
+characterSchema.methods.closeDoor = function(keyword) {
+	var output = new Output(this);
+	var exits = this.room.exits.findByKeyword(keyword);
+	
+	if(exits.items.length === 0) {
+		output.toActor.push( { text: "There doesn't appear to be any '" + keyword + "' here." } );
+		return output;
+	}
+	
+	for(var i = 0; i < exits.items.length; i++) {
+		if(exits.items[i].isClosed) {
+			output.toActor.push( { text: "But it's already closed." } );
+		}
+		else if(!exits.items[i].isClosable) {
+			output.toActor.push( { text: "That can't be closed." } );
+		}
+		else {
+			var messages = this.closeExit(exits.items[i]);
+			
+			output.toActor.push( { text: messages[0] } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+			output.toRoom.push( { roomId: exits.items[i].toRoomId, textArray: [ { text: messages[2] } ] } );
+		}
+	}
+	
+	return output;
+};
 
 var characterModel = mongoose.model('character', characterSchema);
 

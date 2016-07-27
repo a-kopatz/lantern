@@ -42,7 +42,7 @@ var COMMAND_LIST = [
 //           { command: "check"    , minimumPosition: global.POS_RESTING , functionPointer: do_checkMail  , minimumLevel: 0, subCommand: 0 },
           { command: "chuckle"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_CHUCKLE },
           { command: "clap"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_CLAP },
-//           { command: "close"    , minimumPosition: global.POS_RESTING , functionPointer: do_close_door , minomumLevel: 0, subCommand: 0 },
+          { command: "close"    , minimumPosition: global.POS_RESTING , functionPointer: do_close_door , minomumLevel: 0, subCommand: 0 },
           { command: "comb"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_COMB },
           { command: "comfort"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_COMFORT },
 //           { command: "consider" , minimumPosition: global.POS_RESTING , functionPointer: do_consider   , minimumLevel: 0, subCommand: 0 },
@@ -55,7 +55,7 @@ var COMMAND_LIST = [
           { command: "curtsey"  , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_CURTSEY },
           
           { command: "dance"    , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_DANCE },
-          { command: "date"     , minimumPosition: global.POS_DEAD    , functionPointer: do_stardate   , minimumLevel: 0, subCommand: 0 },
+        //   { command: "date"     , minimumPosition: global.POS_DEAD    , functionPointer: do_stardate   , minimumLevel: 0, subCommand: 0 },
                     
           { command: "daydream" , minimumPosition: global.POS_SLEEPING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_DAYDREAM },
           { command: "deposit"  , minimumPosition: global.POS_RESTING , functionPointer: do_deposit    , minimumLevel: 0, subCommand: 0 },
@@ -204,7 +204,7 @@ var COMMAND_LIST = [
           { command: "thank"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_THANK },
           { command: "think"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_THINK },
           { command: "tickle"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_TICKLE },
-          { command: "time"     , minimumPosition: global.POS_DEAD    , functionPointer: do_stardate   , minimumLevel: 0, subCommand: 0 },
+        //   { command: "time"     , minimumPosition: global.POS_DEAD    , functionPointer: do_stardate   , minimumLevel: 0, subCommand: 0 },
           { command: "title"    , minimumPosition: global.POS_DEAD    , functionPointer: do_title      , minimumLevel: 0, subCommand: 0 },
           { command: "twiddle"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_TWIDDLE },
           { command: "typo"     , minimumPosition: global.POS_DEAD    , functionPointer: do_report_typo, minimumLevel: 0, subCommand: 0 },
@@ -732,6 +732,21 @@ function do_withdraw(character, command) {
     }
     else {
         character.emitMessage(global.CANNOT_DO_THAT_HERE);
+    }
+}
+
+function do_close_door(character, command) {
+    if(command.tokens.length === 0) {
+        character.emitMessage("Close what?");
+    }
+    else if(command.tokens.length === 1) {
+        // This is like 'close door'
+        character.closeDoor(command.tokens[0]).emit();
+    }
+    else {
+        // This is like 'close door west'
+        // TODO Implement this function
+        // character.closeDoor(command.tokens[0], command.tokens[1]);
     }
 }
 
