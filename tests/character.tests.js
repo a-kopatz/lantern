@@ -943,7 +943,7 @@ exports.character_openCloseDoorReturnsErrorWhenKeywordNotFound = function(test) 
     test.done();
 };
 
-exports.character_openCloseDoorReturnsErrorWhenDoorIsClosed = function(test) {
+exports.character_closeDoorReturnsErrorWhenDoorIsClosed = function(test) {
     var world = new World();
     var room = new Room();
     
@@ -957,12 +957,12 @@ exports.character_openCloseDoorReturnsErrorWhenDoorIsClosed = function(test) {
     room.addCharacter(actor);
     world.addCharacter(actor);
     
-    var result = actor.openCloseDoor("hatch", true);
+    var result = actor.openCloseDoor("hatch", global.SCMD_CLOSEDOOR);
     test.equal(result.toActor[0].text, "But it's already closed.");
     test.done();
 };
 
-exports.character_openCloseDoorReturnsErrorWhenDoorIsNotClosable = function(test) {
+exports.character_closeDoorReturnsErrorWhenDoorIsNotClosable = function(test) {
     var world = new World();
     var room = new Room();
     
@@ -977,7 +977,7 @@ exports.character_openCloseDoorReturnsErrorWhenDoorIsNotClosable = function(test
     room.addCharacter(actor);
     world.addCharacter(actor);
     
-    var result = actor.openCloseDoor("hatch", true);
+    var result = actor.openCloseDoor("hatch", global.SCMD_CLOSEDOOR);
     test.equal(result.toActor[0].text, "That can't be opened and closed.");
     test.done();
 };
@@ -1014,7 +1014,7 @@ exports.character_closeDoorWorks = function(test) {
     world.rooms.push(room);
     world.rooms.push(oppositeRoom);
     
-    var result = actor.openCloseDoor("hatch", true);
+    var result = actor.openCloseDoor("hatch", global.SCMD_CLOSEDOOR);
 
     test.equal(room.exits[0].isClosed, true);
     test.equal(result.toActor[0].text, "You close the hatch.");
@@ -1058,7 +1058,7 @@ exports.character_openDoorWorks = function(test) {
     world.rooms.push(room);
     world.rooms.push(oppositeRoom);
     
-    var result = actor.openCloseDoor("hatch", false);
+    var result = actor.openCloseDoor("hatch", global.SCMD_OPENDOOR);
 
     test.equal(room.exits[0].isClosed, false);
     test.equal(result.toActor[0].text, "You open the hatch.");
@@ -1067,6 +1067,27 @@ exports.character_openDoorWorks = function(test) {
     test.equal(oppositeRoom.exits[0].isClosed, false);
     test.equal(result.toRoom[1].textArray[0].text, "The door is opened from the other side.");
     test.equal(result.toRoom[1].roomId, 2);
+    test.done();
+};
+
+exports.character_openDoorReturnsErrorWhenDoorIsLocked = function(test) {
+    var world = new World();
+    var room = new Room();
+    
+    var exit = new Exit();
+    exit.isClosed = true;
+    exit.isClosable = true;
+    exit.isLocked = true;
+    exit.keywords.push("hatch");
+    
+    room.exits.push(exit);
+    
+    var actor = new Character();
+    room.addCharacter(actor);
+    world.addCharacter(actor);
+    
+    var result = actor.openCloseDoor("hatch", global.SCMD_OPENDOOR);
+    test.equal(result.toActor[0].text, "It's locked.");
     test.done();
 };
 
@@ -1080,7 +1101,7 @@ exports.character_lockUnlockDoorReturnsErrorWhenKeywordNotFound = function(test)
     room.addCharacter(actor);
     world.addCharacter(actor);
     
-    var result = actor.lockUnlockDoor("door", true);
+    var result = actor.lockUnlockDoor("door", global.SCMD_LOCKDOOR);
     test.equal(result.toActor[0].text, "There doesn't appear to be any 'door' here.");
     test.done();
 };
@@ -1099,7 +1120,7 @@ exports.character_lockUnlockDoorReturnsErrorWhenDoorIsOpen = function(test) {
     room.addCharacter(actor);
     world.addCharacter(actor);
     
-    var result = actor.lockUnlockDoor("hatch", true);
+    var result = actor.lockUnlockDoor("hatch", global.SCMD_UNLOCKDOOR);
     test.equal(result.toActor[0].text, "But it's wide open...");
     test.done();
 };
@@ -1119,7 +1140,7 @@ exports.character_lockUnlockDoorReturnsErrorWhenDoorIsNotClosable = function(tes
     room.addCharacter(actor);
     world.addCharacter(actor);
     
-    var result = actor.lockUnlockDoor("hatch", true);
+    var result = actor.lockUnlockDoor("hatch", global.SCMD_UNLOCKDOOR);
     
     // You can't get to the 'real' error condition
     test.equal(result.toActor[0].text, "But it's wide open...");
@@ -1142,12 +1163,12 @@ exports.character_lockUnlockDoorReturnsErrorWhenDoorIsNotClosable = function(tes
     room.addCharacter(actor);
     world.addCharacter(actor);
     
-    var result = actor.lockUnlockDoor("hatch", true);
+    var result = actor.lockUnlockDoor("hatch", global.SCMD_LOCKDOOR);
     test.equal(result.toActor[0].text, "You don't seem to have the right key for that.");
     test.done();
 };
 
-exports.character_lockUnlockDoorWorksForUnlock = function(test) {
+exports.character_unlockDoorWorks = function(test) {
     var world = new World();
     var room = new Room();
     room.id = 1;
@@ -1187,7 +1208,7 @@ exports.character_lockUnlockDoorWorksForUnlock = function(test) {
     item.id = 5;
     actor.inventory.push(item);
     
-    var result = actor.lockUnlockDoor("hatch", false);
+    var result = actor.lockUnlockDoor("hatch", global.SCMD_UNLOCKDOOR);
 
     test.equal(room.exits[0].isClosed, true);
     test.equal(room.exits[0].isLocked, false);
@@ -1201,7 +1222,7 @@ exports.character_lockUnlockDoorWorksForUnlock = function(test) {
     test.done();
 };
 
-exports.character_lockUnlockDoorWorksForLock = function(test) {
+exports.character_lockDoorWorks = function(test) {
     var world = new World();
     var room = new Room();
     room.id = 1;
@@ -1240,7 +1261,7 @@ exports.character_lockUnlockDoorWorksForLock = function(test) {
     item.id = 5;
     actor.inventory.push(item);
     
-    var result = actor.lockUnlockDoor("hatch", true);
+    var result = actor.lockUnlockDoor("hatch", global.SCMD_LOCKDOOR);
 
     test.equal(room.exits[0].isLocked, true);
     test.equal(result.toActor[0].text, "You lock the hatch.");

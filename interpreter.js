@@ -741,7 +741,7 @@ function do_close_door(character, command) {
     }
     else if(command.tokens.length === 1) {
         // This is like 'close door'
-        character.openCloseDoor(command.tokens[0], 'close').emit();
+        character.openCloseDoor(command.tokens[0], global.SCMD_CLOSEDOOR).emit();
     }
     else {
         // This is like 'close door west'
@@ -756,7 +756,7 @@ function do_open_door(character, command) {
     }
     else if(command.tokens.length === 1) {
         // This is like 'open door'
-        character.openCloseDoor(command.tokens[0], 'open').emit();
+        character.openCloseDoor(command.tokens[0], global.SCMD_OPENDOOR).emit();
     }
     else {
         // This is like 'open door west'
@@ -770,7 +770,7 @@ function do_unlock_door(character, command) {
         character.emitMessage("Unlock what?");
     }
     else if(command.tokens.length === 1) {
-        character.unlockDoor(command.tokens[0]);
+        character.lockUnlockDoor(command.tokens[0], global.SCMD_UNLOCKDOOR).emit();
     }
     else {
         // This is like 'unlock door west'
@@ -784,7 +784,7 @@ function do_lock_door(character, command) {
         character.emitMessage("Lock what?");
     }
     else if(command.tokens.length === 1) {
-        character.lockDoor(command.tokens[0]);
+        character.lockUnlockDoor(command.tokens[0], global.SCMD_LOCKDOOR).emit();
     }
     else {
         // This is like 'lock door west'

@@ -992,7 +992,7 @@ characterSchema.methods.openCloseExit = function(exit, verb, mode) {
 	return messages;
 };
 
-characterSchema.methods.openCloseDoor = function(keyword, mode) {
+characterSchema.methods.openCloseDoor = function(keyword, subcommand) {
 	var output = new Output(this);
 	var exits = this.room.exits.findByKeyword(keyword);
 	
@@ -1001,21 +1001,30 @@ characterSchema.methods.openCloseDoor = function(keyword, mode) {
 		return output;
 	}
 
-	var verb = 'open';
+	var verb = '';
+	var isClosed = false;
 	
-	if(mode == true) {
+	if(subcommand === global.SCMD_OPENDOOR) {
+		verb = 'open';
+		isClosed = false;
+	}
+	else if(subcommand === global.SCMD_CLOSEDOOR) {
 		verb = 'close';
+		isClosed = true;
 	}	
 	
 	for(var i = 0; i < exits.items.length; i++) {
-		if(exits.items[i].isClosed == mode) {
+		if(exits.items[i].isClosed == isClosed) {
 			output.toActor.push( { text: "But it's already " + utility.getPastTenseOfWord(verb) + "." } );
 		}
 		else if(!exits.items[i].isClosable) {
 			output.toActor.push( { text: "That can't be opened and closed." } );
 		}
+		else if(subcommand === global.SCMD_OPENDOOR && exits.items[i].isLocked === true) {
+			output.toActor.push( { text: "It's locked."} );
+		}
 		else {
-			var messages = this.openCloseExit(exits.items[i], verb, mode);
+			var messages = this.openCloseExit(exits.items[i], verb, isClosed);
 			
 			output.toActor.push( { text: messages[0] } );
 			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
@@ -1049,7 +1058,7 @@ characterSchema.methods.lockUnlockExit = function(exit, verb, mode) {
 	return messages;
 };
 
-characterSchema.methods.lockUnlockDoor = function(keyword, mode) {
+characterSchema.methods.lockUnlockDoor = function(keyword, subcommand) {
 	var output = new Output(this);
 	var exits = this.room.exits.findByKeyword(keyword);
 	
@@ -1058,10 +1067,16 @@ characterSchema.methods.lockUnlockDoor = function(keyword, mode) {
 		return output;
 	}
 
-	var verb = 'unlock';
+	var verb = '';
+	var isLocked = false;
 	
-	if(mode == true) {
+	if(subcommand === global.SCMD_LOCKDOOR) {
 		verb = 'lock';
+		isLocked = true;
+	}
+	else if(subcommand === global.SCMD_UNLOCKDOOR) {
+		verb = 'unlock';
+		isLocked = false;
 	}	
 	
 	for(var i = 0; i < exits.items.length; i++) {
@@ -1075,7 +1090,7 @@ characterSchema.methods.lockUnlockDoor = function(keyword, mode) {
 			output.toActor.push( { text: "You don't seem to have the right key for that." } );
 		}
 		else {
-			var messages = this.lockUnlockExit(exits.items[i], verb, mode);
+			var messages = this.lockUnlockExit(exits.items[i], verb, isLocked);
 			
 			output.toActor.push( { text: messages[0] } );
 			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );

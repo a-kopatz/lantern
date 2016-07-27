@@ -96,6 +96,12 @@ global.ITEM_BOARD = "Board";
 global.MESSAGE_BUG = "Please report this using the 'bug' command.";
 global.CANNOT_DO_THAT_HERE = "Sorry, but you can't do that here.";
 
+global.SCMD_OPENDOOR   = 0;
+global.SCMD_CLOSEDOOR  = 1;
+
+global.SCMD_LOCKDOOR   = 0;
+global.SCMD_UNLOCKDOOR  = 1;
+
 global.SCMD_ACCUSE     = 0;
 global.SCMD_APPLAUD    = 1;
 global.SCMD_BEG        = 2;
