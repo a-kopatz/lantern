@@ -970,13 +970,13 @@ characterSchema.methods.withdrawMoney = function(amount) {
 	return output;
 };
 
-characterSchema.methods.closeExit = function(exit) {
+characterSchema.methods.openCloseExit = function(exit, verb, mode) {
 	var messages = [];
+
+	messages.push("You " + verb + " the " + exit.keywords[0] + ".");
+	messages.push("ACTOR_NAME " + verb + "s the " + exit.keywords[0] + ".");
 	
-	messages.push("You close the " + exit.keywords[0] + ".");
-	messages.push("ACTOR_NAME closes the " + exit.keywords[0] + ".");
-	
-	exit.isClosed = true;
+	exit.isClosed = mode;
 
 	var oppositeRoom = this.world.getRoom(exit.toRoomId);
 	
@@ -984,15 +984,71 @@ characterSchema.methods.closeExit = function(exit) {
 		var oppositeExit = oppositeRoom.getExit(utility.oppositeDirection(exit.direction));	
 
 		if(oppositeExit !== null) {
-			oppositeExit.isClosed = true;
-			messages.push("The " + oppositeExit.keywords[0] + " is closed from the other side.");
+			oppositeExit.isClosed = mode;
+			messages.push("The " + oppositeExit.keywords[0] + " is " + utility.getPastTenseOfWord(verb) + " from the other side.");
 		}
 	}
 	
 	return messages;
 };	
 
-characterSchema.methods.closeDoor = function(keyword) {
+characterSchema.methods.openCloseDoor = function(keyword, mode) {
+	var output = new Output(this);
+	var exits = this.room.exits.findByKeyword(keyword);
+	
+	if(exits.items.length === 0) {
+		output.toActor.push( { text: "There doesn't appear to be any '" + keyword + "' here." } );
+		return output;
+	}
+
+	var verb = 'open';
+	
+	if(mode == true) {
+		verb = 'close';
+	}	
+	
+	for(var i = 0; i < exits.items.length; i++) {
+		if(exits.items[i].isClosed == mode) {
+			output.toActor.push( { text: "But it's already " + utility.getPastTenseOfWord(verb) + "." } );
+		}
+		else if(!exits.items[i].isClosable) {
+			output.toActor.push( { text: "That can't be opened and closed." } );
+		}
+		else {
+			var messages = this.openCloseExit(exits.items[i], verb, mode);
+			
+			output.toActor.push( { text: messages[0] } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+			output.toRoom.push( { roomId: exits.items[i].toRoomId, textArray: [ { text: messages[2] } ] } );
+		}
+	}
+	
+	return output;
+};
+
+characterSchema.methods.openExit = function(exit) {
+	var messages = [];
+	
+	messages.push("You open the " + exit.keywords[0] + ".");
+	messages.push("ACTOR_NAME opens the " + exit.keywords[0] + ".");
+	
+	exit.isClosed = false;
+
+	var oppositeRoom = this.world.getRoom(exit.toRoomId);
+	
+	if(oppositeRoom !== null) {
+		var oppositeExit = oppositeRoom.getExit(utility.oppositeDirection(exit.direction));	
+
+		if(oppositeExit !== null) {
+			oppositeExit.isClosed = false;
+			messages.push("The " + oppositeExit.keywords[0] + " is opened from the other side.");
+		}
+	}
+	
+	return messages;
+};	
+
+characterSchema.methods.openDoor = function(keyword) {
 	var output = new Output(this);
 	var exits = this.room.exits.findByKeyword(keyword);
 	
@@ -1002,14 +1058,14 @@ characterSchema.methods.closeDoor = function(keyword) {
 	}
 	
 	for(var i = 0; i < exits.items.length; i++) {
-		if(exits.items[i].isClosed) {
-			output.toActor.push( { text: "But it's already closed." } );
+		if(!exits.items[i].isClosed) {
+			output.toActor.push( { text: "But it's already open." } );
 		}
 		else if(!exits.items[i].isClosable) {
-			output.toActor.push( { text: "That can't be closed." } );
+			output.toActor.push( { text: "That can't be opened." } );
 		}
 		else {
-			var messages = this.closeExit(exits.items[i]);
+			var messages = this.openExit(exits.items[i]);
 			
 			output.toActor.push( { text: messages[0] } );
 			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );

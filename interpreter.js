@@ -136,7 +136,7 @@ var COMMAND_LIST = [
         //   { command: "noshout"  , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_shout  , minimumLevel: 0, subCommand: 0 },
 //           { command: "notell"   , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_tell   , minimumLevel: 0, subCommand: 0 },
 
-//           { command: "open"     , minimumPosition: global.POS_RESTING , functionPointer: do_open_door  , minimumLevel: 0, subCommand: 0 },
+          { command: "open"     , minimumPosition: global.POS_RESTING , functionPointer: do_open_door  , minimumLevel: 0, subCommand: 0 },
 
           { command: "pat"      , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_PAT },
           { command: "peer"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_PEER },
@@ -741,12 +741,27 @@ function do_close_door(character, command) {
     }
     else if(command.tokens.length === 1) {
         // This is like 'close door'
-        character.closeDoor(command.tokens[0]).emit();
+        character.openCloseDoor(command.tokens[0], 'close').emit();
     }
     else {
         // This is like 'close door west'
         // TODO Implement this function
         // character.closeDoor(command.tokens[0], command.tokens[1]);
+    }
+}
+
+function do_open_door(character, command) {
+    if(command.tokens.length === 0) {
+        character.emitMessage("Open what?");
+    }
+    else if(command.tokens.length === 1) {
+        // This is like 'open door'
+        character.openCloseDoor(command.tokens[0], 'open').emit();
+    }
+    else {
+        // This is like 'open door west'
+        // TODO Implement this function
+        // character.openDoor(command.tokens[0], command.tokens[1]);
     }
 }
 

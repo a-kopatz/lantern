@@ -930,7 +930,7 @@ exports.character_withdrawMoneyDecreasesBankIncreasesMoney = function(test) {
 
 ///////////////////////////////////////////////////////////
 
-exports.character_closeDoorReturnsErrorWhenKeywordNotFound = function(test) {
+exports.character_openCloseDoorReturnsErrorWhenKeywordNotFound = function(test) {
     var world = new World();
     var room = new Room();
     
@@ -938,12 +938,12 @@ exports.character_closeDoorReturnsErrorWhenKeywordNotFound = function(test) {
     room.addCharacter(actor);
     world.addCharacter(actor);
     
-    var result = actor.closeDoor("door");
+    var result = actor.openCloseDoor("door", true);
     test.equal(result.toActor[0].text, "There doesn't appear to be any 'door' here.");
     test.done();
 };
 
-exports.character_closeDoorReturnsErrorWhenDoorIsClosed = function(test) {
+exports.character_openCloseDoorReturnsErrorWhenDoorIsClosed = function(test) {
     var world = new World();
     var room = new Room();
     
@@ -957,12 +957,12 @@ exports.character_closeDoorReturnsErrorWhenDoorIsClosed = function(test) {
     room.addCharacter(actor);
     world.addCharacter(actor);
     
-    var result = actor.closeDoor("hatch");
+    var result = actor.openCloseDoor("hatch", true);
     test.equal(result.toActor[0].text, "But it's already closed.");
     test.done();
 };
 
-exports.character_closeDoorReturnsErrorWhenDoorIsNotClosable = function(test) {
+exports.character_openCloseDoorReturnsErrorWhenDoorIsNotClosable = function(test) {
     var world = new World();
     var room = new Room();
     
@@ -977,8 +977,8 @@ exports.character_closeDoorReturnsErrorWhenDoorIsNotClosable = function(test) {
     room.addCharacter(actor);
     world.addCharacter(actor);
     
-    var result = actor.closeDoor("hatch");
-    test.equal(result.toActor[0].text, "That can't be closed.");
+    var result = actor.openCloseDoor("hatch", true);
+    test.equal(result.toActor[0].text, "That can't be opened and closed.");
     test.done();
 };
 
@@ -1014,7 +1014,7 @@ exports.character_closeDoorWorks = function(test) {
     world.rooms.push(room);
     world.rooms.push(oppositeRoom);
     
-    var result = actor.closeDoor("hatch");
+    var result = actor.openCloseDoor("hatch", true);
 
     test.equal(room.exits[0].isClosed, true);
     test.equal(result.toActor[0].text, "You close the hatch.");
@@ -1022,6 +1022,50 @@ exports.character_closeDoorWorks = function(test) {
     test.equal(result.toRoom[0].roomId, 1);
     test.equal(oppositeRoom.exits[0].isClosed, true);
     test.equal(result.toRoom[1].textArray[0].text, "The door is closed from the other side.");
+    test.equal(result.toRoom[1].roomId, 2);
+    test.done();
+};
+
+exports.character_openDoorWorks = function(test) {
+    var world = new World();
+    var room = new Room();
+    room.id = 1;
+    
+    var oppositeRoom = new Room();
+    oppositeRoom.id = 2;
+    
+    var exit = new Exit();
+    exit.isClosed = true;
+    exit.isClosable = true;
+    exit.toRoomId = 2;
+    exit.direction = "U";
+    exit.keywords.push("hatch");
+
+    room.exits.push(exit);
+    
+    var oppositeExit = new Exit();
+    oppositeExit.isClosed = true;
+    oppositeExit.toRoomId = 1;
+    oppositeExit.direction = "D";
+    oppositeExit.keywords.push("door");
+    
+    oppositeRoom.exits.push(oppositeExit);
+    
+    var actor = new Character();
+    room.addCharacter(actor);
+    world.addCharacter(actor);
+    
+    world.rooms.push(room);
+    world.rooms.push(oppositeRoom);
+    
+    var result = actor.openCloseDoor("hatch", false);
+
+    test.equal(room.exits[0].isClosed, false);
+    test.equal(result.toActor[0].text, "You open the hatch.");
+    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME opens the hatch.");
+    test.equal(result.toRoom[0].roomId, 1);
+    test.equal(oppositeRoom.exits[0].isClosed, false);
+    test.equal(result.toRoom[1].textArray[0].text, "The door is opened from the other side.");
     test.equal(result.toRoom[1].roomId, 2);
     test.done();
 };

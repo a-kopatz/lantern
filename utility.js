@@ -45,6 +45,15 @@ function getFormattedLongString(originalString, startWithIndent) {
 	return result;
 }
 
+function getPastTenseOfWord(word) {
+	switch(word.toUpperCase()) {
+		case "OPEN":
+			return "opened";
+		case "CLOSE":
+			return "closed";
+	}
+}
+
 function getBmiDescription(bmi) {
 	if(bmi < 18) {
 		return "underweight";
@@ -77,3 +86,4 @@ exports.randomNumber = randomNumber;
 exports.oppositeDirection = oppositeDirection;
 exports.getBmiDescription = getBmiDescription;
 exports.getFormattedLongString = getFormattedLongString;
+exports.getPastTenseOfWord = getPastTenseOfWord;
