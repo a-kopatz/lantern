@@ -53,6 +53,24 @@ global.getDirection = function(direction) {
 	}
 };
 
+global.WEAR_LIST = [ "light", 
+                     "finger", 
+                     "NOTUSED", 
+                     "neck", 
+                     "NOTUSED", 
+                     "body", 
+                     "head", 
+                     "feet", 
+                     "hands", 
+                     "arms", 
+                     "shield", 
+                     "about", 
+                     "waist", 
+                     "wrist", 
+                     "NOTUSED", 
+                     "wield", 
+                     "hold" ];
+
 global.SCMD_HOLLER  = 0;
 global.SCMD_SHOUT   = 1;
 global.SCMD_GOSSIP  = 2;
@@ -92,6 +110,7 @@ global.ITEM_FOUNTAIN = "Fountain";
 global.ITEM_CORPSE = "Corpse";
 global.ITEM_BANK = "Bank";
 global.ITEM_BOARD = "Board";
+global.ITEM_CLOTHES = "Clothes";
 
 global.MESSAGE_BUG = "Please report this using the 'bug' command.";
 global.CANNOT_DO_THAT_HERE = "Sorry, but you can't do that here.";
@@ -202,6 +221,48 @@ global.SCMD_WINK       = 96;
 global.SCMD_WORSHIP    = 97;
 global.SCMD_YAWN       = 98;
 global.SCMD_YODEL      = 99;
+
+global.MAX_WEARS = 18;
+
+global.WEAR_WHERE = [
+    "  <used as light>      ",
+    "  <worn on finger>     ",
+    "  <worn on finger>     ",
+    "  <worn around neck>   ",
+    "  <worn around neck>   ",
+    "  <worn on body>       ",
+    "  <worn on head>       ",
+    "  <worn on legs>       ",
+    "  <worn on feet>       ",
+    "  <worn on hands>      ",
+    "  <worn on arms>       ",
+    "  <worn as shield>     ",
+    "  <worn about body>    ",
+    "  <worn about waist>   ",
+    "  <worn around wrist>  ",
+    "  <worn around wrist>  ",
+    "  <wielded>            ",
+    "  <held>               "
+  ];
+  
+global.WEAR_LIGHT    =  0;
+global.WEAR_FINGER_R =  1;
+global.WEAR_FINGER_L =  2;
+global.WEAR_NECK_1   =  3;
+global.WEAR_NECK_2   =  4;
+global.WEAR_BODY     =  5;
+global.WEAR_HEAD     =  6;
+global.WEAR_LEGS     =  7;
+global.WEAR_FEET     =  8;
+global.WEAR_HANDS    =  9;
+global.WEAR_ARMS     = 10;
+global.WEAR_SHIELD   = 11;
+global.WEAR_ABOUT    = 12;
+global.WEAR_WAIST    = 13;
+global.WEAR_WRIST_R  = 14;
+global.WEAR_WRIST_L  = 15;
+global.WEAR_WIELD    = 16;
+global.WEAR_HOLD     = 17;
 
 // global.SCMD_EAT    = 0;
 // global.SCMD_TASTE  = 1;

@@ -1273,4 +1273,5 @@ exports.character_lockDoorWorks = function(test) {
     test.done();
 };
 
+// TODO: Test 'wear'
 

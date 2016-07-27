@@ -23,6 +23,7 @@ var COMMAND_LIST = [
           { command: "up"       , minimumPosition: global.POS_STANDING, functionPointer: do_move       , minimumLevel: 0, subCommand: global.SCMD_UP },
           { command: "down"     , minimumPosition: global.POS_STANDING, functionPointer: do_move       , minimumLevel: 0, subCommand: global.SCMD_DOWN },
 
+          { command: "apparel"  , minimumPosition: global.POS_DEAD    , functionPointer: do_apparel    , minimumLevel: 0, subCommand: 0 },
           { command: "accuse"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_ACCUSE },
           { command: "applaud"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_APPLAUD },
           { command: "auction"  , minimumPosition: global.POS_SLEEPING, functionPointer: do_gen_comm   , minimumLevel: 0, subCommand: global.SCMD_AUCTION },
@@ -67,7 +68,6 @@ var COMMAND_LIST = [
           { command: "eat"      , minimumPosition: global.POS_RESTING , functionPointer: do_eat        , minimumLevel: 0, subCommand: global.SCMD_EAT },
           { command: "embrace"  , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_EMBRACE },
           { command: "emote"    , minimumPosition: global.POS_RESTING , functionPointer: do_emote      , minimumLevel: 0, subCommand: 0 },
-//           { command: "equipment", minimumPosition: global.POS_DEAD    , functionPointer: do_equipment  , minimumLevel: 0, subCommand: 0 },
           { command: "exits"    , minimumPosition: global.POS_RESTING , functionPointer: do_exits      , minimumLevel: 0, subCommand: 0 },
 
           { command: "fart"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_FART },
@@ -154,7 +154,7 @@ var COMMAND_LIST = [
 //           { command: "read"     , minimumPosition: global.POS_RESTING , functionPointer: do_read       , minimumLevel: 0, subCommand: 0 },
 //           { command: "receive"  , minimumPosition: global.POS_RESTING , functionPointer: do_receiveMail, minimumLevel: 0, subCommand: 0 },
 //           { command: "rescue"   , minimumPosition: global.POS_STANDING, functionPointer: do_rescue     , minimumLevel: 0, subCommand: 0 },
-//           { command: "remove"   , minimumPosition: global.POS_RESTING , functionPointer: do_remove     , minimumLevel: 0, subCommand: 0 },
+          { command: "remove"   , minimumPosition: global.POS_RESTING , functionPointer: do_remove     , minimumLevel: 0, subCommand: 0 },
 //           { command: "rent"     , minimumPosition: global.POS_RESTING , functionPointer: do_rent       , minimumLevel: 0, subCommand: 0 },
 //           { command: "report"   , minimumPosition: global.POS_RESTING , functionPointer: do_report     , minimumLevel: 0, subCommand: 0 },
           { command: "rest"     , minimumPosition: global.POS_RESTING , functionPointer: do_rest       , minimumLevel: 0, subCommand: 0 },
@@ -217,7 +217,7 @@ var COMMAND_LIST = [
         //   { command: "wake"    , minimumPosition: global.POS_SLEEPING , functionPointer: do_wake         , minimumLevel: 0, subCommand: 0 },
           { command: "wave"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WAVE },
 //           //{ command: "weather"  , minimumPosition: global.POS_RESTING , functionPointer: do_weather    , minimumLevel: 0, subCommand: 0 },
-//           { command: "wear"     , minimumPosition: global.POS_RESTING , functionPointer: do_wear       , minimumLevel: 0, subCommand: 0 },
+          { command: "wear"     , minimumPosition: global.POS_RESTING , functionPointer: do_wear       , minimumLevel: 0, subCommand: 0 },
           { command: "whine"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WHINE },
           { command: "whistle"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WHISTLE },
           { command: "who"      , minimumPosition: global.POS_DEAD    , functionPointer: do_who        , minimumLevel: 0, subCommand: 0 },
@@ -625,6 +625,10 @@ function do_score(character) {
     character.listScore().emit();
 }
 
+function do_apparel(character) {
+    character.listApparel().emit();
+}
+
 function do_inventory(character) {
     character.listInventory().emit();
 }
@@ -809,6 +813,36 @@ function do_who(character) {
     }
     else {
         character.emitMessage(playerCount + " players displayed.");
+    }
+}
+
+function do_wear(character, command) {
+    if(command.tokens.length === 0) {
+        character.emitMessage("Wear what?");
+    }
+    else if(command.tokens.length === 1) {
+        character.wearItem(command.tokens[0]).emit();
+    }
+    else {
+        var locationToken = command.tokens[1].toLowerCase();
+        
+        for(var i = 0; i < global.WEAR_LIST.length; i++) {
+            if(global.WEAR_LIST[i].substr(0, locationToken.length) === locationToken) {
+                character.wearItemAtLocation(command.tokens[0], i).emit();
+                return;
+            }
+        }
+        
+        character.emitMessage("Wear what where?");
+    }
+}
+
+function do_remove(character, command) {
+    if(command.tokens.length === 0) {
+        character.emitMessage("Remove what?");
+    }
+    else {
+        character.removeItem(command.tokens[0]).emit();
     }
 }
 

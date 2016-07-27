@@ -1101,6 +1101,119 @@ characterSchema.methods.lockUnlockDoor = function(keyword, subcommand) {
 	return output;
 };
 
+characterSchema.methods.wearObject = function(object, location) {
+	var messages = [];
+	
+	if(location === global.WEAR_FINGER_R && this.wearing[global.WEAR_FINGER_R] !== null && this.wearing[global.WEAR_FINGER_R] !== undefined) {
+		location++;
+	}
+	
+	if(location === global.WEAR_NECK_1 && this.wearing[global.WEAR_NECK_1] !== null && this.wearing[global.WEAR_NECK_1] !== undefined) {
+		location++;
+	}
+	
+	if(location === global.WEAR_WRIST_R && this.wearing[global.WEAR_WRIST_R] !== null && this.wearing[global.WEAR_WRIST_R] !== undefined) {
+		location++;
+	}
+
+	if(this.wearing[location] === null || this.wearing[location] === undefined) {
+		this.wearing[location] = object;
+		this.inventory.splice(this.inventory.indexOf(object), 1);
+		messages = utility.wearMessage(object, location);
+	}
+	else {
+		messages[0] = utility.alreadyWearing(location);
+    }
+    
+    return messages;
+};
+
+characterSchema.methods.wearItem = function(keyword) {
+	var output = new Output(this);
+	
+	var result = this.inventory.findByKeyword(keyword);
+
+	if(result.items.length === 0) {
+		output.toActor.push( { text: "Wear what?!?" } );
+		return output;
+	}
+
+	for(var i = 0; i < result.items.length; i++) {
+		if(result.items[i].wearSlots.length === 0) {
+			output.toActor.push( { text: "You can't wear " + result.items[i].shortDescription + "." } );
+		}
+		else {
+			var messages = this.wearObject(result.items[i], result.items[i].wearSlots[0]);
+			output.toActor.push( { text: messages[0] } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+		}
+	}
+	
+	return output;
+};
+
+characterSchema.methods.wearItemAtLocation = function(keyword, location) {
+	var output = new Output(this);
+	
+	var result = this.inventory.findByKeyword(keyword);
+
+	if(result.items.length === 0) {
+		output.toActor.push( { text: "Wear what?!?" } );
+		return output;
+	}
+
+	for(var i = 0; i < result.items.length; i++) {
+		if(result.items[i].wearSlots.indexOf(location) > -1) {
+			var messages = this.wearObject(result.items[i], location);
+			output.toActor.push( { text: messages[0] } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+		}
+		else {
+			output.toActor.push( { text: "You can't wear " + result.items[i].shortDescription + " there." } );
+		}
+	}
+	
+	return output;
+};
+
+
+characterSchema.methods.removeObject = function(object) {
+	var messages = [];
+	
+	messages[0] = "You stop using " + object.shortDescription + ".";
+	messages[1] = "ACTOR_NAME stops using " + object.shortDescription + ".";
+	
+	for(var i = 0; i < this.wearing.length; i++) {
+		if(this.wearing[i] === object) {
+			this.wearing[i] = null;
+			break;
+		}
+	}
+	
+ 	this.inventory.push(object);
+ 	
+ 	return messages;
+};
+
+characterSchema.methods.removeItem = function(keyword) {
+	var output = new Output(this);
+	
+	var result = this.wearing.findByKeyword(keyword);
+
+	if(result.items.length === 0) {	
+		output.toActor.push( { text: "Remove what?" } );
+		return output;
+	}
+
+	for(var i = 0; i < result.items.length; i++) {
+		var messages = this.removeObject(result.items[i]);
+		output.toActor.push( { text: messages[0] } );
+		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+	}
+	
+	return output;
+};
+
 var characterModel = mongoose.model('character', characterSchema);
 
 module.exports = {

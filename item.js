@@ -11,6 +11,7 @@ var itemSchema = new schema({
     actionDescription: String,
     canBeDonated: Boolean,
     canBeTaken: Boolean,
+    wearSlots: [ Number ],
     type: String,
     cost: Number,
 	extras: [{

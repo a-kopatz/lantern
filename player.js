@@ -147,6 +147,26 @@ playerSchema.methods.listInventory = function() {
 	return output;
 };
 
+playerSchema.methods.listApparel = function() {
+	var output = new Output(this);
+	output.toActor.push( { text: "You are using:" } );
+	
+	var found = false;
+	
+	for(var i = 0; i < global.MAX_WEARS; i++) {
+		if(this.wearing[i] !== null && this.wearing[i] !== undefined) {
+			output.toActor.push( { text: global.WEAR_WHERE[i] + this.wearing[i].shortDescription } );
+			found = true;
+		}
+	}
+	
+	if(found === false) {
+		output.toActor.push( { text: "  Absolutely nothing!!!" } );
+	}
+	
+	return output;
+};
+
 playerSchema.methods.listScore = function() {
 	var output = new Output(this);
 	
