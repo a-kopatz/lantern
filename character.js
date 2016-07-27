@@ -311,23 +311,23 @@ characterSchema.methods.sleep = function() {
 	return output;
 };
 
-// characterSchema.methods.wake = function() {
-// 	var messages = [];
+characterSchema.methods.wake = function() {
+	var output = new Output(this);
 	
-// 	if(this.position > global.POS_SLEEPING) {
-// 		messages[0] = this.emitMessage("You are already awake...");
-// 	}
-// 	else if(this.position < global.POS_SLEEPING) {
-// 		messages[0] = this.emitMessage("You can't wake up! You're in pretty bad shape!");
-// 	}
-// 	else {
-// 		messages[0] = this.emitMessage("You awaken, and sit up.");
-// 		messages[1] = this.emitRoomMessage(this.name + " awakens.");
-// 		this.position = global.POS_SITTING;
-// 	}
+	if(this.position > global.POS_SLEEPING) {
+		output.toActor.push( { text: "You are already awake..." } );
+	}
+	else if(this.position < global.POS_SLEEPING) {
+		output.toActor.push( { text: "You can't wake up! You're in pretty bad shape!" } );
+	}
+	else {
+		output.toActor.push( { text: "You awaken, and sit up." } );
+		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME awakens and sits up." } ] } );
+		this.position = global.POS_SITTING;
+	}
 	
-// 	return messages;    
-// };
+	return output;    
+};
 
 characterSchema.methods.say = function(message) {
 	var output = new Output(this);
@@ -347,7 +347,7 @@ characterSchema.methods.generalCommunication = function(subCommand, message) {
 
 	if(this.room !== undefined) {
 		if(this.room.isSoundproof) {
-			output.toActor.push( { message: 'The walls seem to absorb your words.' } );
+			output.toActor.push( { text: 'The walls seem to absorb your words.' } );
 			return output;
 		}
 	}
@@ -724,7 +724,7 @@ characterSchema.methods.eatObject = function(object) {
 	// 	this.hunger = Math.min(this.hunger, 24);
 	// }
 
-	this.caloriesConsumed[0] = this.caloriesConsumed[0] + object.calories;
+	// this.caloriesConsumed[0] = this.caloriesConsumed[0] + object.calories;
 	
 	// this.hunger = this.hunger + amount;
 	// this.updateFullness();
@@ -741,11 +741,11 @@ characterSchema.methods.eatItem = function(keyword) {
 	var result = this.inventory.findByKeyword(keyword);
 
 	if(result.items.length === 0) {
-		output.toActor( { text: "Eat what?!?" } );
+		output.toActor.push( { text: "Eat what?!?" } );
 		return output;
 	}
 
-	var fullnessIndex = 0;
+	// var fullnessIndex = 0;
 
 	for(var i = 0; i < result.items.length; i++) {
 		if(result.items[i].type !== global.ITEM_FOOD) {
@@ -754,15 +754,15 @@ characterSchema.methods.eatItem = function(keyword) {
 		else {
 			var messages = this.eatObject(result.items[i]);
 			output.toActor.push( { text: messages[0] } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
 			
-			fullnessIndex = this.getFullnessIndex();
-			var fullnessMessages = global.FULLNESS[ fullnessIndex ];
+			// fullnessIndex = this.getFullnessIndex();
+			// var fullnessMessages = global.FULLNESS[ fullnessIndex ];
 
-			if(fullnessMessages != undefined) {
-				output.toActor.push( { text: fullnessMessages[0] } );
-				output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
-				output.toRoom.push( { roomId: this.room.id, textArray: [ { text: fullnessMessages[1] } ] } );
-			}
+			// if(fullnessMessages != undefined) {
+			// 	output.toActor.push( { text: fullnessMessages[0] } );
+			// 	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: fullnessMessages[1] } ] } );
+			// }
 		}
 	}
 	

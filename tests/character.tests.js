@@ -1,5 +1,7 @@
 var Character = require("../character").character;
 var Room = require("../room").room;
+var Item = require('../item').item;
+var World = require('../world');
 
 // /////////////////////////////////////////////////
 
@@ -406,3 +408,351 @@ exports.character_saySendsExpectedMessage = function(test) {
     test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME says, 'Something everyone should hear!'");
     test.done();
 };
+
+
+// TODO: Test gencomm here
+
+
+///////////////////////////////////////////////////////////
+
+exports.character_takeItemReturnsErrorWhenNoKeyword = function(test) {
+    var actor = new Character();
+    
+    var actual = actor.takeItem('');
+    test.equal(actual.toActor[0].text, 'But what do you want to take?');
+    test.done();
+};
+
+exports.character_takeItemReturnsErrorWhenAllDotNotFound = function(test) {
+    var actor = new Character();
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var actual = actor.takeItem('all.bread');
+    test.equal(actual.toActor[0].text, "You can't seem to find any 'bread' things here.");
+    test.done();
+};
+
+exports.character_takeItemTakesItemFromRoom = function(test) {
+    var actor = new Character();
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var gloves = new Item();
+    gloves.keywords.push("gloves");
+    gloves.shortDescription = "a pair of gloves";
+    gloves.canBeTaken = true;
+    room.addItem(gloves);
+    
+    var actual = actor.takeItem('gloves');
+    test.equal(actual.toActor[0].text, "You take a pair of gloves.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME takes a pair of gloves.");
+    test.equal(actor.inventory.length, 1);
+    test.equal(actor.inventory[0], gloves);
+    test.equal(room.contents.length, 0);
+    test.done();
+};
+
+exports.character_takeItemReturnsErrorWhenItemCannotBeTaken = function(test) {
+    var actor = new Character();
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var atm = new Item();
+    atm.keywords.push("atm");
+    atm.shortDescription = "an ATM machine";
+    atm.canBeTaken = false;
+    room.addItem(atm);
+
+    var actual = actor.takeItem('atm');
+    test.equal(actual.toActor[0].text, "an ATM machine: You can't take THAT!");
+    test.equal(actor.inventory.length, 0);
+    test.equal(room.contents.length, 1);
+    test.done();
+};
+
+exports.character_takeItemTakesItemFromRoom = function(test) {
+    var actor = new Character();
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var gloves1 = new Item();
+    gloves1.keywords.push("gloves");
+    gloves1.shortDescription = "a pair of blue gloves";
+    gloves1.canBeTaken = true;
+    room.addItem(gloves1);
+    
+    var gloves2 = new Item();
+    gloves2.keywords.push("gloves");
+    gloves2.shortDescription = "a pair of black gloves";
+    gloves2.canBeTaken = true;
+    room.addItem(gloves2);
+    
+    var atm = new Item();
+    atm.keywords.push("atm");
+    atm.shortDescription = "an ATM machine";
+    atm.canBeTaken = false;
+    room.addItem(atm);
+    
+    var actual = actor.takeItem('all.gloves');
+    
+    test.equal(actual.toActor[0].text, "You take a pair of blue gloves.");
+    test.equal(actual.toActor[1].text, "You take a pair of black gloves.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME takes a pair of blue gloves.");
+    test.equal(actual.toRoom[1].textArray[0].text, "ACTOR_NAME takes a pair of black gloves.");
+    test.equal(actor.inventory.length, 2);
+    test.equal(actor.inventory[0], gloves1);
+    test.equal(actor.inventory[1], gloves2);
+    test.equal(room.contents.length, 1);
+    test.equal(room.contents[0], atm);
+    test.done();
+};
+
+exports.character_takeItemTakesAllFromRoom = function(test) {
+    var actor = new Character();
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var gloves = new Item();
+    gloves.keywords.push("gloves");
+    gloves.shortDescription = "a pair of gloves";
+    gloves.canBeTaken = true;
+    room.addItem(gloves);
+    
+    var scarf = new Item();
+    scarf.keywords.push("scarf");
+    scarf.shortDescription = "a plaid scarf";
+    scarf.canBeTaken = true;
+    room.addItem(scarf);
+    
+    var atm = new Item();
+    atm.keywords.push("atm");
+    atm.shortDescription = "an ATM machine";
+    atm.canBeTaken = false;
+    room.addItem(atm);
+    
+    var shirt = new Item();
+    shirt.keywords.push("shirt");
+    shirt.shortDescription = "an ugly shirt";
+    shirt.canBeTaken = true;
+    room.addItem(shirt);
+    
+    var actual = actor.takeItem('all');
+    
+    test.equal(actual.toActor[0].text, "You take a pair of gloves.");
+    test.equal(actual.toActor[1].text, "You take a plaid scarf.");
+    test.equal(actual.toActor[2].text, "an ATM machine: You can't take THAT!");
+    test.equal(actual.toActor[3].text, "You take an ugly shirt.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME takes a pair of gloves.");
+    test.equal(actual.toRoom[1].textArray[0].text, "ACTOR_NAME takes a plaid scarf.");
+    test.equal(actual.toRoom[2].textArray[0].text, "ACTOR_NAME takes an ugly shirt.");
+    test.equal(actor.inventory.length, 3);
+    test.equal(actor.inventory[0], gloves);
+    test.equal(actor.inventory[1], scarf);
+    test.equal(actor.inventory[2], shirt);
+    test.equal(room.contents.length, 1);
+    test.equal(room.contents[0], atm);
+    test.done();
+};
+
+///////////////////////////////////////////////////////////
+
+exports.character_dropItemReturnsErrorWhenNoKeyword = function(test) {
+    var actor = new Character();
+    
+    var actual = actor.dropItem('');
+    test.equal(actual.toActor[0].text, "Drop what?!?");
+    test.done();
+};
+
+exports.character_dropItemReturnsErrorWhenItemNotFound = function(test) {
+    var actor = new Character();
+    
+    var actual = actor.dropItem('computer');
+    test.equal(actual.toActor[0].text, "Drop what?!?");
+    test.done();
+};
+
+exports.character_dropItemAddsToRoomInventory = function(test) {
+    var actor = new Character();
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var gloves = new Item();
+    gloves.keywords.push("gloves");
+    gloves.shortDescription = "a pair of gloves";
+    gloves.canBeTaken = true;
+    
+    actor.inventory.push(gloves);
+    
+    var actual = actor.dropItem('gloves');
+    test.equal(actual.toActor[0].text, "You drop a pair of gloves.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME drops a pair of gloves.");
+    test.equal(actor.inventory.length, 0);
+    test.equal(room.contents.length, 1);
+    test.equal(room.contents[0], gloves);
+    test.done();
+};
+
+exports.character_dropAllDotItemAddsToRoomContents = function(test) {
+    var actor = new Character();
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var gloves1 = new Item();
+    gloves1.keywords.push("gloves");
+    gloves1.shortDescription = "a pair of blue gloves";
+    gloves1.canBeTaken = true;
+    actor.inventory.push(gloves1);
+    
+    var gloves2 = new Item();
+    gloves2.keywords.push("gloves");
+    gloves2.shortDescription = "a pair of black gloves";
+    gloves2.canBeTaken = true;
+    actor.inventory.push(gloves2);
+    
+    var pizza = new Item();
+    pizza.keywords.push("pizza");
+    pizza.shortDescription = "a cheese pizza";
+    pizza.canBeTaken = false;
+    actor.inventory.push(pizza);
+    
+    var actual = actor.dropItem('all.gloves');
+    
+    test.equal(actual.toActor[0].text, "You drop a pair of blue gloves.");
+    test.equal(actual.toActor[1].text, "You drop a pair of black gloves.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME drops a pair of blue gloves.");
+    test.equal(actual.toRoom[1].textArray[0].text, "ACTOR_NAME drops a pair of black gloves.");
+    test.equal(actor.inventory.length, 1);
+    test.equal(actor.inventory[0], pizza);
+    test.equal(room.contents.length, 2);
+    test.equal(room.contents[0], gloves1);
+    test.equal(room.contents[1], gloves2);
+    test.done();
+};
+
+exports.character_dropAllDropsEverythingToRoom = function(test) {
+    var actor = new Character();
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var gloves1 = new Item();
+    gloves1.keywords.push("gloves");
+    gloves1.shortDescription = "a pair of blue gloves";
+    gloves1.canBeTaken = true;
+    actor.inventory.push(gloves1);
+    
+    var gloves2 = new Item();
+    gloves2.keywords.push("gloves");
+    gloves2.shortDescription = "a pair of black gloves";
+    gloves2.canBeTaken = true;
+    actor.inventory.push(gloves2);
+    
+    var pizza = new Item();
+    pizza.keywords.push("pizza");
+    pizza.shortDescription = "a cheese pizza";
+    pizza.canBeTaken = false;
+    actor.inventory.push(pizza);
+    
+    var actual = actor.dropItem('all');
+    
+    test.equal(actual.toActor[0].text, "You drop a pair of blue gloves.");
+    test.equal(actual.toActor[1].text, "You drop a pair of black gloves.");
+    test.equal(actual.toActor[2].text, "You drop a cheese pizza.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME drops a pair of blue gloves.");
+    test.equal(actual.toRoom[1].textArray[0].text, "ACTOR_NAME drops a pair of black gloves.");
+    test.equal(actual.toRoom[2].textArray[0].text, "ACTOR_NAME drops a cheese pizza.");
+    test.equal(actor.inventory.length, 0);
+    test.equal(room.contents.length, 3);
+    test.equal(room.contents[0], gloves1);
+    test.equal(room.contents[1], gloves2);
+    test.equal(room.contents[2], pizza);
+    test.done();
+};
+
+// TODO: Junk
+
+// TODO: Donate
+
+///////////////////////////////////////////////////////////
+
+exports.character_eatItemReturnsErrorWhenNoKeyword = function(test) {
+    var actor = new Character();
+    
+    var actual = actor.eatItem('');
+    test.equal(actual.toActor[0].text, "Eat what?!?");
+    test.done();
+};
+
+exports.character_eatItemReturnsErrorWhenItemNotFound = function(test) {
+    var actor = new Character();
+    
+    var actual = actor.eatItem('computer');
+    test.equal(actual.toActor[0].text, "Eat what?!?");
+    test.done();
+};
+
+exports.character_eatItemReturnsErrorWhenItemIsNotFood = function(test) {
+    var actor = new Character();
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var socks = new Item();
+    socks.keywords.push("socks");
+    socks.shortDescription = "a pair of socks";
+    socks.type = global.ITEM_TRASH;
+    actor.inventory.push(socks);
+
+    var actual = actor.eatItem('socks');
+    test.equal(actual.toActor[0].text, "a pair of socks -- You can't eat THAT!");
+    test.equal(actor.inventory[0], socks);
+    test.done();
+};
+
+exports.character_eatItemRemovesItemFromInventory = function(test) {
+    var actor = new Character();
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var myWorld = new World();
+    myWorld.addCharacter(actor);
+    
+    var donut = new Item();
+    donut.keywords.push("donut");
+    donut.shortDescription = "a cream-filled donut";
+    donut.type = global.ITEM_FOOD;
+    actor.inventory.push(donut);
+
+    myWorld.addItem(donut);
+
+    var actual = actor.eatItem('donut');
+    
+    console.log(actual);
+    
+    test.equal(actual.toActor[0].text, "You eat a cream-filled donut.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME eats a cream-filled donut.");
+    test.equal(actor.inventory.length, 0);
+    test.done();
+};
+
+
