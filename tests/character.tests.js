@@ -104,7 +104,6 @@ exports.character_emoteSendsIdenticalMessagesToActorAndRoom = function(test) {
     
     var room = new Room();
     room.id = 3001;
-
     room.addCharacter(actor);
     
     var actual = actor.emote("feels the love.");
@@ -118,8 +117,6 @@ exports.character_emoteSendsIdenticalMessagesToActorAndRoom = function(test) {
 
 exports.character_standReturnsErrorWhenAlreadyStanding = function(test) {
     var actor = new Character();
-    actor.name = "Joe";
-    actor.gender = global.GENDER_MALE;
     actor.position = global.POS_STANDING;
     
     var actual = actor.stand();
@@ -131,19 +128,14 @@ exports.character_standReturnsErrorWhenAlreadyStanding = function(test) {
 
 exports.character_standWorksWhenSitting = function(test) {
     var actor = new Character();
-    actor.name = "Joe";
-    actor.gender = global.GENDER_MALE;
     actor.position = global.POS_SITTING;
     
     var room = new Room();
     room.id = 3001;
-
     room.addCharacter(actor);
     
     var actual = actor.stand();
 
-    console.log(actual);
-    
     test.equal(actual.toActor[0].text, "You stand up.");
     test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME clambers to ACTOR_PRONOUN_POSSESSIVE feet.");
     test.equal(actor.position, global.POS_STANDING);
@@ -152,13 +144,10 @@ exports.character_standWorksWhenSitting = function(test) {
 
 exports.character_standWorksWhenResting = function(test) {
     var actor = new Character();
-    actor.name = "Joe";
-    actor.gender = global.GENDER_MALE;
     actor.position = global.POS_RESTING;
     
     var room = new Room();
     room.id = 3001;
-
     room.addCharacter(actor);
     
     var actual = actor.stand();
@@ -171,8 +160,6 @@ exports.character_standWorksWhenResting = function(test) {
 
 exports.character_standReturnsErrorWhenSleeping = function(test) {
     var actor = new Character();
-    actor.name = "Joe";
-    actor.gender = global.GENDER_MALE;
     actor.position = global.POS_SLEEPING;
     
     var actual = actor.stand();
@@ -181,3 +168,177 @@ exports.character_standReturnsErrorWhenSleeping = function(test) {
     test.equal(actor.position, global.POS_SLEEPING);
     test.done();
 };
+
+///////////////////////////////////////////////////////////
+
+exports.character_sitWorksWhenStanding = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_STANDING;
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var actual = actor.sit();
+    
+    test.equal(actual.toActor[0].text, "You sit down.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME sits down.");
+    test.equal(actor.position, global.POS_SITTING);
+    test.done();
+};
+
+exports.character_sitReturnsErrorWhenAlreadySitting = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_SITTING;
+    
+    var actual = actor.sit();
+    
+    test.equal(actual.toActor[0].text, "You're sitting already.");
+    test.equal(actor.position, global.POS_SITTING);
+    test.done();
+};
+
+exports.character_sitWorksWhenResting = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_RESTING;
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var actual = actor.sit();
+    
+    test.equal(actual.toActor[0].text, "You stop resting, and sit up.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME stops resting.");
+    test.equal(actor.position, global.POS_SITTING);
+    test.done();
+};
+
+exports.character_sitReturnsErrorWhenSleeping = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_SLEEPING;
+    
+    var actual = actor.sit();
+    
+    test.equal(actual.toActor[0].text, "You have to wake up first.");
+    test.equal(actor.position, global.POS_SLEEPING);
+    test.done();
+};
+
+///////////////////////////////////////////////////////////
+
+exports.character_restWorksWhenStanding = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_STANDING;
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var actual = actor.rest();
+    
+    test.equal(actual.toActor[0].text, "You sit down and rest your tired bones.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME sits down and rests.");
+    test.equal(actor.position, global.POS_RESTING);
+    test.done();
+};
+
+exports.character_restWorksWhenSitting = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_SITTING;
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var actual = actor.rest();
+    
+    test.equal(actual.toActor[0].text, "You rest your tired bones.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME rests.");
+    test.equal(actor.position, global.POS_RESTING);
+    test.done();
+};
+
+exports.character_restReturnsErrorWhenAlreadyResting = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_RESTING;
+    
+    var actual = actor.rest();
+    
+    test.equal(actual.toActor[0].text, "You are resting already.");
+    test.equal(actor.position, global.POS_RESTING);
+    test.done();
+};
+
+exports.character_restReturnsErrorWhenSleeping = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_SLEEPING;
+    
+    var actual = actor.rest();
+    
+    test.equal(actual.toActor[0].text, "You have to wake up first.");
+    test.equal(actor.position, global.POS_SLEEPING);
+    test.done();
+};
+
+///////////////////////////////////////////////////////////
+
+exports.character_sleepWorksWhenStanding = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_STANDING;
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var actual = actor.sleep();
+    
+    test.equal(actual.toActor[0].text, "You go to sleep.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME lies down and falls asleep.");
+    test.equal(actor.position, global.POS_SLEEPING);
+    test.done();
+};
+
+exports.character_sleepWorksWhenSitting = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_SITTING;
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var actual = actor.sleep();
+    
+    test.equal(actual.toActor[0].text, "You go to sleep.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME lies down and falls asleep.");
+    test.equal(actor.position, global.POS_SLEEPING);
+    test.done();
+};
+
+exports.character_sleepWorksWhenResting = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_RESTING;
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var actual = actor.sleep();
+    
+    test.equal(actual.toActor[0].text, "You go to sleep.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME lies down and falls asleep.");
+    test.equal(actor.position, global.POS_SLEEPING);
+    test.done();
+};
+
+exports.character_sleepReturnsErrorWhenSleeping = function(test) {
+    var actor = new Character();
+    actor.position = global.POS_SLEEPING;
+    
+    var actual = actor.sleep();
+    
+    test.equal(actual.toActor[0].text, "You are already sound asleep.");
+    test.equal(actor.position, global.POS_SLEEPING);
+    test.done();
+};
+
