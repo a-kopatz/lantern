@@ -27,7 +27,7 @@ var COMMAND_LIST = [
           { command: "applaud"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_APPLAUD },
           { command: "auction"  , minimumPosition: global.POS_SLEEPING, functionPointer: do_gen_comm   , minimumLevel: 0, subCommand: global.SCMD_AUCTION },
 
-        //   { command: "balance"  , minimumPosition: global.POS_RESTING , functionPointer: do_balance    , minimumLevel: 0, subCommand: 0 },
+          { command: "balance"  , minimumPosition: global.POS_RESTING , functionPointer: do_balance    , minimumLevel: 0, subCommand: 0 },
           { command: "beg"      , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_BEG },
           { command: "bleed"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_BLEED },
           { command: "blush"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_BLUSH },
@@ -58,7 +58,7 @@ var COMMAND_LIST = [
           { command: "date"     , minimumPosition: global.POS_DEAD    , functionPointer: do_stardate   , minimumLevel: 0, subCommand: 0 },
                     
           { command: "daydream" , minimumPosition: global.POS_SLEEPING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_DAYDREAM },
-        //   { command: "deposit"  , minimumPosition: global.POS_RESTING , functionPointer: do_deposit    , minimumLevel: 0, subCommand: 0 },
+          { command: "deposit"  , minimumPosition: global.POS_RESTING , functionPointer: do_deposit    , minimumLevel: 0, subCommand: 0 },
         //   { command: "drink"    , minimumPosition: global.POS_RESTING , functionPointer: do_drink      , minimumLevel: 0, subCommand: global.SCMD_DRINK },
           { command: "donate"   , minimumPosition: global.POS_RESTING , functionPointer: do_donate     , minimumLevel: 0, subCommand: 0 },
           { command: "drop"     , minimumPosition: global.POS_RESTING , functionPointer: do_drop       , minimumLevel: 0, subCommand: 0 },
@@ -224,7 +224,7 @@ var COMMAND_LIST = [
 //           //{ command: "whoami"   , minimumPosition: global.POS_DEAD    , functionPointer: do_whoami     , minimumLevel: 0, subCommand: 0 },
           { command: "wiggle"   , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WIGGLE },
           { command: "wink"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WINK },
-        //   { command: "withdraw" , minimumPosition: global.POS_RESTING , functionPointer: do_withdraw   , minimumLevel: 0, subCommand: 0 },
+          { command: "withdraw" , minimumPosition: global.POS_RESTING , functionPointer: do_withdraw   , minimumLevel: 0, subCommand: 0 },
           { command: "worship"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WORSHIP },
 //           { command: "write"    , minimumPosition: global.POS_RESTING , functionPointer: do_write      , minimumLevel: 0, subCommand: 0 },
 
@@ -688,55 +688,55 @@ function do_emote(character, command) {
     character.emote(command.subInput.trim()).emit();
 }
 
-// function do_balance(character, command) {
-//     if(character.isAtBank() === true) {
-//         character.checkBankBalance();
-//     }
-//     else {
-//         character.emitMessage(global.CANNOT_DO_THAT_HERE);
-//     }
-// }
+function do_balance(character, command) {
+    if(character.isAtBank() === true) {
+        character.checkBankBalance().emit();
+    }
+    else {
+        character.emitMessage(global.CANNOT_DO_THAT_HERE);
+    }
+}
 
-// function do_deposit(character, command) {
-//     if(character.isAtBank() === true) {
-//         var error = "How many dollars do you wish to deposit?";
+function do_deposit(character, command) {
+    if(character.isAtBank() === true) {
+        var error = "How much do you wish to deposit?";
         
-//         if(command.tokens.length === 0) {
-//             character.emitMessage(error);
-//         }
-//         else if(isNaN(command.tokens[0]) === true) {
-//             character.emitMessage(error);
-//         }
-//         else {
-//             character.depositCoins(command.tokens[0]);
-//         }
-//     }
-//     else {
-//         character.emitMessage(global.CANNOT_DO_THAT_HERE);
-//     }
-// }
+        if(command.tokens.length === 0) {
+            character.emitMessage(error);
+        }
+        else if(isNaN(command.tokens[0]) === true) {
+            character.emitMessage(error);
+        }
+        else {
+            character.depositMoney(parseInt(command.tokens[0], 10)).emit();
+        }
+    }
+    else {
+        character.emitMessage(global.CANNOT_DO_THAT_HERE);
+    }
+}
 
-// function do_withdraw(character, command) {
-//     if(character.isAtBank() === true) {
-//         var error = "How many dollars do you wish to withdraw?";
+function do_withdraw(character, command) {
+    if(character.isAtBank() === true) {
+        var error = "How much do you wish to withdraw?";
         
-//         if(command.tokens.length === 0) {
-//             character.emitMessage(error);
-//         }
-//         else if(isNaN(command.tokens[0]) === true) {
-//             character.emitMessage(error);
-//         }
-//         else {
-//             character.withdrawCoins(command.tokens[0]);
-//         }
-//     }
-//     else {
-//         character.emitMessage(global.CANNOT_DO_THAT_HERE);
-//     }
-// }
+        if(command.tokens.length === 0) {
+            character.emitMessage(error);
+        }
+        else if(isNaN(command.tokens[0]) === true) {
+            character.emitMessage(error);
+        }
+        else {
+            character.withdrawMoney(parseInt(command.tokens[0], 10)).emit();
+        }
+    }
+    else {
+        character.emitMessage(global.CANNOT_DO_THAT_HERE);
+    }
+}
 
 function do_who(character) {
-    character.emitMessage("Players ---------------------");
+    character.emitMessage("Players --------------------------------------------");
     
     var playerCount = 0;
     

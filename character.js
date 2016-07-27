@@ -908,54 +908,66 @@ characterSchema.methods.giveItem = function(keyword, targetName) {
 	return output;
 };
 
-// /* Banking and money-related methods */
+/* Banking and money-related methods */
 
-// characterSchema.methods.isAtBank = function() {
-// 	if(this.room.contents.containsItemByType(global.ITEM_BANK) === true || 
-// 	   this.inventory.containsItemByType(global.ITEM_BANK) === true) {
-//   		return true;
-// 	}
+characterSchema.methods.isAtBank = function() {
+	if(this.room.contents.containsItemByType(global.ITEM_BANK) === true || 
+	   this.inventory.containsItemByType(global.ITEM_BANK) === true) {
+  			return true;
+	}
 	   
-// 	return false;
-// };
+	return false;
+};
 
-// characterSchema.methods.checkBankBalance = function() {
-// 	if(this.bank === 0) {
-// 		this.emitMessage("You have no money deposited.");
-// 	}
-// 	else if(this.bank === 1) {
-// 		this.emitMessage("You have exactly 1 pathetic dollar deposited, loser.");
-// 	}
-// 	else {
-// 		this.emitMessage("You have " + this.bank + " dollars deposited.");
-// 	}
-// };
+characterSchema.methods.checkBankBalance = function() {
+	var output = new Output(this);
+	
+	if(this.bank === 0) {
+		output.toActor.push( { text: "You have no money deposited." } );
+	}
+	else if(this.bank === 1) {
+		output.toActor.push( { text: "You have exactly 1 pathetic dollar deposited." } );
+	}
+	else {
+		output.toActor.push( { text: "You have " + this.bank + " dollars deposited." } );
+	}
+	
+	return output;
+};
 
-// characterSchema.methods.depositMoney = function(amount) {
-// 	if(this.bank < amount) {
-// 		this.emitMessage("You don't have that many dollars deposited!");
-// 		return;
-// 	}
+characterSchema.methods.depositMoney = function(amount) {
+	var output = new Output(this);
 	
-// 	this.money = this.money + amount;
-// 	this.bank = this.bank - amount;
+	if(this.money < amount) {
+		output.toActor.push( { text: "You don't have that much money!" } );
+		return output;
+	}
 	
-// 	this.emitMessage("You withdraw " + amount + " dollars.");
-// 	this.emitRoomMessage(this.name + " makes a bank transaction.");
-// };
+	this.money = this.money - amount;
+	this.bank = this.bank + amount;
+	
+	output.toActor.push( { text: "You deposit " + amount + " dollars." } );
+	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME makes a bank transaction." } ] } );
+	
+	return output;
+};
 
-// characterSchema.methods.withdrawMoney = function(amount) {
-// 	if(this.money < amount) {
-// 		this.emitMessage("You don't have that many dollars!");
-// 		return;
-// 	}
+characterSchema.methods.withdrawMoney = function(amount) {
+	var output = new Output(this);
 	
-// 	this.money = this.money - amount;
-// 	this.bank = this.bank + amount;
+	if(this.bank < amount) {
+		output.toActor.push( { text: "You don't have that much money in the bank!" } );
+		return output;
+	}
 	
-// 	this.emitMessage("You deposit " + amount + " dollars.");
-// 	this.emitRoomMessage(this.name + " makes a bank transaction.");
-// };
+	this.money = this.money + amount;
+	this.bank = this.bank - amount;
+	
+	output.toActor.push( { text: "You withdraw " + amount + " dollars." } );
+	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME makes a bank transaction." } ] } );
+	
+	return output;
+};
 
 
 var characterModel = mongoose.model('character', characterSchema);

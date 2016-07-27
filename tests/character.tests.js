@@ -799,7 +799,6 @@ exports.character_giveItemReturnsErrorWhenTargetIsSelf = function(test) {
     test.done();
 };
 
-
 exports.character_giveItemGivesAllDotItems = function(test) {
     var actor = new Character();
     actor.name = 'Mac';
@@ -846,6 +845,87 @@ exports.character_giveItemGivesAllDotItems = function(test) {
     test.done();
 };
 
+///////////////////////////////////////////////////////////
 
+exports.character_checkBalanceReturnsExpectedMessages = function(test) {
+    var actor = new Character();
+    actor.bank = 0;
+    
+    var actual = actor.checkBankBalance();
+    test.equal(actual.toActor[0].text, "You have no money deposited.");
+    
+    actor.bank = 1;
+    actual = actor.checkBankBalance();
+    test.equal(actual.toActor[0].text, "You have exactly 1 pathetic dollar deposited.");
+
+    actor.bank = 300;
+    actual = actor.checkBankBalance();
+    test.equal(actual.toActor[0].text, "You have 300 dollars deposited.");
+    
+    test.done();    
+};
+
+///////////////////////////////////////////////////////////
+
+exports.character_depositMoneyReturnsErrorWhenNotEnoughMoney = function(test) {
+    var actor = new Character();
+    actor.money = 100;
+    actor.bank = 200;
+    
+    var actual = actor.depositMoney(500);
+    test.equal(actual.toActor[0].text, "You don't have that much money!");
+    test.equal(actor.money, 100);
+    test.equal(actor.bank, 200);
+    test.done();    
+};
+
+exports.character_depositMoneyIncreasesBankDecreasesMoney = function(test) {
+    var actor = new Character();
+    actor.money = 100;
+    actor.bank = 200;
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var actual = actor.depositMoney(50);
+    test.equal(actual.toActor[0].text, "You deposit 50 dollars.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME makes a bank transaction.");
+    test.equal(actor.money, 50);
+    test.equal(actor.bank, 250);
+    test.done();    
+};
+
+
+///////////////////////////////////////////////////////////
+
+exports.character_withdrawMoneyReturnsErrorWhenNotEnoughMoney = function(test) {
+    var actor = new Character();
+    actor.money = 500;
+    actor.bank = 20;
+    
+    var actual = actor.withdrawMoney(50);
+    test.equal(actual.toActor[0].text, "You don't have that much money in the bank!");
+    test.equal(actor.money, 500);
+    test.equal(actor.bank, 20);
+    test.done();    
+};
+
+exports.character_withdrawMoneyDecreasesBankIncreasesMoney = function(test) {
+    var actor = new Character();
+    actor.money = 75;
+    actor.bank = 900;
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var actual = actor.withdrawMoney(150);
+    test.equal(actual.toActor[0].text, "You withdraw 150 dollars.");
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME makes a bank transaction.");
+    test.equal(actor.money, 225);
+    test.equal(actor.bank, 750);
+    test.done();    
+};
 
 
