@@ -9,7 +9,7 @@ function World() {
  	this.items = [];
 	this.zones = [];
 // 	this.shops = [];
-	// this.stardate = null;
+	this.time = null;
 }
 
 // // Public Properties
@@ -19,7 +19,7 @@ World.prototype.npcs;
 World.prototype.zones;
 World.prototype.shops;
 World.prototype.items;
-// World.prototype.stardate;
+World.prototype.time;
 
 
 World.prototype.getRoom = function(id) {
@@ -180,10 +180,10 @@ World.prototype.updateNPCs = function() {
 };
 
 World.prototype.hourElapsed = function() {
-    // this.stardate.advanceHour();
-    // this.stardate.save(function(err) {
-    // 	console.log(err);
-    // });
+    this.time.advanceHour();
+    this.time.save(function(err) {
+    	console.log(err);
+    });
     
   //  if(this.stardate % 1 === 0) {
 		// for(var i = 0; i < this.players.length; i++) {
