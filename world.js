@@ -185,11 +185,11 @@ World.prototype.hourElapsed = function() {
     	console.log(err);
     });
     
-  //  if(this.stardate % 1 === 0) {
-		// for(var i = 0; i < this.players.length; i++) {
-		// 	this.players[i].dailyUpdate();
-		// }
-  //  }
+    if(this.time.hour % 24 === 0) {
+		for(var i = 0; i < this.players.length; i++) {
+			this.players[i].dailyUpdate();
+		}
+    }
     
 	for(var i = 0; i < this.players.length; i++) {
 		this.players[i].hourlyUpdate();

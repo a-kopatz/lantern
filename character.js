@@ -709,10 +709,6 @@ characterSchema.methods.donateItem = function(keyword) {
 	return output;
 };
 
-// // characterSchema.methods.social = function(action, parameter) {
-// // 	var thisSocial = new Social(action, parameter, this);
-// // 	thisSocial.emitMessages();
-// // };
 
 characterSchema.methods.eatObject = function(object) {
 	var messages = [];
@@ -720,16 +716,9 @@ characterSchema.methods.eatObject = function(object) {
 	messages[0] = "You eat " + object.shortDescription + ".";
 	messages[1] = "ACTOR_NAME eats " + object.shortDescription + ".";
 
-	// if(!this.isNpc()) {
-	// 	this.hunger = this.hunger + amount;
-	// 	this.hunger = Math.min(this.hunger, 24);
-	// }
-
-	// this.caloriesConsumed[0] = this.caloriesConsumed[0] + object.calories;
-	
-	// this.hunger = this.hunger + amount;
-	// this.updateFullness();
-
+	if(!this.isNpc()) {
+		this.caloriesConsumed[0] = this.caloriesConsumed[0] + object.calories;
+	}
 
 	this.inventory.splice(this.inventory.indexOf(object), 1);
 	this.world.removeItem(object);

@@ -180,7 +180,11 @@ playerSchema.methods.listScore = function() {
 	var bmi = this.getBMI();
 	output.toActor.push( { text: "Your BMI is " + bmi + ", which makes you " + utility.getBmiDescription(bmi) + "."} );
 
-	output.toActor.push( { text: global.FULLNESS[this.getFullnessIndex()][0] } );
+	// output.toActor.push( { text: global.FULLNESS[this.getFullnessIndex()][0] } );
+	
+	output.toActor.push( { text: "caloriesConsumed: " + this.caloriesConsumed.total() } );
+	output.toActor.push( { text: "maximumFullness: " + this.maximumFullness } );
+	output.toActor.push( { text: "Fullness: " + this.getFullnessIndex() } );
 	
 	return output;
 };
@@ -239,13 +243,19 @@ playerSchema.methods.hourlyUpdate = function() {
 	}
 };
 
+playerSchema.methods.getFullnessIndex = function() {
+	var sum = this.caloriesConsumed.total();
+	var index = Math.round(Math.max(0, (sum - this.maximumFullness)) / (Math.round(this.maximumFullness / 4)));
+	index = Math.min(index, global.MAX_FULLNESS);
+	return index;
+};
+
 playerSchema.methods.dailyUpdate = function() {
 	//this.emitMessage("Day....");
 	
-	// if(this.caloriesConsumed.total() > global.CALORIES_TO_GAIN_ONE_POUND) {
-	// 	this.weight++;
-	// }
-	
+	if(this.caloriesConsumed.total() > global.CALORIES_TO_GAIN_ONE_POUND) {
+		this.weight++;
+	}
 };
 
 playerSchema.methods.getFullnessIndex = function() {
