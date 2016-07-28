@@ -1275,3 +1275,6 @@ exports.character_lockDoorWorks = function(test) {
 
 // TODO: Test 'wear'
 
+// TODO: Test 'remove'
+
+

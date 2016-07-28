@@ -1176,7 +1176,6 @@ characterSchema.methods.wearItemAtLocation = function(keyword, location) {
 	return output;
 };
 
-
 characterSchema.methods.removeObject = function(object) {
 	var messages = [];
 	

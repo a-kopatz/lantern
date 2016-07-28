@@ -12,6 +12,8 @@ var zone = require('./zone');
 var interpreter = require('./interpreter');
 // var stardate = require('./stardate');
 
+var clothes = require('./clothes');
+
 // TODO: Room
 // TODO: Zone
 // TODO: World
