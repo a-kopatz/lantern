@@ -36,6 +36,32 @@ global.SCMD_WEST	= "W";
 global.SCMD_UP		= "U";
 global.SCMD_DOWN	= "D";
 
+global.daysOfTheWeek = [ 
+	"Sunday",
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
+	"Saturday"
+];
+
+global.monthNames = [
+	"",
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December"
+];
+
 global.getDirection = function(direction) {
 	switch(direction.toLowerCase()) {
 		case "n":
