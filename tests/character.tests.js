@@ -730,6 +730,7 @@ exports.character_eatItemReturnsErrorWhenItemIsNotFood = function(test) {
 
 exports.character_eatItemRemovesItemFromInventory = function(test) {
     var actor = new Character();
+    actor.caloriesConsumed = [ 0 ];
     
     var room = new Room();
     room.id = 3001;
