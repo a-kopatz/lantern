@@ -141,8 +141,10 @@ roomSchema.methods.getPlayers = function() {
 };
 
 roomSchema.methods.getExit = function(direction) {
+	var formattedDirection = direction.substr(0, 1).toLowerCase();
+	
 	for(var i = 0; i < this.exits.length; i++) {
-		if(this.exits[i].direction.toLowerCase() === direction.toLowerCase()) {
+		if(this.exits[i].direction.toLowerCase() === formattedDirection) {
 			return this.exits[i];
 		}
 	}
