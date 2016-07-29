@@ -1206,6 +1206,79 @@ characterSchema.methods.removeItem = function(keyword) {
 	return output;
 };
 
+characterSchema.methods.lookTarget = function(command) {
+	var output = new Output(this);
+	
+	if(command.allTokens[0] !== "in") {
+	// 	var targetList = this.room.players.concat(this.room.mobs).concat(this.inventory)
+	// 		.concat(this.wearing).concat(this.room.contents).concat(this.room.extras)
+	// 		.concat(this.getWornExtras()).concat(this.getInventoryExtras())
+	// 		.concat(this.room.getContentsExtras());
+		
+	// 	var target = targetList.findByKeyword(command.tokens[0]);
+		
+	// 	if(target.items.length > 0) {
+	// 		if(target.items[0].category === global.CATEGORY_EXTRA) {
+	// 			this.emitMessage(target.items[0].description);
+	// 			return;
+	// 		}
+	// 		else if(target.items[0].category === global.CATEGORY_ITEM) {
+	// 			this.emitMessage("You look at " + target.items[0].shortDescription + ".");
+	// 			this.emitRoomMessage(this.name + " looks at " + target.items[0].shortDescription + ".");
+	// 			this.emitMessages(target.items[0].getDescription());
+	// 		}
+	// 		else if(target.items[0].category === global.CATEGORY_PLAYER || target.items[0].category === global.MOB) {
+	// 			this.lookAtCharacter(target.items[0]);
+	// 		}
+	// 		// Else what is it?
+	// 	}
+	// 	else {
+	// 		var exit = this.room.getExit(command.tokens[0]);
+			
+	// 		if(exit === null) {
+	// 			this.emitMessage("You do not see that here.");
+	// 		}
+	// 		else {
+	// 			this.emitMessage(this.lookInDirection(exit));
+	// 		}
+	// 	}
+	
+	}
+	else {
+		// output = this.lookInTarget(command.tokens[0]);
+	}
+	
+	return output;
+};
+
+// characterSchema.methods.lookInTarget = function(keyword) {
+// 	var result = [];
+	
+//     var targetList = this.inventory.concat(this.wearing).concat(this.room.contents);
+// 	var target = targetList.findByKeyword(keyword);
+	
+// 	if(target.items.length > 0) {
+// 		var targetItem = target.items[0];
+		
+// 		if(this.inventory.indexOf(targetItem) > -1) {
+// 			this.emitMessage(targetItem.shortDescription + " (carried): ");
+// 		}
+// 		else if(this.wearing.indexOf(targetItem) > -1) {
+// 			this.emitMessage(targetItem.shortDescription + " (worn): ");
+// 		}
+// 		else if(this.room.contents.indexOf(targetItem) > -1){
+// 			this.emitMessage(targetItem.shortDescription + " (here): ");
+// 		}
+		
+// 		this.emitMessages(targetItem.listContents());
+// 		this.emitRoomMessage(this.name + " looks in " + targetItem.shortDescription + ".");
+// 	}
+// 	else {
+// 		return this.emitMessage("You do not see that here.");	
+// 	}
+// };
+
+
 var characterModel = mongoose.model('character', characterSchema);
 
 module.exports = {

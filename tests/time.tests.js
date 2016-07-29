@@ -296,8 +296,6 @@ exports.time_getDisplayDateWorks_1 = function(test) {
 	currentTime.year = 2263;
 	var day = currentTime.getDisplayDate();
 	
-	console.log(day);
-	
 	test.equal("The 12th Day of May, Year 2263.", day);	
 	test.done();
 };

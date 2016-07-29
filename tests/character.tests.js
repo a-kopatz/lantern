@@ -4,7 +4,7 @@ var Exit = require("../room").exit;
 var Item = require('../item').item;
 var World = require('../world');
 
-// /////////////////////////////////////////////////
+/////////////////////////////////////////////////
 
 exports.character_getPersonalPronoun_worksForNeutral = function(test) {
     var myCharacter = new Character();
@@ -1277,5 +1277,13 @@ exports.character_lockDoorWorks = function(test) {
 // TODO: Test 'wear'
 
 // TODO: Test 'remove'
+
+
+
+
+///////////////////////////////////////////////////////////
+
+// TODO: Test 'look', which is the most complex command in the game....
+
 
 

@@ -113,7 +113,7 @@ var COMMAND_LIST = [
 //           { command: "kick"     , minimumPosition: global.POS_FIGHTING, functionPointer: do_kick       , minimumLevel: 0, subCommand: 0 },
           { command: "kiss"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_KISS },
 
-        //   { command: "look"     , minimumPosition: global.POS_RESTING , functionPointer: do_look       , minimumLevel: 0, subCommand: 0},
+          { command: "look"     , minimumPosition: global.POS_RESTING , functionPointer: do_look       , minimumLevel: 0, subCommand: 0},
           { command: "laugh"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_LAUGH },
           { command: "lick"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_LICK },
 //           { command: "list"     , minimumPosition: global.POS_RESTING , functionPointer: do_list       , minimumLevel: 0, subCommand: 0 },
@@ -617,6 +617,15 @@ function do_give(character, command) {
                 character.giveItem(command.tokens[0], command.tokens[2]);
             }
         }
+    }
+}
+
+function do_look(character, command) {
+    if(command.tokens.length === 0) {
+        character.room.showRoomToCharacter(character).emit();
+    }
+    else {
+        character.lookTarget(command).emit();
     }
 }
 

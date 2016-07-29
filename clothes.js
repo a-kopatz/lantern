@@ -8,6 +8,11 @@ var clothesSchema = itemSchema.extend({
 	maximumBmi: Number
 }, { collection : 'items' });
 
+clothesSchema.methods.getType = function() {
+	// 'item' is an abstract class
+	return global.ITEM_CLOTHES;
+};
+
 var clothesModel = mongoose.model('clothes', clothesSchema);
 
 module.exports = {
