@@ -1128,7 +1128,7 @@ characterSchema.methods.wearObject = function(object, location) {
 	if(this.wearing[location] === null || this.wearing[location] === undefined) {
 		this.wearing[location] = object;
 		this.inventory.splice(this.inventory.indexOf(object), 1);
-		messages = utility.wearMessage(object, location);
+		messages = utility.wearMessage(location);
 	}
 	else {
 		messages[0] = utility.alreadyWearing(location);
@@ -1153,8 +1153,8 @@ characterSchema.methods.wearItem = function(keyword) {
 		}
 		else {
 			var messages = this.wearObject(result.items[i], result.items[i].wearSlots[0]);
-			output.toActor.push( { text: messages[0] } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
 		}
 	}
 	
@@ -1174,8 +1174,8 @@ characterSchema.methods.wearItemAtLocation = function(keyword, location) {
 	for(var i = 0; i < result.items.length; i++) {
 		if(result.items[i].wearSlots.indexOf(location) > -1) {
 			var messages = this.wearObject(result.items[i], location);
-			output.toActor.push( { text: messages[0] } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
 		}
 		else {
 			output.toActor.push( { text: "You can't wear " + result.items[i].shortDescription + " there." } );

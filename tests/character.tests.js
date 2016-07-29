@@ -1318,8 +1318,8 @@ exports.character_wearObjectAsLightWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_LIGHT);
-    test.equal(result[0], "You light a torch and hold it.");
-    test.equal(result[1], "ACTOR_NAME lights a torch and holds it.");
+    test.equal(result[0], "You light FIRST_OBJECT_SHORTDESC and hold it.");
+    test.equal(result[1], "ACTOR_NAME lights FIRST_OBJECT_SHORTDESC and holds it.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_LIGHT], myItem);
     test.done();
@@ -1357,8 +1357,8 @@ exports.character_wearObjectAsRightRingWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_FINGER_R);
-    test.equal(result[0], "You slide a gold ring onto your right ring finger.");
-    test.equal(result[1], "ACTOR_NAME slides a gold ring onto ACTOR_PRONOUN_POSSESSIVE right ring finger.");
+    test.equal(result[0], "You slide FIRST_OBJECT_SHORTDESC onto your right ring finger.");
+    test.equal(result[1], "ACTOR_NAME slides FIRST_OBJECT_SHORTDESC onto ACTOR_PRONOUN_POSSESSIVE right ring finger.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_FINGER_R], myItem);
     test.done();
@@ -1376,8 +1376,8 @@ exports.character_wearObjectAsLeftRingWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_FINGER_L);
-    test.equal(result[0], "You slide a gold ring onto your left ring finger.");
-    test.equal(result[1], "ACTOR_NAME slides a gold ring onto ACTOR_PRONOUN_POSSESSIVE left ring finger.");
+    test.equal(result[0], "You slide FIRST_OBJECT_SHORTDESC onto your left ring finger.");
+    test.equal(result[1], "ACTOR_NAME slides FIRST_OBJECT_SHORTDESC onto ACTOR_PRONOUN_POSSESSIVE left ring finger.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_FINGER_L], myItem);
     test.done();
@@ -1450,8 +1450,8 @@ exports.character_wearObjectAsRightRingSwitchesWhenAlreadyWearing = function(tes
     actor.wearing[global.WEAR_FINGER_R] = myOtherItem2;
 
     var result = actor.wearObject(myItem, global.WEAR_FINGER_R);
-    test.equal(result[0], "You slide a gold ring onto your left ring finger.");
-    test.equal(result[1], "ACTOR_NAME slides a gold ring onto ACTOR_PRONOUN_POSSESSIVE left ring finger.");
+    test.equal(result[0], "You slide FIRST_OBJECT_SHORTDESC onto your left ring finger.");
+    test.equal(result[1], "ACTOR_NAME slides FIRST_OBJECT_SHORTDESC onto ACTOR_PRONOUN_POSSESSIVE left ring finger.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_FINGER_L], myItem);
     test.done();
@@ -1468,8 +1468,8 @@ exports.character_wearObjectAsNeck1Works = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_NECK_1);
-    test.equal(result[0], "You wear a silver pendant around your neck.");
-    test.equal(result[1], "ACTOR_NAME wears a silver pendant around ACTOR_PRONOUN_POSSESSIVE neck.");
+    test.equal(result[0], "You wear FIRST_OBJECT_SHORTDESC around your neck.");
+    test.equal(result[1], "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC around ACTOR_PRONOUN_POSSESSIVE neck.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_NECK_1], myItem);
     test.done();
@@ -1486,8 +1486,8 @@ exports.character_wearObjectAsNeck2Works = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_NECK_2);
-    test.equal(result[0], "You wear a silver pendant around your neck.");
-    test.equal(result[1], "ACTOR_NAME wears a silver pendant around ACTOR_PRONOUN_POSSESSIVE neck.");
+    test.equal(result[0], "You wear FIRST_OBJECT_SHORTDESC around your neck.");
+    test.equal(result[1], "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC around ACTOR_PRONOUN_POSSESSIVE neck.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_NECK_2], myItem);
     test.done();
@@ -1560,8 +1560,8 @@ exports.character_wearObjectAsNeck1SwitchesToNeck2WhenAlreadyWearing = function(
     actor.wearing[global.WEAR_NECK_1] = myOtherItem1;
 
     var result = actor.wearObject(myItem, global.WEAR_NECK_1);
-    test.equal(result[0], "You wear a silver pendant around your neck.");
-    test.equal(result[1], "ACTOR_NAME wears a silver pendant around ACTOR_PRONOUN_POSSESSIVE neck.");
+    test.equal(result[0], "You wear FIRST_OBJECT_SHORTDESC around your neck.");
+    test.equal(result[1], "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC around ACTOR_PRONOUN_POSSESSIVE neck.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_NECK_2], myItem);
     test.done();
@@ -1578,8 +1578,8 @@ exports.character_wearObjectOnBodyWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_BODY);
-    test.equal(result[0], "You wear some leather armor on your body.");
-    test.equal(result[1], "ACTOR_NAME wears some leather armor on ACTOR_PRONOUN_POSSESSIVE body.");
+    test.equal(result[0], "You wear FIRST_OBJECT_SHORTDESC on your body.");
+    test.equal(result[1], "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE body.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_BODY], myItem);
     test.done();
@@ -1617,8 +1617,8 @@ exports.character_wearObjectOnHeadWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_HEAD);
-    test.equal(result[0], "You wear a silly hat on your head.");
-    test.equal(result[1], "ACTOR_NAME wears a silly hat on ACTOR_PRONOUN_POSSESSIVE head.");
+    test.equal(result[0], "You wear FIRST_OBJECT_SHORTDESC on your head.");
+    test.equal(result[1], "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE head.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_HEAD], myItem);
     test.done();
@@ -1656,8 +1656,8 @@ exports.character_wearObjectOnLegsWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_LEGS);
-    test.equal(result[0], "You wear jeans on your legs.");
-    test.equal(result[1], "ACTOR_NAME wears jeans on ACTOR_PRONOUN_POSSESSIVE legs.");
+    test.equal(result[0], "You wear FIRST_OBJECT_SHORTDESC on your legs.");
+    test.equal(result[1], "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE legs.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_LEGS], myItem);
     test.done();
@@ -1695,8 +1695,8 @@ exports.character_wearObjectOnFeetWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_FEET);
-    test.equal(result[0], "You wear Air Jordans on your feet.");
-    test.equal(result[1], "ACTOR_NAME wears Air Jordans on ACTOR_PRONOUN_POSSESSIVE feet.");
+    test.equal(result[0], "You wear FIRST_OBJECT_SHORTDESC on your feet.");
+    test.equal(result[1], "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE feet.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_FEET], myItem);
     test.done();
@@ -1734,8 +1734,8 @@ exports.character_wearObjectOnHandsWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_HANDS);
-    test.equal(result[0], "You wear wooly mittens on your hands.");
-    test.equal(result[1], "ACTOR_NAME wears wooly mittens on ACTOR_PRONOUN_POSSESSIVE hands.");
+    test.equal(result[0], "You wear FIRST_OBJECT_SHORTDESC on your hands.");
+    test.equal(result[1], "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE hands.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_HANDS], myItem);
     test.done();
@@ -1773,8 +1773,8 @@ exports.character_wearObjectOnArmsWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_ARMS);
-    test.equal(result[0], "You wear leather sleeves on your arms.");
-    test.equal(result[1], "ACTOR_NAME wears leather sleeves on ACTOR_PRONOUN_POSSESSIVE arms.");
+    test.equal(result[0], "You wear FIRST_OBJECT_SHORTDESC on your arms.");
+    test.equal(result[1], "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE arms.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_ARMS], myItem);
     test.done();
@@ -1813,8 +1813,8 @@ exports.character_wearObjectAsShieldWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_SHIELD);
-    test.equal(result[0], "You start to use an iron shield as a shield.");
-    test.equal(result[1], "ACTOR_NAME straps an iron shield around ACTOR_PRONOUN_POSSESSIVE arm as a shield.");
+    test.equal(result[0], "You start to use FIRST_OBJECT_SHORTDESC as a shield.");
+    test.equal(result[1], "ACTOR_NAME straps FIRST_OBJECT_SHORTDESC around ACTOR_PRONOUN_POSSESSIVE arm as a shield.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_SHIELD], myItem);
     test.done();
@@ -1852,8 +1852,8 @@ exports.character_wearObjectAboutBodyWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_ABOUT);
-    test.equal(result[0], "You wear a cloak around your body.");
-    test.equal(result[1], "ACTOR_NAME wears a cloak about ACTOR_PRONOUN_POSSESSIVE body.");
+    test.equal(result[0], "You wear FIRST_OBJECT_SHORTDESC around your body.");
+    test.equal(result[1], "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC about ACTOR_PRONOUN_POSSESSIVE body.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_ABOUT], myItem);
     test.done();
@@ -1891,8 +1891,8 @@ exports.character_wearObjectAroundWaistWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_WAIST);
-    test.equal(result[0], "You wear Batman's Utility Belt around your waist.");
-    test.equal(result[1], "ACTOR_NAME wears Batman's Utility Belt around ACTOR_PRONOUN_POSSESSIVE waist.");
+    test.equal(result[0], "You wear FIRST_OBJECT_SHORTDESC around your waist.");
+    test.equal(result[1], "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC around ACTOR_PRONOUN_POSSESSIVE waist.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_WAIST], myItem);
     test.done();
@@ -1930,8 +1930,8 @@ exports.character_wearObjectOnRightWristWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_WRIST_R);
-    test.equal(result[0], "You wear a watch around your right wrist.");
-    test.equal(result[1], "ACTOR_NAME wears a watch around ACTOR_PRONOUN_POSSESSIVE right wrist.");
+    test.equal(result[0], "You wear FIRST_OBJECT_SHORTDESC around your right wrist.");
+    test.equal(result[1], "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC around ACTOR_PRONOUN_POSSESSIVE right wrist.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_WRIST_R], myItem);
     test.done();
@@ -1948,8 +1948,8 @@ exports.character_wearObjectOnLeftWristWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_WRIST_L);
-    test.equal(result[0], "You wear an ebony bracelet around your left wrist.");
-    test.equal(result[1], "ACTOR_NAME wears an ebony bracelet around ACTOR_PRONOUN_POSSESSIVE left wrist.");
+    test.equal(result[0], "You wear FIRST_OBJECT_SHORTDESC around your left wrist.");
+    test.equal(result[1], "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC around ACTOR_PRONOUN_POSSESSIVE left wrist.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_WRIST_L], myItem);
     test.done();
@@ -2022,8 +2022,8 @@ exports.character_wearObjectOnRightWristSwitchesWhenAlreadyWearing = function(te
     actor.wearing[global.WEAR_WRIST_R] = myOtherItem2;
     
     var result = actor.wearObject(myItem, global.WEAR_WRIST_R);
-    test.equal(result[0], "You wear a watch around your left wrist.");
-    test.equal(result[1], "ACTOR_NAME wears a watch around ACTOR_PRONOUN_POSSESSIVE left wrist.");
+    test.equal(result[0], "You wear FIRST_OBJECT_SHORTDESC around your left wrist.");
+    test.equal(result[1], "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC around ACTOR_PRONOUN_POSSESSIVE left wrist.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_WRIST_L], myItem);
     test.equal(actor.wearing[global.WEAR_WRIST_R], myOtherItem2);
@@ -2041,8 +2041,8 @@ exports.character_wearObjectWieldWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_WIELD);
-    test.equal(result[0], "You wield a huge friggin battleaxe.");
-    test.equal(result[1], "ACTOR_NAME wields a huge friggin battleaxe.");
+    test.equal(result[0], "You wield FIRST_OBJECT_SHORTDESC.");
+    test.equal(result[1], "ACTOR_NAME wields FIRST_OBJECT_SHORTDESC.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_WIELD], myItem);
     test.done();
@@ -2080,8 +2080,8 @@ exports.character_wearObjectHeldWorks = function(test) {
     actor.inventory.push(myItem);
     
     var result = actor.wearObject(myItem, global.WEAR_HOLD);
-    test.equal(result[0], "You grab a clear stone.");
-    test.equal(result[1], "ACTOR_NAME grabs a clear stone.");
+    test.equal(result[0], "You grab FIRST_OBJECT_SHORTDESC.");
+    test.equal(result[1], "ACTOR_NAME grabs FIRST_OBJECT_SHORTDESC.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_HOLD], myItem);
     test.done();
@@ -2121,8 +2121,8 @@ exports.character_wearItemWearsItem = function(test) {
     actor.inventory.push(hat);
 
     var output = actor.wearItem("hat");
-    test.equal(output.toActor[0].text, "You wear a hat on your head.");
-    test.equal(output.toRoom[0].textArray[0].text, "ACTOR_NAME wears a hat on ACTOR_PRONOUN_POSSESSIVE head.");
+    test.equal(output.toActor[0].text, "You wear FIRST_OBJECT_SHORTDESC on your head.");
+    test.equal(output.toRoom[0].textArray[0].text, "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE head.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_HEAD], hat);
     test.done();
@@ -2181,12 +2181,12 @@ exports.character_wearItemWearsAllItems = function(test) {
     actor.inventory.push(shirt);
 
     var output = actor.wearItem("all");
-    test.equal(output.toActor[0].text, "You wear a hat on your head.");
-    test.equal(output.toRoom[0].textArray[0].text, "ACTOR_NAME wears a hat on ACTOR_PRONOUN_POSSESSIVE head.");
-    test.equal(output.toActor[1].text, "You wear shoes on your feet.");
-    test.equal(output.toRoom[1].textArray[0].text, "ACTOR_NAME wears shoes on ACTOR_PRONOUN_POSSESSIVE feet.");
-    test.equal(output.toActor[2].text, "You wear a shirt on your body.");
-    test.equal(output.toRoom[2].textArray[0].text, "ACTOR_NAME wears a shirt on ACTOR_PRONOUN_POSSESSIVE body.");
+    test.equal(output.toActor[0].text, "You wear FIRST_OBJECT_SHORTDESC on your head.");
+    test.equal(output.toRoom[0].textArray[0].text, "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE head.");
+    test.equal(output.toActor[1].text, "You wear FIRST_OBJECT_SHORTDESC on your feet.");
+    test.equal(output.toRoom[1].textArray[0].text, "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE feet.");
+    test.equal(output.toActor[2].text, "You wear FIRST_OBJECT_SHORTDESC on your body.");
+    test.equal(output.toRoom[2].textArray[0].text, "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE body.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_HEAD], hat);
     test.equal(actor.wearing[global.WEAR_FEET], shoes);
