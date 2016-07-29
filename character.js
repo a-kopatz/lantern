@@ -1245,38 +1245,45 @@ characterSchema.methods.lookTarget = function(command) {
 	
 	}
 	else {
-		// output = this.lookInTarget(command.tokens[0]);
+		output = this.lookInTarget(command.tokens[0]);
 	}
 	
 	return output;
 };
 
-// characterSchema.methods.lookInTarget = function(keyword) {
-// 	var result = [];
+characterSchema.methods.lookInTarget = function(keyword) {
+	var output = new Output(this);
 	
-//     var targetList = this.inventory.concat(this.wearing).concat(this.room.contents);
-// 	var target = targetList.findByKeyword(keyword);
+    var targetList = this.inventory.concat(this.wearing).concat(this.room.contents);
+	var target = targetList.findByKeyword(keyword);
 	
-// 	if(target.items.length > 0) {
-// 		var targetItem = target.items[0];
+	if(target.items.length > 0) {
+		var targetItem = target.items[0];
 		
-// 		if(this.inventory.indexOf(targetItem) > -1) {
-// 			this.emitMessage(targetItem.shortDescription + " (carried): ");
-// 		}
-// 		else if(this.wearing.indexOf(targetItem) > -1) {
-// 			this.emitMessage(targetItem.shortDescription + " (worn): ");
-// 		}
-// 		else if(this.room.contents.indexOf(targetItem) > -1){
-// 			this.emitMessage(targetItem.shortDescription + " (here): ");
-// 		}
+		if(this.inventory.indexOf(targetItem) > -1) {
+			output.toActor.push( { text: targetItem.shortDescription + " (carried): " } );
+		}
+		else if(this.wearing.indexOf(targetItem) > -1) {
+			output.toActor.push( { text: targetItem.shortDescription + " (worn): " } );
+		}
+		else if(this.room.contents.indexOf(targetItem) > -1){
+			output.toActor.push( { text: targetItem.shortDescription + " (here): " } );
+		}
 		
-// 		this.emitMessages(targetItem.listContents());
-// 		this.emitRoomMessage(this.name + " looks in " + targetItem.shortDescription + ".");
-// 	}
-// 	else {
-// 		return this.emitMessage("You do not see that here.");	
-// 	}
-// };
+		var contentsList = targetItem.listContents();
+		
+		for(var i = 0; i < contentsList.length; i++) {
+			output.toActor.push( { text: contentsList[i] });
+		}
+		
+		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks in " + targetItem.shortDescription + "." } ] } );
+	}
+	else {
+		return output.toActor.push( { text: "You do not see that here." } );
+	}
+	
+	return output;
+};
 
 
 var characterModel = mongoose.model('character', characterSchema);

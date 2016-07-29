@@ -42,7 +42,7 @@ itemSchema.methods.listContents = function() {
  //   		break;
 
 	
-	messages.push( { text: "There's nothing inside that!" } );
+	messages.push("There's nothing inside that!");
 	
 	return messages;
 };

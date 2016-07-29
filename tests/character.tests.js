@@ -1285,5 +1285,66 @@ exports.character_lockDoorWorks = function(test) {
 
 // TODO: Test 'look', which is the most complex command in the game....
 
+exports.character_lookInTargetFindsCarried = function(test) {
+    var actor = new Character();
+    
+    var room = new Room();
+    room.id = 1;
 
+    room.addCharacter(actor);
+
+    var item = new Item();
+    item.keywords.push("duck");
+    item.shortDescription = "a gold duck";
+    actor.inventory.push(item);
+    
+    var result = actor.lookInTarget("duck");
+    
+    test.equal(result.toActor[0].text, "a gold duck (carried): ");
+    test.equal(result.toActor[1].text, "There's nothing inside that!");
+    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks in a gold duck.");
+    test.done();
+};
+
+exports.character_lookInTargetFindsWorn = function(test) {
+    var actor = new Character();
+    
+    var room = new Room();
+    room.id = 1;
+
+    room.addCharacter(actor);
+
+    var item = new Item();
+    item.keywords.push("vest");
+    item.shortDescription = "a filthy vest";
+    actor.wearing[global.WEAR_ARMS] = item;
+    
+    var result = actor.lookInTarget("vest");
+    
+    test.equal(result.toActor[0].text, "a filthy vest (worn): ");
+    test.equal(result.toActor[1].text, "There's nothing inside that!");
+    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks in a filthy vest.");
+    test.done();
+};
+
+exports.character_lookInTargetFindsInRoom = function(test) {
+    var actor = new Character();
+    
+    var room = new Room();
+    room.id = 1;
+
+    room.addCharacter(actor);
+
+    var item = new Item();
+    item.keywords.push("blob");
+    item.shortDescription = "a blob of crap";
+    room.contents.push(item);
+    
+    var result = actor.lookInTarget("blob");
+    
+    test.equal(result.toActor[0].text, "a blob of crap (here): ");
+    test.equal(result.toActor[1].text, "There's nothing inside that!");
+    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks in a blob of crap.");
+    test.done();
+};
 
