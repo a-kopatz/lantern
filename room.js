@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var schema = mongoose.Schema;
+var extra = require('./extra').schema;
 var arrayExtensions = require('./arrayExtensions');
 var constants = require('./constants');
 var utility = require("./utility");
@@ -35,11 +36,7 @@ var roomSchema = new schema({
 	players: [],
 	npcs: [],
 	contents: [],
-	extras: [{
-		description: String,
-	   	category: { type: Number, default: global.CATEGORY_EXTRA },
-		keywords: []
-	}]
+	extras: [ extra ]
 });
 
 roomSchema.methods.addItem = function(item) {

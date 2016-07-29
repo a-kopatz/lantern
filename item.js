@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var schema = mongoose.Schema;
 var constants = require("./constants");
+var extra = require('./extra').schema;
 
 var itemSchema = new schema({
     id: Number,
@@ -13,11 +14,7 @@ var itemSchema = new schema({
     canBeTaken: Boolean,
     type: String,
     cost: Number,
-	extras: [{
-		description: String,
-	   	category: { type: Number, default: global.CATEGORY_EXTRA },
-		keywords: []
-	}]
+	extras: [ extra ]
 });
 
 itemSchema.methods.getType = function() {
@@ -48,15 +45,11 @@ itemSchema.methods.listContents = function() {
 };
 
 itemSchema.methods.getShortDescription = function() {
-    var messages = [];
-    messages.push(this.shortDescription);
-    return messages;
+    return this.shortDescription;
 };
 
-itemSchema.methods.getLongDescription = function() {
-    var messages = [];
-    messages.push(this.longDescription);
-    return messages;
+itemSchema.methods.getDescription = function() {
+    return this.longDescription;
 };
 
 

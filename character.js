@@ -1233,9 +1233,9 @@ characterSchema.methods.lookTarget = function(command) {
 	// 		// Else what is it?
 	
 			output.toActor.push( { text: "You look at " + target.items[0].getShortDescription() + "." } );
-			output.toActor.push( { text: target.items[0].getLongDescription() } );
+			output.toActor.push( { text: target.items[0].getDescription() } );
 			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks at " + target.items[0].getShortDescription() + "." } ] } );
-			console.log(target.items[0]);
+			// console.log(target.items[0]);
 		}
 		else {
 			var exit = this.room.getExit(command.tokens[0]);
