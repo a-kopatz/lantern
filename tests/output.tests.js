@@ -2,6 +2,7 @@ var Output = require('../output');
 var Character = require("../character").character;
 var Room = require("../room").room;
 var World = require("../world");
+var Item = require("../item").item;
 var constants = require('../constants');
 
 exports.output_formatReplacesActorName = function(test) {
@@ -97,6 +98,48 @@ exports.output_formatReplacesTargetSubject = function(test) {
     test.done();
 };
 
+exports.output_formatReplacesFirstObjectShortDescription = function(test) {
+    var actor = new Character();
+    actor.name = "Erik";
+    
+    var item = new Item();
+    item.shortDescription = "a cheesesteak sandwich";
+    
+    var output = new Output(actor);
+    output.firstObject = item;
+
+    var target = new Character();
+    target.gender = global.GENDER_FEMALE;
+    output.target = target;    
+    
+    var returnMessage = output.format("ACTOR_NAME eats FIRST_OBJECT_SHORTDESC.", null);
+    test.equal(returnMessage, "Erik eats a cheesesteak sandwich.");
+    test.done();
+};
+
+exports.output_formatReplacesFirstAndSecondObjectShortDescriptions = function(test) {
+    var actor = new Character();
+    actor.name = "Ricky Bobby";
+    
+    var item1 = new Item();
+    item1.shortDescription = "a broken watch";
+
+    var item2 = new Item();
+    item2.shortDescription = "a bag";
+    
+    var output = new Output(actor);
+    output.firstObject = item1;
+    output.secondObject = item2;
+
+    var target = new Character();
+    target.gender = global.GENDER_FEMALE;
+    output.target = target;    
+    
+    var returnMessage = output.format("ACTOR_NAME puts FIRST_OBJECT_SHORTDESC into SECOND_OBJECT_SHORTDESC.", null);
+    test.equal(returnMessage, "Ricky Bobby puts a broken watch into a bag.");
+    test.done();
+};
+
 exports.output_emitSendsMessageToActor = function(test) {
     var actor = new Character();
     var output = new Output(actor);
@@ -108,12 +151,7 @@ exports.output_emitSendsMessageToActor = function(test) {
     test.done();
 };
 
-
-
-
-
-// TODO: Rename this test
-exports.output_blah = function(test) {
+exports.output_generatesCompleteExpectedOutput = function(test) {
     var actor = new Character();
     actor.name = 'Actur';
     actor.gender = global.GENDER_MALE;

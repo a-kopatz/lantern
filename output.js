@@ -2,6 +2,8 @@
 function Output(actor) {
     this.actor = actor;
     this.target = null;
+    this.firstObject = null;
+    this.secondObject = null;
     
     this.toActor = [];
     this.toTarget = [];
@@ -27,6 +29,14 @@ Output.prototype.format = function(text, textTarget) {
             .replace(/TARGET_PRONOUN_POSSESSIVE/g, this.target.getPossessivePronoun())
             .replace(/TARGET_PRONOUN_OBJECT/g, this.target.getObjectPronoun())
             .replace(/TARGET_PRONOUN_SUBJECT/g, this.target.getPersonalPronoun());
+    }
+    
+    if(this.firstObject !== null) {
+        returnMessage = returnMessage.replace(/FIRST_OBJECT_SHORTDESC/g, this.firstObject.getShortDescription());
+    }
+    
+    if(this.secondObject !== null) {
+        returnMessage = returnMessage.replace(/SECOND_OBJECT_SHORTDESC/g, this.secondObject.getShortDescription());
     }
 
     return returnMessage;
