@@ -18,6 +18,15 @@ var exitSchema = new schema({
 	toRoomId: Number
 });
 
+exitSchema.methods.getDescription = function() {
+	if(this.description.length > 0) {
+		return this.description;
+	}
+	else {
+		return "You see nothing special in that direction.";
+	}
+};
+
 var roomSchema = new schema({
 	id: Number,
 	title: String,

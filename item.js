@@ -47,6 +47,19 @@ itemSchema.methods.listContents = function() {
 	return messages;
 };
 
+itemSchema.methods.getShortDescription = function() {
+    var messages = [];
+    messages.push(this.shortDescription);
+    return messages;
+};
+
+itemSchema.methods.getLongDescription = function() {
+    var messages = [];
+    messages.push(this.longDescription);
+    return messages;
+};
+
+
 function load(id, item, commands, world, previousThing, instructionNumber, callback) {
 	itemModel.find({id: id}, function(err, docs) {
 		console.log(err);

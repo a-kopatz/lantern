@@ -1210,14 +1210,14 @@ characterSchema.methods.lookTarget = function(command) {
 	var output = new Output(this);
 	
 	if(command.allTokens[0] !== "in") {
-	// 	var targetList = this.room.players.concat(this.room.mobs).concat(this.inventory)
-	// 		.concat(this.wearing).concat(this.room.contents).concat(this.room.extras)
-	// 		.concat(this.getWornExtras()).concat(this.getInventoryExtras())
-	// 		.concat(this.room.getContentsExtras());
+		var targetList = this.room.players.concat(this.room.mobs).concat(this.inventory)
+			.concat(this.wearing).concat(this.room.contents).concat(this.room.extras)
+			.concat(this.getWornExtras()).concat(this.getInventoryExtras())
+			.concat(this.room.getContentsExtras());
 		
-	// 	var target = targetList.findByKeyword(command.tokens[0]);
+		var target = targetList.findByKeyword(command.tokens[0]);
 		
-	// 	if(target.items.length > 0) {
+		if(target.items.length > 0) {
 	// 		if(target.items[0].category === global.CATEGORY_EXTRA) {
 	// 			this.emitMessage(target.items[0].description);
 	// 			return;
@@ -1231,18 +1231,22 @@ characterSchema.methods.lookTarget = function(command) {
 	// 			this.lookAtCharacter(target.items[0]);
 	// 		}
 	// 		// Else what is it?
-	// 	}
-	// 	else {
-	// 		var exit = this.room.getExit(command.tokens[0]);
-			
-	// 		if(exit === null) {
-	// 			this.emitMessage("You do not see that here.");
-	// 		}
-	// 		else {
-	// 			this.emitMessage(this.lookInDirection(exit));
-	// 		}
-	// 	}
 	
+			output.toActor.push( { text: "You look at " + target.items[0].getShortDescription() + "." } );
+			output.toActor.push( { text: target.items[0].getLongDescription() } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks at " + target.items[0].getShortDescription() + "." } ] } );
+			console.log(target.items[0]);
+		}
+		else {
+			var exit = this.room.getExit(command.tokens[0]);
+			
+			if(exit === null) {
+				output.toActor.push( { text: "You do not see that here." } );
+			}
+			else {
+				output.toActor.push( { text: exit.getDescription() } );
+			}
+		}
 	}
 	else {
 		output = this.lookInTarget(command.tokens[0]);
@@ -1285,6 +1289,31 @@ characterSchema.methods.lookInTarget = function(keyword) {
 	return output;
 };
 
+characterSchema.methods.getWornExtras = function() {
+	var result = [];
+	
+	for(var i = 0; i < this.wearing.length; i++) {
+		if(this.wearing[i] !== null && this.wearing[i] !== undefined) {
+			for(var j = 0; j < this.wearing[i].extras.length; j++) {
+				result.push(this.wearing[i].extras[j]);
+			}
+		}
+	}
+	
+	return result;
+};
+
+characterSchema.methods.getInventoryExtras = function() {
+	var result = [];
+	
+	for(var i = 0; i < this.inventory.length; i++) {
+		for(var j = 0; j < this.inventory[i].extras.length; j++) {
+			result.push(this.inventory[i].extras[j]);
+		}
+	}
+	
+	return result;
+};
 
 var characterModel = mongoose.model('character', characterSchema);
 

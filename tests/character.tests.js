@@ -1285,6 +1285,90 @@ exports.character_lockDoorWorks = function(test) {
 
 // TODO: Test 'look', which is the most complex command in the game....
 
+exports.character_lookTargetReturnsErrorWhenNothingFound = function(test) {
+    var actor = new Character();
+    actor.keywords = [];
+    
+    var room = new Room();
+    room.id = 1;
+
+    room.addCharacter(actor);
+    
+    // Player typed 'look at monkey'
+    var result = actor.lookTarget( { tokens: [ "monkey" ], allTokens: [ "look", "at", "monkey" ] } );
+    test.equal(result.toActor[0].text, "You do not see that here.");
+    test.done();
+};
+
+exports.character_lookTargetReturnsObjectDescriptionsWhenWorn = function(test) {
+    var actor = new Character();
+    actor.keywords = [];
+    
+    var room = new Room();
+    room.id = 1;
+
+    room.addCharacter(actor);
+    
+    var item = new Item();
+    item.keywords.push("chain");
+    item.shortDescription = "a gold chain";
+    item.longDescription = "It's a chain made of gold.  Duh.";
+    actor.wearing[global.WEAR_NECK_1] = item;
+    
+    // Player typed 'look at chain'
+    var result = actor.lookTarget( { tokens: [ "chain" ], allTokens: [ "look", "at", "chain" ] } );
+    test.equal(result.toActor[0].text, "You look at a gold chain.");
+    test.equal(result.toActor[1].text, "It's a chain made of gold.  Duh.");
+    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks at a gold chain.");
+    test.done();
+};
+
+exports.character_lookTargetReturnsObjectDescriptionsWhenWorn = function(test) {
+    var actor = new Character();
+    actor.keywords = [];
+    
+    var room = new Room();
+    room.id = 1;
+
+    room.addCharacter(actor);
+    
+    var item = new Item();
+    item.keywords.push("chain");
+    item.shortDescription = "a gold chain";
+    item.longDescription = "It's a chain made of gold.  Duh.";
+    actor.inventory.push(item);
+    
+    // Player typed 'look at chain'
+    var result = actor.lookTarget( { tokens: [ "chain" ], allTokens: [ "look", "at", "chain" ] } );
+    test.equal(result.toActor[0].text, "You look at a gold chain.");
+    test.equal(result.toActor[1].text, "It's a chain made of gold.  Duh.");
+    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks at a gold chain.");
+    test.done();
+};
+
+exports.character_lookTargetReturnsObjectDescriptionsWhenInRoom = function(test) {
+    var actor = new Character();
+    actor.keywords = [];
+    
+    var room = new Room();
+    room.id = 1;
+
+    room.addCharacter(actor);
+    
+    var item = new Item();
+    item.keywords.push("chain");
+    item.shortDescription = "a gold chain";
+    item.longDescription = "It's a chain made of gold.  Duh.";
+    room.contents.push(item);
+    
+    // Player typed 'look at chain'
+    var result = actor.lookTarget( { tokens: [ "chain" ], allTokens: [ "look", "at", "chain" ] } );
+    test.equal(result.toActor[0].text, "You look at a gold chain.");
+    test.equal(result.toActor[1].text, "It's a chain made of gold.  Duh.");
+    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks at a gold chain.");
+    test.done();
+};
+
 exports.character_lookInTargetFindsCarried = function(test) {
     var actor = new Character();
     
