@@ -729,8 +729,8 @@ characterSchema.methods.donateItem = function(keyword) {
 characterSchema.methods.eatObject = function(object) {
 	var messages = [];
 
-	messages[0] = "You eat " + object.shortDescription + ".";
-	messages[1] = "ACTOR_NAME eats " + object.shortDescription + ".";
+	messages[0] = "You eat FIRST_OBJECT_SHORTDESC.";
+	messages[1] = "ACTOR_NAME eats FIRST_OBJECT_SHORTDESC.";
 
 	if(!this.isNpc()) {
 		this.caloriesConsumed[0] = this.caloriesConsumed[0] + object.calories;
@@ -763,8 +763,8 @@ characterSchema.methods.eatItem = function(keyword) {
 		}
 		else {
 			var messages = this.eatObject(result.items[i]);
-			output.toActor.push( { text: messages[0] } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
 		}
 	}
 

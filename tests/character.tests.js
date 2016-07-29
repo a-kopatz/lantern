@@ -772,8 +772,10 @@ exports.character_eatItemRemovesItemFromInventory = function(test) {
 
     var actual = actor.eatItem('donut');
 
-    test.equal(actual.toActor[0].text, "You eat a cream-filled donut.");
-    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME eats a cream-filled donut.");
+    test.equal(actual.toActor[0].text, "You eat FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toActor[0].items[0], donut);
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME eats FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toRoom[0].textArray[0].items[0], donut);
     test.equal(actor.inventory.length, 0);
     test.done();
 };
