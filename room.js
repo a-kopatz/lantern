@@ -20,12 +20,16 @@ var exitSchema = new schema({
 });
 
 exitSchema.methods.getDescription = function() {
+	var result = [];
+	
 	if(this.description.length > 0) {
-		return this.description;
+		result.push(this.description);
 	}
 	else {
-		return "You see nothing special in that direction.";
+		result.push("You see nothing special in that direction.");
 	}
+	
+	return result;
 };
 
 var roomSchema = new schema({

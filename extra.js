@@ -12,7 +12,9 @@ extraSchema.methods.getShortDescription = function() {
 };
 
 extraSchema.methods.getDescription = function() {
-    return this.longDescription;
+    var result = [];
+    result.push(this.longDescription);
+    return result;
 };
 
 var extraModel = mongoose.model('extra', extraSchema);

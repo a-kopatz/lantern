@@ -143,6 +143,18 @@ characterSchema.methods.getBMI = function() {
 	return Math.floor((this.weight / (this.height * this.height)) * 703);
 };
 
+characterSchema.methods.getDescription = function() {
+	var result = [];
+	
+	for(var i = 0; i < global.MAX_WEARS; i++) {
+		if(this.wearing[i] !== null && this.wearing[i] !== undefined) {
+			result.push(global.WEAR_WHERE[i] + this.wearing[i].shortDescription);
+		}
+	}
+	
+	return result;
+};
+
 characterSchema.methods.move = function(direction) {
 	var output = new Output(this);
 
@@ -1218,24 +1230,14 @@ characterSchema.methods.lookTarget = function(command) {
 		var target = targetList.findByKeyword(command.tokens[0]);
 		
 		if(target.items.length > 0) {
-	// 		if(target.items[0].category === global.CATEGORY_EXTRA) {
-	// 			this.emitMessage(target.items[0].description);
-	// 			return;
-	// 		}
-	// 		else if(target.items[0].category === global.CATEGORY_ITEM) {
-	// 			this.emitMessage("You look at " + target.items[0].shortDescription + ".");
-	// 			this.emitRoomMessage(this.name + " looks at " + target.items[0].shortDescription + ".");
-	// 			this.emitMessages(target.items[0].getDescription());
-	// 		}
-	// 		else if(target.items[0].category === global.CATEGORY_PLAYER || target.items[0].category === global.MOB) {
-	// 			this.lookAtCharacter(target.items[0]);
-	// 		}
-	// 		// Else what is it?
-	
 			output.toActor.push( { text: "You look at " + target.items[0].getShortDescription() + "." } );
-			output.toActor.push( { text: target.items[0].getDescription() } );
+			
+			var descriptionArray = target.items[0].getDescription();
+			for(var i = 0; i < descriptionArray.length; i++) {
+				output.toActor.push( { text: descriptionArray[i] } );
+			}
+			
 			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks at " + target.items[0].getShortDescription() + "." } ] } );
-			// console.log(target.items[0]);
 		}
 		else {
 			var exit = this.room.getExit(command.tokens[0]);
@@ -1244,7 +1246,7 @@ characterSchema.methods.lookTarget = function(command) {
 				output.toActor.push( { text: "You do not see that here." } );
 			}
 			else {
-				output.toActor.push( { text: exit.getDescription() } );
+				// output.toActor.push( { text: exit.getDescription() } );
 			}
 		}
 	}

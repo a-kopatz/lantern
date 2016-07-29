@@ -80,10 +80,6 @@ playerSchema.methods.getShortDescription = function() {
 	return this.name + " " + this.title;
 };
 
-playerSchema.methods.getDescription = function() {
-	return "TODO: Not implemented.";
-};
-
 playerSchema.methods.toggle = function(mode, property, trueMessage, falseMessage) {
 	var toggle = false;
 	

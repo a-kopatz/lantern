@@ -1432,3 +1432,219 @@ exports.character_lookInTargetFindsInRoom = function(test) {
     test.done();
 };
 
+
+exports.character_getDescriptionReturnsWearingLight = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "a torch";
+    char.wearing[global.WEAR_LIGHT] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <used as light>      a torch");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingRightFinger = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "a sapphire ring";
+    char.wearing[global.WEAR_FINGER_R] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn on finger>     a sapphire ring");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingLeftFinger = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "a ruby ring";
+    char.wearing[global.WEAR_FINGER_L] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn on finger>     a ruby ring");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingNeck1 = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "a jade pendant";
+    char.wearing[global.WEAR_NECK_1] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn around neck>   a jade pendant");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingNeck2 = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "an emerald pendant";
+    char.wearing[global.WEAR_NECK_2] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn around neck>   an emerald pendant");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingBody = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "leather armor";
+    char.wearing[global.WEAR_BODY] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn on body>       leather armor");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingHead = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "the Helm of Ursula";
+    char.wearing[global.WEAR_HEAD] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn on head>       the Helm of Ursula");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingLegs = function(test) {
+    var char = new Character();
+    
+    var item = new Item();
+    item.shortDescription = "Dragonscale Leggings";
+    char.wearing[global.WEAR_LEGS] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn on legs>       Dragonscale Leggings");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingFeet = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "some iron boots";
+    char.wearing[global.WEAR_FEET] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn on feet>       some iron boots");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingHands = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "Swordsman's Gloves";
+    char.wearing[global.WEAR_HANDS] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn on hands>      Swordsman's Gloves");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingArms = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "the blood of your victims";
+    char.wearing[global.WEAR_ARMS] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn on arms>       the blood of your victims");
+    test.done();
+};
+
+exports.character_lookAtCharacterReturnsWearingShield = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "a wooden plank";
+    char.wearing[global.WEAR_SHIELD] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn as shield>     a wooden plank");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingAboutBody = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "The Cloak of Doom";
+    char.wearing[global.WEAR_ABOUT] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn about body>    The Cloak of Doom");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingWaist = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "The Cloak of Doom";
+    char.wearing[global.WEAR_WAIST] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn about waist>   The Cloak of Doom");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingWristR = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "a diamond bracelet";
+    char.wearing[global.WEAR_WRIST_R] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn around wrist>  a diamond bracelet");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingWristL = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "a zirconium bracelet";
+    char.wearing[global.WEAR_WRIST_L] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <worn around wrist>  a zirconium bracelet");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingWield = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "Thor's Hammer";
+    char.wearing[global.WEAR_WIELD] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <wielded>            Thor's Hammer");
+    test.done();
+};
+
+exports.character_getDescriptionReturnsWearingHold = function(test) {
+    var char = new Character();
+
+    var item = new Item();
+    item.shortDescription = "a Sapphire Dragonscale";
+    char.wearing[global.WEAR_HOLD] = item;
+
+    var result = char.getDescription();
+    test.equal(result[0], "  <held>               a Sapphire Dragonscale");
+    test.done();
+};

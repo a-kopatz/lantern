@@ -49,7 +49,9 @@ itemSchema.methods.getShortDescription = function() {
 };
 
 itemSchema.methods.getDescription = function() {
-    return this.longDescription;
+    var result = [];
+    result.push(this.longDescription);
+    return result;
 };
 
 
