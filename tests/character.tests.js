@@ -610,8 +610,10 @@ exports.character_dropItemAddsToRoomInventory = function(test) {
     actor.inventory.push(gloves);
     
     var actual = actor.dropItem('gloves');
-    test.equal(actual.toActor[0].text, "You drop a pair of gloves.");
-    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME drops a pair of gloves.");
+    test.equal(actual.toActor[0].text, "You drop FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toActor[0].items[0], gloves);
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME drops FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toRoom[0].textArray[0].items[0], gloves);
     test.equal(actor.inventory.length, 0);
     test.equal(room.contents.length, 1);
     test.equal(room.contents[0], gloves);
@@ -645,10 +647,14 @@ exports.character_dropAllDotItemAddsToRoomContents = function(test) {
     
     var actual = actor.dropItem('all.gloves');
     
-    test.equal(actual.toActor[0].text, "You drop a pair of blue gloves.");
-    test.equal(actual.toActor[1].text, "You drop a pair of black gloves.");
-    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME drops a pair of blue gloves.");
-    test.equal(actual.toRoom[1].textArray[0].text, "ACTOR_NAME drops a pair of black gloves.");
+    test.equal(actual.toActor[0].text, "You drop FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toActor[0].items[0], gloves1);
+    test.equal(actual.toActor[1].text, "You drop FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toActor[1].items[0], gloves2);
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME drops FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toRoom[0].textArray[0].items[0], gloves1);
+    test.equal(actual.toRoom[1].textArray[0].text, "ACTOR_NAME drops FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toRoom[1].textArray[0].items[0], gloves2);
     test.equal(actor.inventory.length, 1);
     test.equal(actor.inventory[0], pizza);
     test.equal(room.contents.length, 2);
@@ -684,12 +690,18 @@ exports.character_dropAllDropsEverythingToRoom = function(test) {
     
     var actual = actor.dropItem('all');
     
-    test.equal(actual.toActor[0].text, "You drop a pair of blue gloves.");
-    test.equal(actual.toActor[1].text, "You drop a pair of black gloves.");
-    test.equal(actual.toActor[2].text, "You drop a cheese pizza.");
-    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME drops a pair of blue gloves.");
-    test.equal(actual.toRoom[1].textArray[0].text, "ACTOR_NAME drops a pair of black gloves.");
-    test.equal(actual.toRoom[2].textArray[0].text, "ACTOR_NAME drops a cheese pizza.");
+    test.equal(actual.toActor[0].text, "You drop FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toActor[0].items[0], gloves1);
+    test.equal(actual.toActor[1].text, "You drop FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toActor[1].items[0], gloves2);
+    test.equal(actual.toActor[2].text, "You drop FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toActor[2].items[0], pizza);
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME drops FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toRoom[0].textArray[0].items[0], gloves1);
+    test.equal(actual.toRoom[1].textArray[0].text, "ACTOR_NAME drops FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toRoom[1].textArray[0].items[0], gloves2);
+    test.equal(actual.toRoom[2].textArray[0].text, "ACTOR_NAME drops FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toRoom[2].textArray[0].items[0], pizza);
     test.equal(actor.inventory.length, 0);
     test.equal(room.contents.length, 3);
     test.equal(room.contents[0], gloves1);

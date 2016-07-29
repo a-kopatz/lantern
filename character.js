@@ -627,8 +627,8 @@ characterSchema.methods.dropObject = function(object) {
 
 	this.inventory.splice(this.inventory.indexOf(object), 1);
 	this.room.addItem(object);
-	messages[0] = "You drop " + object.shortDescription + ".";
-	messages[1] = "ACTOR_NAME drops " + object.shortDescription + ".";
+	messages[0] = "You drop FIRST_OBJECT_SHORTDESC.";
+	messages[1] = "ACTOR_NAME drops FIRST_OBJECT_SHORTDESC.";
 	
 	return messages;
 };
@@ -638,8 +638,8 @@ characterSchema.methods.junkObject = function(object) {
 	
 	this.inventory.splice(this.inventory.indexOf(object), 1);
 	this.world.removeItem(object);
-	messages[0] = "You junk " + object.shortDescription + ".";
-	messages[1] = "ACTOR_NAME junks " + object.shortDescription + ".";
+	messages[0] = "You junk FIRST_OBJECT_SHORTDESC.";
+	messages[1] = "ACTOR_NAME junks FIRST_OBJECT_SHORTDESC.";
 	return messages;
 };
 
@@ -649,15 +649,15 @@ characterSchema.methods.donateObject = function(object) {
 	var messages = [];
 	
 	this.inventory.splice(this.inventory.indexOf(object), 1);
-	messages[0] = "You donate " + object.shortDescription + ".\n\rIt vanishes in a puff of smoke!";
-	messages[1] = "ACTOR_NAME donates " + object.shortDescription + ".\n\rIt vanishes in a puff of smoke!";
+	messages[0] = "You donate FIRST_OBJECT_SHORTDESC.\n\rIt vanishes in a puff of smoke!";
+	messages[1] = "ACTOR_NAME donates FIRST_OBJECT_SHORTDESC.\n\rIt vanishes in a puff of smoke!";
 
 	var donationRoom = this.world.getRoom(global.DONATION_ROOM);
 	
 	if(donationRoom !== null) {
 		donationRoom.addItem(object);
 		
-		messages[2] = object.shortDescription + " appears in a puff of smoke!";
+		messages[2] = "FIRST_OBJECT_SHORTDESC appears in a puff of smoke!";
 	}
 	
 	return messages;
@@ -676,8 +676,8 @@ characterSchema.methods.dropItem = function(keyword) {
 
 	for(var i = 0; i < result.items.length; i++) {
 		var messages = this.dropObject(result.items[i]);
-		output.toActor.push( { text: messages[0] } );
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+		output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
 	}
 	
 	return output;
@@ -694,8 +694,8 @@ characterSchema.methods.junkItem = function(keyword) {
 	
 	for(var i = 0; i < result.items.length; i++) {
 		var messages = this.junkObject(result.items[i]);
-		output.toActor.push( { text: messages[0] });
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+		output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
 	}
 	
 	return output;
@@ -713,9 +713,9 @@ characterSchema.methods.donateItem = function(keyword) {
 	for(var i = 0; i < result.items.length; i++) {
 		if(result.items[i].canBeDonated === true) {
 			var messages = this.donateObject(result.items[i]);
-			output.toActor.push( { text: messages[0] });
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
-			output.toRoom.push( { roomId: global.DONATION_ROOM, textArray: [ { text: messages[2] } ] } );
+			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
+			output.toRoom.push( { roomId: global.DONATION_ROOM, textArray: [ { text: messages[2], items: [ result.items[i] ] } ] } );
 		}
 		else {
 			output.toActor.push( { text: result.items[i].shortDescription + " can't be donated!" } );
