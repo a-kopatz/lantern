@@ -133,72 +133,72 @@ function wearMessage(object, location) {
 	switch(location) {
 		case 0:
 			messages[0] = "You light " + object.shortDescription + " and hold it.";
-			messages[1] = "ACTOR NAME lights " + object.shortDescription + " and holds it.";
+			messages[1] = "ACTOR_NAME lights " + object.shortDescription + " and holds it.";
 			break;
 		case 1:
 			messages[0] = "You slide " + object.shortDescription + " onto your right ring finger.";
-			messages[1] = "ACTOR NAME slides " + object.shortDescription + " onto ACTOR_PRONOUN_POSSESSIVE right ring finger.";
+			messages[1] = "ACTOR_NAME slides " + object.shortDescription + " onto ACTOR_PRONOUN_POSSESSIVE right ring finger.";
 			break;
 		case 2:
 			messages[0] = "You slide " + object.shortDescription + " onto your left ring finger.";
-			messages[1] = "ACTOR NAME slides " + object.shortDescription + " onto ACTOR_PRONOUN_POSSESSIVE left ring finger.";
+			messages[1] = "ACTOR_NAME slides " + object.shortDescription + " onto ACTOR_PRONOUN_POSSESSIVE left ring finger.";
 			break;
 		case 3:
 		case 4:
 			messages[0] = "You wear " + object.shortDescription + " around your neck.";
-			messages[1] = "ACTOR NAME wears " + object.shortDescription + " around ACTOR_PRONOUN_POSSESSIVE neck.";
+			messages[1] = "ACTOR_NAME wears " + object.shortDescription + " around ACTOR_PRONOUN_POSSESSIVE neck.";
 			break;
 		case 5:
 			messages[0] = "You wear " + object.shortDescription + " on your body.";
-			messages[1] = "ACTOR NAME wears " + object.shortDescription + " on ACTOR_PRONOUN_POSSESSIVE body.";
+			messages[1] = "ACTOR_NAME wears " + object.shortDescription + " on ACTOR_PRONOUN_POSSESSIVE body.";
 			break;
 		case 6:
 			messages[0] = "You wear " + object.shortDescription + " on your head.";
-			messages[1] = "ACTOR NAME wears " + object.shortDescription + " on ACTOR_PRONOUN_POSSESSIVE head.";
+			messages[1] = "ACTOR_NAME wears " + object.shortDescription + " on ACTOR_PRONOUN_POSSESSIVE head.";
 			break;
 		case 7:
 			messages[0] = "You wear " + object.shortDescription + " on your legs.";
-			messages[1] = "ACTOR NAME wears " + object.shortDescription + " on ACTOR_PRONOUN_POSSESSIVE legs.";
+			messages[1] = "ACTOR_NAME wears " + object.shortDescription + " on ACTOR_PRONOUN_POSSESSIVE legs.";
 			break;
 		case 8:
 			messages[0] = "You wear " + object.shortDescription + " on your feet.";
-			messages[1] = "ACTOR NAME wears " + object.shortDescription + " on ACTOR_PRONOUN_POSSESSIVE feet.";
+			messages[1] = "ACTOR_NAME wears " + object.shortDescription + " on ACTOR_PRONOUN_POSSESSIVE feet.";
 			break;
 		case 9:
 			messages[0] = "You wear " + object.shortDescription + " on your hands.";
-			messages[1] = "ACTOR NAME wears " + object.shortDescription + " on ACTOR_PRONOUN_POSSESSIVE hands.";
+			messages[1] = "ACTOR_NAME wears " + object.shortDescription + " on ACTOR_PRONOUN_POSSESSIVE hands.";
 			break;
 		case 10:
 			messages[0] = "You wear " + object.shortDescription + " on your arms.";
-			messages[1] = "ACTOR NAME wears " + object.shortDescription + " on ACTOR_PRONOUN_POSSESSIVE arms.";
+			messages[1] = "ACTOR_NAME wears " + object.shortDescription + " on ACTOR_PRONOUN_POSSESSIVE arms.";
 			break;
 		case 11:
 			messages[0] = "You start to use " + object.shortDescription + " as a shield.";
-			messages[1] = "ACTOR NAME straps " + object.shortDescription + " around ACTOR_PRONOUN_POSSESSIVE arm as a shield.";
+			messages[1] = "ACTOR_NAME straps " + object.shortDescription + " around ACTOR_PRONOUN_POSSESSIVE arm as a shield.";
 			break;
 		case 12:
 			messages[0] = "You wear " + object.shortDescription + " around your body.";
-			messages[1] = "ACTOR NAME wears " + object.shortDescription + " about ACTOR_PRONOUN_POSSESSIVE body.";
+			messages[1] = "ACTOR_NAME wears " + object.shortDescription + " about ACTOR_PRONOUN_POSSESSIVE body.";
 			break;
 		case 13:
 			messages[0] = "You wear " + object.shortDescription + " around your waist.";
-			messages[1] = "ACTOR NAME wears " + object.shortDescription + " around ACTOR_PRONOUN_POSSESSIVE waist.";
+			messages[1] = "ACTOR_NAME wears " + object.shortDescription + " around ACTOR_PRONOUN_POSSESSIVE waist.";
 			break;
 		case 14:
 			messages[0] = "You wear " + object.shortDescription + " around your right wrist.";
-			messages[1] = "ACTOR NAME wears " + object.shortDescription + " around ACTOR_PRONOUN_POSSESSIVE right wrist.";
+			messages[1] = "ACTOR_NAME wears " + object.shortDescription + " around ACTOR_PRONOUN_POSSESSIVE right wrist.";
 			break;
 		case 15:
 			messages[0] = "You wear " + object.shortDescription + " around your left wrist.";
-			messages[1] = "ACTOR NAME wears " + object.shortDescription + " around ACTOR_PRONOUN_POSSESSIVE left wrist.";
+			messages[1] = "ACTOR_NAME wears " + object.shortDescription + " around ACTOR_PRONOUN_POSSESSIVE left wrist.";
 			break;
 		case 16:
 			messages[0] = "You wield " + object.shortDescription + ".";
-			messages[1] = "ACTOR NAME wields " + object.shortDescription + ".";
+			messages[1] = "ACTOR_NAME wields " + object.shortDescription + ".";
 			break;
 		case 17:
 			messages[0] = "You grab " + object.shortDescription + ".";
-			messages[1] = "ACTOR NAME grabs " + object.shortDescription + ".";
+			messages[1] = "ACTOR_NAME grabs " + object.shortDescription + ".";
 			break;
 	}
 	
