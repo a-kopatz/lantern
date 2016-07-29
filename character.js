@@ -873,9 +873,9 @@ characterSchema.methods.eatItem = function(keyword) {
 characterSchema.methods.giveObject = function(object, target) {
 	var messages = [];
 	
-	messages[0] = "You give " + object.shortDescription + " to TARGET_NAME.";
-	messages[1] = "ACTOR_NAME gives you " + object.shortDescription + ".";
-	messages[2] = "ACTOR_NAME gives " + object.shortDescription + " to TARGET_NAME.";
+	messages[0] = "You give FIRST_OBJECT_SHORTDESC to TARGET_NAME.";
+	messages[1] = "ACTOR_NAME gives you FIRST_OBJECT_SHORTDESC.";
+	messages[2] = "ACTOR_NAME gives FIRST_OBJECT_SHORTDESC to TARGET_NAME.";
 	
 	this.inventory.splice(this.inventory.indexOf(object), 1);
 	target.inventory.push(object);
@@ -910,9 +910,9 @@ characterSchema.methods.giveItem = function(keyword, targetName) {
 	for(var i = 0; i < result.items.length; i++) {
 		var messages = this.giveObject(result.items[i], target);
 		
-		output.toActor.push( { text: messages[0] } );
-		output.toTarget.push( { text: messages[1] } );
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[2] } ] } );
+		output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+		output.toTarget.push( { text: messages[1], items: [ result.items[i] ] } );
+		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[2], items: [ result.items[i] ] } ] } );
 	}
 	
 	return output;

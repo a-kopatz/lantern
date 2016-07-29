@@ -858,12 +858,18 @@ exports.character_giveItemGivesAllDotItems = function(test) {
     
     var actual = actor.giveItem('all.gloves', 'nick');
     
-    test.equal(actual.toActor[0].text, "You give a pair of blue gloves to TARGET_NAME.");
-    test.equal(actual.toActor[1].text, "You give a pair of black gloves to TARGET_NAME.");
-    test.equal(actual.toTarget[0].text, "ACTOR_NAME gives you a pair of blue gloves.");
-    test.equal(actual.toTarget[1].text, "ACTOR_NAME gives you a pair of black gloves.");
-    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME gives a pair of blue gloves to TARGET_NAME.");
-    test.equal(actual.toRoom[1].textArray[0].text, "ACTOR_NAME gives a pair of black gloves to TARGET_NAME.");
+    test.equal(actual.toActor[0].text, "You give FIRST_OBJECT_SHORTDESC to TARGET_NAME.");
+    test.equal(actual.toActor[0].items[0], gloves1);
+    test.equal(actual.toActor[1].text, "You give FIRST_OBJECT_SHORTDESC to TARGET_NAME.");
+    test.equal(actual.toActor[1].items[0], gloves2);
+    test.equal(actual.toTarget[0].text, "ACTOR_NAME gives you FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toTarget[0].items[0], gloves1);
+    test.equal(actual.toTarget[1].text, "ACTOR_NAME gives you FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toTarget[1].items[0], gloves2);
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME gives FIRST_OBJECT_SHORTDESC to TARGET_NAME.");
+    test.equal(actual.toRoom[0].textArray[0].items[0], gloves1);
+    test.equal(actual.toRoom[1].textArray[0].text, "ACTOR_NAME gives FIRST_OBJECT_SHORTDESC to TARGET_NAME.");
+    test.equal(actual.toRoom[1].textArray[0].items[0], gloves2);
     test.equal(actor.inventory.length, 1);
     test.equal(target.inventory.length, 2);
     test.equal(target.inventory[0], gloves1);
