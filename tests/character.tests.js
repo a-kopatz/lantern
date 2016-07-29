@@ -506,10 +506,14 @@ exports.character_takeItemTakesItemFromRoom = function(test) {
     
     var actual = actor.takeItem('all.gloves');
     
-    test.equal(actual.toActor[0].text, "You take a pair of blue gloves.");
-    test.equal(actual.toActor[1].text, "You take a pair of black gloves.");
-    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME takes a pair of blue gloves.");
-    test.equal(actual.toRoom[1].textArray[0].text, "ACTOR_NAME takes a pair of black gloves.");
+    test.equal(actual.toActor[0].text, "You take FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toActor[0].items[0], gloves1);
+    test.equal(actual.toActor[1].text, "You take FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toActor[1].items[0], gloves2);
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME takes FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toRoom[0].textArray[0].items[0], gloves1);
+    test.equal(actual.toRoom[1].textArray[0].text, "ACTOR_NAME takes FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toRoom[1].textArray[0].items[0], gloves2);
     test.equal(actor.inventory.length, 2);
     test.equal(actor.inventory[0], gloves1);
     test.equal(actor.inventory[1], gloves2);
@@ -551,13 +555,19 @@ exports.character_takeItemTakesAllFromRoom = function(test) {
     
     var actual = actor.takeItem('all');
     
-    test.equal(actual.toActor[0].text, "You take a pair of gloves.");
-    test.equal(actual.toActor[1].text, "You take a plaid scarf.");
+    test.equal(actual.toActor[0].text, "You take FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toActor[0].items[0], gloves);
+    test.equal(actual.toActor[1].text, "You take FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toActor[1].items[0], scarf);
     test.equal(actual.toActor[2].text, "an ATM machine: You can't take THAT!");
-    test.equal(actual.toActor[3].text, "You take an ugly shirt.");
-    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME takes a pair of gloves.");
-    test.equal(actual.toRoom[1].textArray[0].text, "ACTOR_NAME takes a plaid scarf.");
-    test.equal(actual.toRoom[2].textArray[0].text, "ACTOR_NAME takes an ugly shirt.");
+    test.equal(actual.toActor[3].text, "You take FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toActor[3].items[0], shirt);
+    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME takes FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toRoom[0].textArray[0].items[0], gloves);
+    test.equal(actual.toRoom[1].textArray[0].text, "ACTOR_NAME takes FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toRoom[1].textArray[0].items[0], scarf);
+    test.equal(actual.toRoom[2].textArray[0].text, "ACTOR_NAME takes FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toRoom[2].textArray[0].items[0], shirt);
     test.equal(actor.inventory.length, 3);
     test.equal(actor.inventory[0], gloves);
     test.equal(actor.inventory[1], scarf);

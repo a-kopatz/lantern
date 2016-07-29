@@ -112,7 +112,7 @@ exports.output_formatReplacesFirstObjectShortDescription = function(test) {
     target.gender = global.GENDER_FEMALE;
     output.target = target;    
     
-    var returnMessage = output.format("ACTOR_NAME eats FIRST_OBJECT_SHORTDESC.", null);
+    var returnMessage = output.format("ACTOR_NAME eats FIRST_OBJECT_SHORTDESC.", null, [item] );
     test.equal(returnMessage, "Erik eats a cheesesteak sandwich.");
     test.done();
 };
@@ -135,7 +135,7 @@ exports.output_formatReplacesFirstAndSecondObjectShortDescriptions = function(te
     target.gender = global.GENDER_FEMALE;
     output.target = target;    
     
-    var returnMessage = output.format("ACTOR_NAME puts FIRST_OBJECT_SHORTDESC into SECOND_OBJECT_SHORTDESC.", null);
+    var returnMessage = output.format("ACTOR_NAME puts FIRST_OBJECT_SHORTDESC into SECOND_OBJECT_SHORTDESC.", null, [item1, item2] );
     test.equal(returnMessage, "Ricky Bobby puts a broken watch into a bag.");
     test.done();
 };

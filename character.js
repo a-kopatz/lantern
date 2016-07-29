@@ -464,8 +464,12 @@ characterSchema.methods.takeObject = function(object) {
 
 	this.room.removeItem(object);
 	this.inventory.push(object);
-	messages[0] = "You take " + object.shortDescription + ".";
-	messages[1] = "ACTOR_NAME takes " + object.shortDescription + ".";
+	
+	// messages[0] = "You take " + object.shortDescription + ".";
+	// messages[1] = "ACTOR_NAME takes " + object.shortDescription + ".";
+	
+	messages[0] = "You take FIRST_OBJECT_SHORTDESC.";
+	messages[1] = "ACTOR_NAME takes FIRST_OBJECT_SHORTDESC.";
 	
 	return messages;
 };
@@ -530,8 +534,8 @@ characterSchema.methods.takeItem = function(keyword) {
 				
 					var messages = this.takeObject(result.items[i]);
 					
-					output.toActor.push( { text: messages[0] } );
-					output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+					output.toActor.push( { text: messages[0], items: [result.items[i] ] } );
+					output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [result.items[i] ] } ] } );
 					
 				
 				// }

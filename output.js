@@ -2,8 +2,8 @@
 function Output(actor) {
     this.actor = actor;
     this.target = null;
-    this.firstObject = null;
-    this.secondObject = null;
+    // this.firstObject = null;
+    // this.secondObject = null;
     
     this.toActor = [];
     this.toTarget = [];
@@ -13,7 +13,7 @@ function Output(actor) {
     this.subCommand = null;
 }
 
-Output.prototype.format = function(text, textTarget) {
+Output.prototype.format = function(text, textTarget, itemArray) {
     // TODO: Stuff like textTarget can see that actor or target --> name else 'someone'
     // Use function character.canSee(target)
 
@@ -31,12 +31,12 @@ Output.prototype.format = function(text, textTarget) {
             .replace(/TARGET_PRONOUN_SUBJECT/g, this.target.getPersonalPronoun());
     }
     
-    if(this.firstObject !== null) {
-        returnMessage = returnMessage.replace(/FIRST_OBJECT_SHORTDESC/g, this.firstObject.getShortDescription());
-    }
-    
-    if(this.secondObject !== null) {
-        returnMessage = returnMessage.replace(/SECOND_OBJECT_SHORTDESC/g, this.secondObject.getShortDescription());
+    if(itemArray !== undefined && itemArray !== null && itemArray.length > 0) {
+        returnMessage = returnMessage.replace(/FIRST_OBJECT_SHORTDESC/g, itemArray[0].getShortDescription());
+        
+        if(itemArray.length > 1) {
+            returnMessage = returnMessage.replace(/SECOND_OBJECT_SHORTDESC/g, this.secondObject.getShortDescription());    
+        }
     }
 
     return returnMessage;
@@ -67,9 +67,9 @@ Output.prototype.__emit = function(target, textArray) {
     
     for(var i = 0; i < textArray.length; i++) {
         if(textArray[i].color !== undefined) {
-            result.push(target.emitMessage(this.format(textArray[i].text), textArray[i].color));
+            result.push(target.emitMessage(this.format(textArray[i].text, target, textArray[i].items), textArray[i].color));
         } else {
-            result.push(target.emitMessage(this.format(textArray[i].text)));
+            result.push(target.emitMessage(this.format(textArray[i].text, target, textArray[i].items)));
         }
     }
     
