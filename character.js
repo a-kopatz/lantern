@@ -726,6 +726,10 @@ characterSchema.methods.eatObject = function(object) {
 	return messages;
 };
 
+characterSchema.methods.getFullnessIndex = function() {
+	return 1;
+};
+
 characterSchema.methods.eatItem = function(keyword) {
 	var output = new Output(this);
 	var result = this.inventory.findByKeyword(keyword);
@@ -735,7 +739,7 @@ characterSchema.methods.eatItem = function(keyword) {
 		return output;
 	}
 
-	// var fullnessIndex = 0;
+	var fullnessIndex = 0;
 
 	for(var i = 0; i < result.items.length; i++) {
 		if(result.items[i].type !== global.ITEM_FOOD) {
@@ -745,20 +749,20 @@ characterSchema.methods.eatItem = function(keyword) {
 			var messages = this.eatObject(result.items[i]);
 			output.toActor.push( { text: messages[0] } );
 			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
-			
-			// fullnessIndex = this.getFullnessIndex();
-			// var fullnessMessages = global.FULLNESS[ fullnessIndex ];
-
-			// if(fullnessMessages != undefined) {
-			// 	output.toActor.push( { text: fullnessMessages[0] } );
-			// 	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: fullnessMessages[1] } ] } );
-			// }
 		}
 	}
-	
-	// if(fullnessIndex >= global.MAX_FULLNESS) {
-	// 	this.position = global.POS_SLEEPING;
-	// }
+
+	fullnessIndex = this.getFullnessIndex();
+	var fullnessMessages = global.FULLNESS[ fullnessIndex ];
+
+	if(fullnessMessages != undefined) {
+		output.toActor.push( { text: fullnessMessages[0] } );
+		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: fullnessMessages[1] } ] } );
+	}
+			
+	if(fullnessIndex >= global.MAX_FULLNESS) {
+		this.position = global.POS_SLEEPING;
+	}
 	
 	return output;
 };

@@ -23,7 +23,7 @@ global.START_ROOM    = 3001;
 global.DONATION_ROOM = 3063;
 
 global.PULSE_NPC      = 10;   // 10 real seconds
-global.PULSE_MUD_HOUR = 120;
+global.PULSE_MUD_HOUR = 20;  // TODO: Reset to 120
 
 global.HOURLY_DOLLAR_BONUS = 100;
 
