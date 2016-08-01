@@ -1149,7 +1149,7 @@ characterSchema.methods.wearItem = function(keyword) {
 
 	for(var i = 0; i < result.items.length; i++) {
 		if(result.items[i].wearSlots.length === 0) {
-			output.toActor.push( { text: "You can't wear " + result.items[i].shortDescription + "." } );
+			output.toActor.push( { text: "You can't wear FIRST_OBJECT_SHORTDESC." } );
 		}
 		else {
 			var messages = this.wearObject(result.items[i], result.items[i].wearSlots[0]);
@@ -1188,8 +1188,8 @@ characterSchema.methods.wearItemAtLocation = function(keyword, location) {
 characterSchema.methods.removeObject = function(object) {
 	var messages = [];
 	
-	messages[0] = "You stop using " + object.shortDescription + ".";
-	messages[1] = "ACTOR_NAME stops using " + object.shortDescription + ".";
+	messages[0] = "You stop using FIRST_OBJECT_SHORTDESC.";
+	messages[1] = "ACTOR_NAME stops using FIRST_OBJECT_SHORTDESC.";
 	
 	for(var i = 0; i < this.wearing.length; i++) {
 		if(this.wearing[i] === object) {
@@ -1215,8 +1215,8 @@ characterSchema.methods.removeItem = function(keyword) {
 
 	for(var i = 0; i < result.items.length; i++) {
 		var messages = this.removeObject(result.items[i]);
-		output.toActor.push( { text: messages[0] } );
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+		output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
 	}
 	
 	return output;
@@ -1234,14 +1234,14 @@ characterSchema.methods.lookTarget = function(command) {
 		var target = targetList.findByKeyword(command.tokens[0]);
 		
 		if(target.items.length > 0) {
-			output.toActor.push( { text: "You look at " + target.items[0].getShortDescription() + "." } );
+			output.toActor.push( { text: "You look at FIRST_OBJECT_SHORTDESC.", items: [ target.items[0] ] } );
 			
 			var descriptionArray = target.items[0].getDescription();
 			for(var i = 0; i < descriptionArray.length; i++) {
 				output.toActor.push( { text: descriptionArray[i] } );
 			}
 			
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks at " + target.items[0].getShortDescription() + "." } ] } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.", items: [ target.items[0] ] } ] } );
 		}
 		else {
 			var exit = this.room.getExit(command.tokens[0]);
@@ -1271,13 +1271,13 @@ characterSchema.methods.lookInTarget = function(keyword) {
 		var targetItem = target.items[0];
 		
 		if(this.inventory.indexOf(targetItem) > -1) {
-			output.toActor.push( { text: targetItem.shortDescription + " (carried): " } );
+			output.toActor.push( { text: "FIRST_OBJECT_SHORTDESC (carried): ", items: [ target.items[0] ] } );
 		}
 		else if(this.wearing.indexOf(targetItem) > -1) {
-			output.toActor.push( { text: targetItem.shortDescription + " (worn): " } );
+			output.toActor.push( { text: targetItem.shortDescription + " (worn): ", items: [ target.items[0] ] } );
 		}
 		else if(this.room.contents.indexOf(targetItem) > -1){
-			output.toActor.push( { text: targetItem.shortDescription + " (here): " } );
+			output.toActor.push( { text: targetItem.shortDescription + " (here): ", items: [ target.items[0] ] } );
 		}
 		
 		var contentsList = targetItem.listContents();
@@ -1286,7 +1286,7 @@ characterSchema.methods.lookInTarget = function(keyword) {
 			output.toActor.push( { text: contentsList[i] });
 		}
 		
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks in " + targetItem.shortDescription + "." } ] } );
+		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks in FIRST_OBJECT_SHORTDESC.", items: [ target.items[i] ] } ] } );
 	}
 	else {
 		return output.toActor.push( { text: "You do not see that here." } );

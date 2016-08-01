@@ -2151,7 +2151,7 @@ exports.character_wearItemReturnsErrorWhenItemIsNotWearable = function(test) {
     actor.inventory.push(hat);
 
     var output = actor.wearItem("hat");
-    test.equal(output.toActor[0].text, "You can't wear a hat.");
+    test.equal(output.toActor[0].text, "You can't wear FIRST_OBJECT_SHORTDESC.");
     test.equal(actor.inventory[0], hat);
     test.done();
 };
@@ -2258,9 +2258,9 @@ exports.character_lookTargetReturnsObjectDescriptionsWhenWorn = function(test) {
     
     // Player typed 'look at chain'
     var result = actor.lookTarget( { tokens: [ "chain" ], allTokens: [ "look", "at", "chain" ] } );
-    test.equal(result.toActor[0].text, "You look at a gold chain.");
+    test.equal(result.toActor[0].text, "You look at FIRST_OBJECT_SHORTDESC.");
     test.equal(result.toActor[1].text, "It's a chain made of gold.  Duh.");
-    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks at a gold chain.");
+    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.");
     test.done();
 };
 
@@ -2281,9 +2281,9 @@ exports.character_lookTargetReturnsObjectDescriptionsWhenInRoom = function(test)
     
     // Player typed 'look at chain'
     var result = actor.lookTarget( { tokens: [ "chain" ], allTokens: [ "look", "at", "chain" ] } );
-    test.equal(result.toActor[0].text, "You look at a gold chain.");
+    test.equal(result.toActor[0].text, "You look at FIRST_OBJECT_SHORTDESC.");
     test.equal(result.toActor[1].text, "It's a chain made of gold.  Duh.");
-    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks at a gold chain.");
+    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.");
     test.done();
 };
 
@@ -2302,9 +2302,9 @@ exports.character_lookInTargetFindsCarried = function(test) {
     
     var result = actor.lookInTarget("duck");
     
-    test.equal(result.toActor[0].text, "a gold duck (carried): ");
+    test.equal(result.toActor[0].text, "FIRST_OBJECT_SHORTDESC (carried): ");
     test.equal(result.toActor[1].text, "There's nothing inside that!");
-    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks in a gold duck.");
+    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks in FIRST_OBJECT_SHORTDESC.");
     test.done();
 };
 
@@ -2325,7 +2325,7 @@ exports.character_lookInTargetFindsWorn = function(test) {
     
     test.equal(result.toActor[0].text, "a filthy vest (worn): ");
     test.equal(result.toActor[1].text, "There's nothing inside that!");
-    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks in a filthy vest.");
+    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks in FIRST_OBJECT_SHORTDESC.");
     test.done();
 };
 
@@ -2346,7 +2346,7 @@ exports.character_lookInTargetFindsInRoom = function(test) {
     
     test.equal(result.toActor[0].text, "a blob of crap (here): ");
     test.equal(result.toActor[1].text, "There's nothing inside that!");
-    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks in a blob of crap.");
+    test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks in FIRST_OBJECT_SHORTDESC.");
     test.done();
 };
 
