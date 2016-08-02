@@ -412,6 +412,42 @@ exports.character_saySendsExpectedMessage = function(test) {
 };
 
 
+/////////////////////////////////////////////////
+
+exports.character_tellReturnsErrorWhenCharacterNotFound = function(test) {
+    var myWorld = new World();
+    
+    var actor = new Character();
+    actor.name = "Actor";
+    myWorld.addCharacter(actor);
+
+    var result = actor.tell("target", "hi!");
+    test.equal(result.toActor[0].text, "No-one by that name here.");
+    test.done();    
+};
+
+exports.character_tellWorksWhenCharacterFound = function(test) {
+    var myWorld = new World();
+    
+    var actor = new Character();
+    actor.name = "Actur";
+    myWorld.addCharacter(actor);
+
+    var target = new Character();
+    target.name = "Targut";
+    myWorld.addCharacter(target);
+
+    var result = actor.tell("targut", "hi!");
+    test.equal(result.toActor[0].text, "You tell Targut, 'hi!'");
+    test.equal(result.toActor[0].color, "Red");
+    test.equal(result.toTarget[0].text, "ACTOR_NAME tells you, 'hi!'");
+    test.equal(result.toTarget[0].color, "Red");
+    test.done();    
+};
+
+    
+/////////////////////////////////////////////////
+
 // TODO: Test gencomm here
 
 

@@ -200,7 +200,7 @@ var COMMAND_LIST = [
           { command: "tango"    , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_TANGO },
         //   { command: "taste"    , minimumPosition: global.POS_RESTING , functionPointer: do_eat        , minimumLevel: 0, subCommand: global.SCMD_TASTE },
           { command: "taunt"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_TAUNT },
-        //   { command: "tell"     , minimumPosition: global.POS_DEAD    , functionPointer: do_tell       , minimumLevel: 0, subCommand: 0 },
+          { command: "tell"     , minimumPosition: global.POS_DEAD    , functionPointer: do_tell       , minimumLevel: 0, subCommand: 0 },
           { command: "thank"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_THANK },
           { command: "think"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_THINK },
           { command: "tickle"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_TICKLE },
@@ -646,6 +646,15 @@ function do_title(character, command) {
     character.setTitle(command.subInput).emit();
 }
 
+function do_tell(character, command) {
+    if(command.tokens.length > 0) {
+        character.tell(command.tokens[0], command.subInput.replace(command.tokens[0], '').trim());
+    }
+    else {
+        character.emitMessage("Tell what to who?");
+    }
+}
+
 function do_report_bug(character, command) {
     var bugReport = command.subInput.trim();
     
@@ -859,10 +868,6 @@ function do_remove(character, command) {
         character.removeItem(command.tokens[0]).emit();
     }
 }
-
-// function do_stardate(character) {
-//     character.emitMessage(character.world.stardate.pretty());
-// }
 
 // Exports
 module.exports = Interpreter;

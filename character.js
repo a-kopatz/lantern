@@ -431,6 +431,24 @@ characterSchema.methods.generalCommunication = function(subCommand, message) {
 	return output;
 };
 
+characterSchema.methods.tell = function(targetName, message) {
+	var output = new Output(this);
+	var target = this.world.getCharacter(targetName);
+	
+	if(target === null) {
+		output.toActor.push( { text: "No-one by that name here." } );
+	}
+	else {
+		// TODO: Implement this
+		//if(this.canTellTarget(target)) {
+			output.toActor.push( { text: "You tell " + target.name + ", '" + message + "'", color: "Red" } );
+			output.toTarget.push( { text: "ACTOR_NAME tells you, '" + message + "'",  color: "Red" } );
+		//}
+	}
+	
+	return output;
+};
+
 // characterSchema.methods.wakeCharacter = function(targetName) {
 // 	var messages = [];
 	
