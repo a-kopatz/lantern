@@ -68,6 +68,7 @@ var COMMAND_LIST = [
           { command: "eat"      , minimumPosition: global.POS_RESTING , functionPointer: do_eat        , minimumLevel: 0, subCommand: global.SCMD_EAT },
           { command: "embrace"  , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_EMBRACE },
           { command: "emote"    , minimumPosition: global.POS_RESTING , functionPointer: do_emote      , minimumLevel: 0, subCommand: 0 },
+          { command: "equipment", minimumPosition: global.POS_DEAD    , functionPointer: do_apparel    , minimumLevel: 0, subCommand: 0 },
           { command: "exits"    , minimumPosition: global.POS_RESTING , functionPointer: do_exits      , minimumLevel: 0, subCommand: 0 },
 
           { command: "fart"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_FART },

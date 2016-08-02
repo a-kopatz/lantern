@@ -2323,7 +2323,7 @@ exports.character_lookInTargetFindsWorn = function(test) {
     
     var result = actor.lookInTarget("vest");
     
-    test.equal(result.toActor[0].text, "a filthy vest (worn): ");
+    test.equal(result.toActor[0].text, "FIRST_OBJECT_SHORTDESC (worn): ");
     test.equal(result.toActor[1].text, "There's nothing inside that!");
     test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks in FIRST_OBJECT_SHORTDESC.");
     test.done();
@@ -2344,7 +2344,7 @@ exports.character_lookInTargetFindsInRoom = function(test) {
     
     var result = actor.lookInTarget("blob");
     
-    test.equal(result.toActor[0].text, "a blob of crap (here): ");
+    test.equal(result.toActor[0].text, "FIRST_OBJECT_SHORTDESC (here): ");
     test.equal(result.toActor[1].text, "There's nothing inside that!");
     test.equal(result.toRoom[0].textArray[0].text, "ACTOR_NAME looks in FIRST_OBJECT_SHORTDESC.");
     test.done();

@@ -2,9 +2,8 @@
 function Output(actor) {
     this.actor = actor;
     this.target = null;
-    // this.firstObject = null;
-    // this.secondObject = null;
-    
+    this.items = [];
+
     this.toActor = [];
     this.toTarget = [];
     this.toRoom = [];
@@ -19,6 +18,15 @@ Output.prototype.format = function(text, textTarget, itemArray) {
 
     // console.log(text);
 
+    if(text === undefined || text === null) {
+        console.log('WTF?');
+        return '';
+    } else if(text.length < 1) {
+        return '';
+    }
+    
+    console.log('100:' + text);
+
     var returnMessage = text.replace(/ACTOR_NAME/g, this.actor.name)
         .replace(/ACTOR_PRONOUN_POSSESSIVE/g, this.actor.getPossessivePronoun())
         .replace(/ACTOR_PRONOUN_OBJECT/g, this.actor.getObjectPronoun())
@@ -32,15 +40,32 @@ Output.prototype.format = function(text, textTarget, itemArray) {
     }
     
     if(itemArray !== undefined && itemArray !== null && itemArray.length > 0) {
-        returnMessage = returnMessage.replace(/FIRST_OBJECT_SHORTDESC/g, itemArray[0].getShortDescription());
+        if(itemArray[0] !== undefined && itemArray[0] !== null) {
+            returnMessage = returnMessage.replace(/FIRST_OBJECT_SHORTDESC/g, itemArray[0].getShortDescription());
+        }
         
         if(itemArray.length > 1) {
-            returnMessage = returnMessage.replace(/SECOND_OBJECT_SHORTDESC/g, this.secondObject.getShortDescription());    
+            if(itemArray[1] !== undefined && itemArray[1] !== null) {
+                returnMessage = returnMessage.replace(/SECOND_OBJECT_SHORTDESC/g, itemArray[1].getShortDescription());    
+            }
         }
     }
 
     return returnMessage;
 };
+
+Output.prototype.toActorMessage = function(message, item) {
+    this.toActor.push( { text: message, items: [ item ] } );
+};
+
+Output.prototype.toRoomMessage = function(roomId, message) {
+    this.toRoom.push( { roomId: roomId, textArray: [ { text: message } ] } );
+};
+
+Output.prototype.toRoomMessage = function(roomId, message, item) {
+    this.toRoom.push( { roomId: roomId, textArray: [ { text: message, items: [ item ] } ] } );
+};
+
 
 Output.prototype.emit = function() {
     var result = [];

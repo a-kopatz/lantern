@@ -36,11 +36,19 @@ playerSchema.methods.enterGame = function(world) {
 	this.position = global.POS_STANDING;
 	
 	var output = room.showRoomToCharacter(this);
-	console.log(output);
 	
-	output.toRoom.push( { roomId: room.id, textArray: [ { text: this.name + " has entered the game." } ] } );
-	output.emit();
+	// output.toRoom.push( { roomId: room.id, textArray: [ { text: this.name + " has entered the game." } ] } );
+	output.toRoomMessage(room.id, "ACTOR_NAME has entered the game.");
 
+	// console.log(output);
+
+	console.log('AAAAAA');
+	console.log(output.toRoom[0].textArray[0].text);
+	
+	
+	output.emit();
+	console.log('BBBBBBB');
+	
 	this.keywords = [];
 	this.keywords.push(this.name);
 	

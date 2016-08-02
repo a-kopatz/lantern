@@ -1153,7 +1153,7 @@ characterSchema.methods.wearItem = function(keyword) {
 		}
 		else {
 			var messages = this.wearObject(result.items[i], result.items[i].wearSlots[0]);
-			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+			output.toActorMessage(messages[0], result.items[i]);
 			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
 		}
 	}
@@ -1174,7 +1174,7 @@ characterSchema.methods.wearItemAtLocation = function(keyword, location) {
 	for(var i = 0; i < result.items.length; i++) {
 		if(result.items[i].wearSlots.indexOf(location) > -1) {
 			var messages = this.wearObject(result.items[i], location);
-			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+			output.toActorMessage(messages[0], result.items[i]);
 			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
 		}
 		else {
@@ -1215,8 +1215,9 @@ characterSchema.methods.removeItem = function(keyword) {
 
 	for(var i = 0; i < result.items.length; i++) {
 		var messages = this.removeObject(result.items[i]);
-		output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
+		output.toActorMessage(messages[0], result.items[i]);
+		// output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
+		output.toRoomMessage(this.room.id, messages[1], result.items[i]);
 	}
 	
 	return output;
@@ -1234,14 +1235,16 @@ characterSchema.methods.lookTarget = function(command) {
 		var target = targetList.findByKeyword(command.tokens[0]);
 		
 		if(target.items.length > 0) {
-			output.toActor.push( { text: "You look at FIRST_OBJECT_SHORTDESC.", items: [ target.items[0] ] } );
+			// output.toActor.push( { text: "You look at FIRST_OBJECT_SHORTDESC.", items: [ target.items[0] ] } );
+			output.toActorMessage("You look at FIRST_OBJECT_SHORTDESC.", target.items[i]);
 			
 			var descriptionArray = target.items[0].getDescription();
 			for(var i = 0; i < descriptionArray.length; i++) {
 				output.toActor.push( { text: descriptionArray[i] } );
 			}
 			
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.", items: [ target.items[0] ] } ] } );
+			//output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.", items: [ target.items[0] ] } ] } );
+			output.toRoomMessage(this.room.id, "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.", target.items[0]);
 		}
 		else {
 			var exit = this.room.getExit(command.tokens[0]);
@@ -1271,13 +1274,13 @@ characterSchema.methods.lookInTarget = function(keyword) {
 		var targetItem = target.items[0];
 		
 		if(this.inventory.indexOf(targetItem) > -1) {
-			output.toActor.push( { text: "FIRST_OBJECT_SHORTDESC (carried): ", items: [ target.items[0] ] } );
+			output.toActorMessage("FIRST_OBJECT_SHORTDESC (carried): ", target.items[i]);
 		}
 		else if(this.wearing.indexOf(targetItem) > -1) {
-			output.toActor.push( { text: targetItem.shortDescription + " (worn): ", items: [ target.items[0] ] } );
+			output.toActorMessage("FIRST_OBJECT_SHORTDESC (worn): ", target.items[i]);
 		}
 		else if(this.room.contents.indexOf(targetItem) > -1){
-			output.toActor.push( { text: targetItem.shortDescription + " (here): ", items: [ target.items[0] ] } );
+			output.toActorMessage("FIRST_OBJECT_SHORTDESC (here): ", target.items[i]);
 		}
 		
 		var contentsList = targetItem.listContents();
@@ -1286,7 +1289,9 @@ characterSchema.methods.lookInTarget = function(keyword) {
 			output.toActor.push( { text: contentsList[i] });
 		}
 		
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks in FIRST_OBJECT_SHORTDESC.", items: [ target.items[i] ] } ] } );
+		// output.toRoom.push( { roomId: this.room.id, textArray: [ { text: , items: [ target.items[i] ] } ] } );
+		output.toRoomMessage(this.room.id, "ACTOR_NAME looks in FIRST_OBJECT_SHORTDESC.", target.items[i]);
+
 	}
 	else {
 		return output.toActor.push( { text: "You do not see that here." } );
