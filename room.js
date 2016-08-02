@@ -245,6 +245,7 @@ roomSchema.methods.showRoomToCharacter = function(character) {
 	output.toActor.push( { text: "[ Exits:" + exitsMessage + " ]", color: "Cyan" } );
 
 // FIXME: This feels broken -- it's different than almost everything else
+//        But it would mean that each 'text' of the output would have its own TARGET
  	for (var i = 0; i < this.players.length; i++) {
  		if (this.players[i] !== character) {
  			// TODO: if character.canSee(this.players[i])

@@ -130,11 +130,11 @@ var COMMAND_LIST = [
           { command: "nod"      , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NOD },
           { command: "nudge"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NUDGE },
           { command: "nuzzle"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NUZZLE },
-        //   { command: "noauction", minimumPosition: global.POS_DEAD    , functionPointer: do_tog_auction, minimumLevel: 0, subCommand: 0 },
-        //   { command: "nogossip" , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_gossip , minimumLevel: 0, subCommand: 0 },
-        //   { command: "nogratz"  , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_gratz  , minimumLevel: 0, subCommand: 0 },
-        //   { command: "noholler" , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_holler , minimumLevel: 0, subCommand: 0 },
-        //   { command: "noshout"  , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_shout  , minimumLevel: 0, subCommand: 0 },
+          { command: "noauction", minimumPosition: global.POS_DEAD    , functionPointer: do_tog_auction, minimumLevel: 0, subCommand: 0 },
+          { command: "nogossip" , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_gossip , minimumLevel: 0, subCommand: 0 },
+          { command: "nogratz"  , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_gratz  , minimumLevel: 0, subCommand: 0 },
+          { command: "noholler" , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_holler , minimumLevel: 0, subCommand: 0 },
+          { command: "noshout"  , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_shout  , minimumLevel: 0, subCommand: 0 },
 //           { command: "notell"   , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_tell   , minimumLevel: 0, subCommand: 0 },
 
           { command: "open"     , minimumPosition: global.POS_RESTING , functionPointer: do_open_door  , minimumLevel: 0, subCommand: 0 },
@@ -410,90 +410,90 @@ function do_gen_comm(character, command) {
     character.generalCommunication(command.subCommand, command.subInput.trim()).emit();
 }
 
-// function do_tog_auction(character, command) {
-//     if(command.tokens.length > 0) {
-//         if(command.tokens[0].toLowerCase().trim() === "on") {
-//             character.toggleAuction(true);
-//         }
-//         else if(command.tokens[0].toLowerCase().trim() === "off") {
-//             character.toggleAuction(false);
-//         }
-//         else {
-//             character.toggleAuction();
-//         }
-//     }
-//     else {
-//         character.toggleAuction();
-//     }
-// }
+function do_tog_auction(character, command) {
+    if(command.tokens.length > 0) {
+        if(command.tokens[0].toLowerCase().trim() === "on") {
+            character.toggleAuction(true).emit();
+        }
+        else if(command.tokens[0].toLowerCase().trim() === "off") {
+            character.toggleAuction(false).emit();
+        }
+        else {
+            character.toggleAuction().emit();
+        }
+    }
+    else {
+        character.toggleAuction().emit();
+    }
+}
 
-// function do_tog_gossip(character, command) {
-//     if(command.tokens.length > 0) {
-//         if(command.tokens[0].toLowerCase().trim() === "on") {
-//             character.toggleGossip(true);
-//         }
-//         else if(command.tokens[0].toLowerCase().trim() === "off") {
-//             character.toggleGossip(false);
-//         }
-//         else {
-//             character.toggleGossip();
-//         }
-//     }
-//     else {
-//         character.toggleGossip();
-//     }
-// }
+function do_tog_gossip(character, command) {
+    if(command.tokens.length > 0) {
+        if(command.tokens[0].toLowerCase().trim() === "on") {
+            character.toggleGossip(true).emit();
+        }
+        else if(command.tokens[0].toLowerCase().trim() === "off") {
+            character.toggleGossip(false).emit();
+        }
+        else {
+            character.toggleGossip().emit();
+        }
+    }
+    else {
+        character.toggleGossip().emit();
+    }
+}
 
-// function do_tog_gratz(character, command) {
-//     if(command.tokens.length > 0) {
-//         if(command.tokens[0].toLowerCase().trim() === "on") {
-//             character.toggleGratz(true);
-//         }
-//         else if(command.tokens[0].toLowerCase().trim() === "off") {
-//             character.toggleGratz(false);
-//         }
-//         else {
-//             character.toggleGratz();
-//         }
-//     }
-//     else {
-//         character.toggleGratz();
-//     }
-// }
+function do_tog_gratz(character, command) {
+    if(command.tokens.length > 0) {
+        if(command.tokens[0].toLowerCase().trim() === "on") {
+            character.toggleGratz(true).emit();
+        }
+        else if(command.tokens[0].toLowerCase().trim() === "off") {
+            character.toggleGratz(false).emit();
+        }
+        else {
+            character.toggleGratz().emit();
+        }
+    }
+    else {
+        character.toggleGratz().emit();
+    }
+}
 
-// function do_tog_holler(character, command) {
-//     if(command.tokens.length > 0) {
-//         if(command.tokens[0].toLowerCase().trim() === "on") {
-//             character.toggleHoller(true);
-//         }
-//         else if(command.tokens[0].toLowerCase().trim() === "off") {
-//             character.toggleHoller(false);
-//         }
-//         else {
-//             character.toggleHoller();
-//         }
-//     }
-//     else {
-//         character.toggleHoller();
-//     }
-// }
+function do_tog_holler(character, command) {
+    if(command.tokens.length > 0) {
+        if(command.tokens[0].toLowerCase().trim() === "on") {
+            character.toggleHoller(true).emit();
+        }
+        else if(command.tokens[0].toLowerCase().trim() === "off") {
+            character.toggleHoller(false).emit();
+        }
+        else {
+            character.toggleHoller().emit();
+        }
+    }
+    else {
+        character.toggleHoller().emit();
+    }
+}
 
-// function do_tog_shout(character, command) {
-//     if(command.tokens.length > 0) {
-//         if(command.tokens[0].toLowerCase().trim() === "on") {
-//             character.toggleShout(true);
-//         }
-//         else if(command.tokens[0].toLowerCase().trim() === "off") {
-//             character.toggleShout(false);
-//         }
-//         else {
-//             character.toggleShout();
-//         }
-//     }
-//     else {
-//         character.toggleShout();
-//     }
-// }
+function do_tog_shout(character, command) {
+    if(command.tokens.length > 0) {
+        if(command.tokens[0].toLowerCase().trim() === "on") {
+            character.toggleShout(true).emit();
+        }
+        else if(command.tokens[0].toLowerCase().trim() === "off") {
+            character.toggleShout(false).emit();
+        }
+        else {
+            character.toggleShout().emit();
+        }
+    }
+    else {
+        character.toggleShout().emit();
+    }
+}
 
 // function do_quit(character) {
 //      character.emitMessage("Goodbye friend.... Come back soon!");

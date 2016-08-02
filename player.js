@@ -37,18 +37,9 @@ playerSchema.methods.enterGame = function(world) {
 	
 	var output = room.showRoomToCharacter(this);
 	
-	// output.toRoom.push( { roomId: room.id, textArray: [ { text: this.name + " has entered the game." } ] } );
 	output.toRoomMessage(room.id, "ACTOR_NAME has entered the game.");
-
-	// console.log(output);
-
-	console.log('AAAAAA');
-	console.log(output.toRoom[0].textArray[0].text);
-	
-	
 	output.emit();
-	console.log('BBBBBBB');
-	
+
 	this.keywords = [];
 	this.keywords.push(this.name);
 	
@@ -65,6 +56,14 @@ playerSchema.methods.start = function() {
 		this.height = utility.randomNumber(60, 72);
 		this.weight = utility.randomNumber(90, 110);
 	}
+	
+	this.isNoAuction = false;
+	this.isNoGossip = false;
+	this.isNoHoller = false;
+	this.isNoShout = false;
+	this.isNoGratz = false;
+	this.isNoQuest = false;
+	this.isNoTell = false;
 	
 	this.maximumFullness = 1200;
 	this.caloriesConsumed = [ 0,0,0,0,0,0,0,0,0,0 ];
@@ -88,7 +87,7 @@ playerSchema.methods.getShortDescription = function() {
 	return this.name + " " + this.title;
 };
 
-playerSchema.methods.toggle = function(mode, property, trueMessage, falseMessage) {
+playerSchema.methods.toggle = function(mode, property) {
 	var toggle = false;
 	
 	if(mode === undefined) {
@@ -103,39 +102,82 @@ playerSchema.methods.toggle = function(mode, property, trueMessage, falseMessage
 		toggle = mode;
 	}
 
-	if(toggle === true) {
-		this.emitMessage(trueMessage);
-	}
-	else {
-		this.emitMessage(falseMessage);
-	}
-	
 	return toggle;
 };
 
 playerSchema.methods.toggleAuction = function(mode) {
-	this.isNoAuction = this.toggle(mode, this.isNoAuction, "You are now deaf to auctions.", "You can now hear auctions.");
-	// mudlog.info(this.name + " turned auction channel to " + this.isNoAuction);
+	var output = new Output(this);
+	
+	this.isNoAuction = this.toggle(mode, this.isNoAuction);
+	
+	if(this.isNoAuction === true) {
+		output.toActor.push( { text: "You are now deaf to auctions." } );
+	}
+	else {
+		output.toActor.push( { text: "You can now hear auctions." } );
+	}
+	
+	return output;
 };
 
 playerSchema.methods.toggleGossip = function(mode) {
-	this.isNoGossip = this.toggle(mode, this.isNoGossip, "You are now deaf to gossip.", "You can now hear gossip.");
-	// mudlog.info(this.name + " turned gossip channel to " + this.isNoGossip);
+	var output = new Output(this);
+	
+	this.isNoGossip = this.toggle(mode, this.isNoGossip);
+	
+	if(this.isNoGossip === true) {
+		output.toActor.push( { text: "You are now deaf to gossip." } );
+	}
+	else {
+		output.toActor.push( { text: "You can now hear gossip." } );
+	}
+	
+	return output;
 };
 
 playerSchema.methods.toggleGratz = function(mode) {
-	this.isNoGratz = this.toggle(mode, this.isNoGratz, "You are now deaf to congratulations messages.", "You can now hear congratulations messages.");
-	// mudlog.info(this.name + " turned gratz channel to " + this.isNoGratz);
+	var output = new Output(this);
+	
+	this.isNoGratz = this.toggle(mode, this.isNoGratz);
+	
+	if(this.isNoGratz === true) {
+		output.toActor.push( { text: "You are now deaf to congratulations messages." } );
+	}
+	else {
+		output.toActor.push( { text: "You can now hear congratulations messages." } );
+	}
+	
+	return output;
 };
 
 playerSchema.methods.toggleHoller = function(mode) {
-	this.isNoHoller = this.toggle(mode, this.isNoHoller, "You are now deaf to holler messages.", "You can now hear holler messages.");
-	// mudlog.info(this.name + " turned holler channel to " + this.isNoHoller);
+	var output = new Output(this);
+	
+	this.isNoHoller = this.toggle(mode, this.isNoHoller);
+	
+	if(this.isNoHoller === true) {
+		output.toActor.push( { text: "You are now deaf to hollering." } );
+	}
+	else {
+		output.toActor.push( { text: "You can now hear hollering." } );
+	}
+	
+	return output;
 };
 
 playerSchema.methods.toggleShout = function(mode) {
-	this.isNoShout = this.toggle(mode, this.isNoShout, "You are now deaf to shouting.", "You can now hear shouting.");
-	// mudlog.info(this.name + " turned shout channel to " + this.isNoShout);
+	var output = new Output(this);
+	
+	this.isNoShout = this.toggle(mode, this.isNoShout);
+	
+	if(this.isNoShout === true) {
+		output.toActor.push( { text: "You are now deaf to shouting." } );
+	}
+	else {
+		output.toActor.push( { text: "You can now hear shouting." } );
+	}
+	
+	return output;
 };
 
 playerSchema.methods.listInventory = function() {

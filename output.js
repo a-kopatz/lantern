@@ -25,8 +25,6 @@ Output.prototype.format = function(text, textTarget, itemArray) {
         return '';
     }
     
-    console.log('100:' + text);
-
     var returnMessage = text.replace(/ACTOR_NAME/g, this.actor.name)
         .replace(/ACTOR_PRONOUN_POSSESSIVE/g, this.actor.getPossessivePronoun())
         .replace(/ACTOR_PRONOUN_OBJECT/g, this.actor.getObjectPronoun())
