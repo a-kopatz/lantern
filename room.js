@@ -244,23 +244,23 @@ roomSchema.methods.showRoomToCharacter = function(character) {
 	
 	output.toActor.push( { text: "[ Exits:" + exitsMessage + " ]", color: "Cyan" } );
 
-// FIXME: This appears to be extremely broken.
- 	// for (var i = 0; i < this.players.length; i++) {
- 	// 	if (this.players[i] !== character) {
- 	// 		// TODO: if character.canSee(this.players[i])
- 	// 		output.toActor.push( { text: this.players[i].getDescription(), color: "Orange" } );
- 	// 	}
- 	// }
+// FIXME: This feels broken -- it's different than almost everything else
+ 	for (var i = 0; i < this.players.length; i++) {
+ 		if (this.players[i] !== character) {
+ 			// TODO: if character.canSee(this.players[i])
+ 			output.toActor.push( { text: this.players[i].getShortDescription() + " is here.", color: "Orange" } );
+ 		}
+ 	}
  	
+ 	// TODO: Add back when NPCs re-implemented
  	// for(var j = 0; j < this.npcs.length; j++) {
  	// 	// TODO: if character.canSee(this.npcs[i])
  	// 	output.toActor.push( { text: this.mobs[j].longDescription, color: "Orange" } );
  	// }
 
- 	// for (var i = 0; i < this.contents.length; i++) {
- 	// 	// TODO: if character.canSee(this.contents[i])
- 	// 	output.toActor.push( { text: this.contents[i].longDescription, color: 'Green' } );
- 	// }
+ 	for (var i = 0; i < this.contents.length; i++) {
+ 		output.toActor.push( { text: "FIRST_OBJECT_DESC", items: [ this.contents[i] ], color: 'Green' } );
+ 	}
 
 	return output;
 };

@@ -143,6 +143,10 @@ characterSchema.methods.getBMI = function() {
 	return Math.floor((this.weight / (this.height * this.height)) * 703);
 };
 
+characterSchema.methods.getShortDescription = function() {
+	return "Override this function in child classes.";
+};
+
 characterSchema.methods.getDescription = function() {
 	var result = [];
 	
