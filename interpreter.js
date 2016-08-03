@@ -231,6 +231,8 @@ var COMMAND_LIST = [
 
           { command: "yawn"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_YAWN },
           { command: "yodel"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_YODEL },
+          
+          { command: "/"        , minimumPosition: global.POS_STANDING, functionPointer: do_home       , minimumLevel: 0, subCommand: 0 }
     ];
 
 
