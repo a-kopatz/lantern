@@ -11,8 +11,10 @@ var zone = require('./zone');
 var interpreter = require('./interpreter');
 var time = require('./time');
 
+// NOTE: These are here to force mongoose to register the schema prior to use
 var clothes = require('./clothes');
 var food = require('./food');
+var note = require('./note');
 
 // TODO: Room
 // TODO: Zone

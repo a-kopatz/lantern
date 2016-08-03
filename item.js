@@ -9,7 +9,7 @@ var itemSchema = new schema({
    	category: { type: Number, default: global.CATEGORY_ITEM },
     shortDescription: String,
     longDescription: String,
-    actionDescription: String,
+    // actionDescription: String,
     canBeDonated: Boolean,
     canBeTaken: Boolean,
     type: String,
@@ -54,6 +54,9 @@ itemSchema.methods.getDescription = function() {
     return result;
 };
 
+itemSchema.methods.read = function() {
+    return "You can't read that.";
+};
 
 function load(id, item, commands, world, previousThing, instructionNumber, callback) {
 	itemModel.find({id: id}, function(err, docs) {

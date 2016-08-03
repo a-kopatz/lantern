@@ -153,7 +153,7 @@ var COMMAND_LIST = [
 
         //   { command: "quit"     , minimumPosition: global.POS_STANDING, functionPointer: do_quit       , minimumLevel: 0, subCommand: 0 },
 
-//           { command: "read"     , minimumPosition: global.POS_RESTING , functionPointer: do_read       , minimumLevel: 0, subCommand: 0 },
+          { command: "read"     , minimumPosition: global.POS_RESTING , functionPointer: do_read       , minimumLevel: 0, subCommand: 0 },
 //           { command: "receive"  , minimumPosition: global.POS_RESTING , functionPointer: do_receiveMail, minimumLevel: 0, subCommand: 0 },
 //           { command: "rescue"   , minimumPosition: global.POS_STANDING, functionPointer: do_rescue     , minimumLevel: 0, subCommand: 0 },
           { command: "remove"   , minimumPosition: global.POS_RESTING , functionPointer: do_remove     , minimumLevel: 0, subCommand: 0 },
@@ -567,7 +567,7 @@ function do_junk(character, command) {
         // character.junkMoney(command.tokens[0]);
     }    
     else {
-        character.junkItem(command.tokens[0]);
+        character.junkItem(command.tokens[0]).emit();
     }
 }
 
@@ -877,6 +877,15 @@ function do_remove(character, command) {
     }
     else {
         character.removeItem(command.tokens[0]).emit();
+    }
+}
+
+function do_read(character, command) {
+    if(command.tokens.length === 0) {
+        character.emitMessage("Read what?");
+    }
+    else {
+        character.readItem(command.tokens[0]).emit();
     }
 }
 

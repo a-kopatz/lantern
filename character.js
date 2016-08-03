@@ -716,8 +716,11 @@ characterSchema.methods.junkItem = function(keyword) {
 	
 	for(var i = 0; i < result.items.length; i++) {
 		var messages = this.junkObject(result.items[i]);
-		output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
+		
+		output.toActorMessage(messages[0], result.items[i]);
+		output.toRoomMessage(this.room.id, messages[1], result.items[i]);		
+		// output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+		// output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
 	}
 	
 	return output;
@@ -1346,6 +1349,25 @@ characterSchema.methods.getInventoryExtras = function() {
 	}
 	
 	return result;
+};
+
+characterSchema.methods.readItem = function(keyword) {
+	var output = new Output(this);
+	
+	var targetList = this.inventory.concat(this.wearing).concat(this.room.contents);
+	var result = this.wearing.findByKeyword(targetList);
+
+	if(result.items.length === 0) {	
+		output.toActor.push( { text: "Read what?" } );
+		return output;
+	}
+
+	for(var i = 0; i < result.items.length; i++) {
+		output.toActorMessage(result.items[i].read, result.items[i]);
+		output.toRoomMessage(this.room.id, "ACTOR_NAME reads FIRST_OBJECT_SHORTDESC.", result.items[i]);
+	}
+	
+	return output;
 };
 
 var characterModel = mongoose.model('character', characterSchema);
