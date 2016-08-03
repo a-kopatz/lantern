@@ -87,7 +87,7 @@ var COMMAND_LIST = [
           { command: "glare"    , minimumPosition: global.POS_RESTING,  functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_GLARE },
 //           { command: "gold"     , minimumPosition: global.POS_SLEEPING, functionPointer: do_gold       , minimumLevel: 0, subCommand: 0 },
           { command: "gossip"   , minimumPosition: global.POS_SLEEPING, functionPointer: do_gen_comm   , minimumLevel: 0, subCommand: global.SCMD_GOSSIP },
-//           { command: "goto"     , minimumPosition: global.POS_RESTING , functionPointer: do_goto       , minimumLevel: 0, subCommand: 0 },
+          { command: "goto"     , minimumPosition: global.POS_RESTING , functionPointer: do_goto       , minimumLevel: 0, subCommand: 0 },
 //           { command: "group"    , minimumPosition: global.POS_RESTING , functionPointer: do_group      , minimumLevel: 0, subCommand: 0 },
           { command: "grats"    , minimumPosition: global.POS_SLEEPING, functionPointer: do_gen_comm   , minimumLevel: 0, subCommand: global.SCMD_GRATZ },
           { command: "gratz"    , minimumPosition: global.POS_SLEEPING, functionPointer: do_gen_comm   , minimumLevel: 0, subCommand: global.SCMD_GRATZ },
@@ -103,6 +103,7 @@ var COMMAND_LIST = [
           { command: "hiccup"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_HICCUP },
 //           { command: "hit"      , minimumPosition: global.POS_RESTING , functionPointer: do_hit        , minimumLevel: 0, subCommand: 0 },
           { command: "holler"   , minimumPosition: global.POS_RESTING,  functionPointer: do_gen_comm   , minimumLevel: 0, subCommand: global.SCMD_HOLLER },
+          { command: "home"     , minimumPosition: global.POS_STANDING, functionPointer: do_home       , minimumLevel: 0, subCommand: 0 },
           { command: "hug"      , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_HUG },
 
           { command: "inventory", minimumPosition: global.POS_DEAD    , functionPointer: do_inventory  , minimumLevel: 0, subCommand: 0 },
@@ -704,6 +705,14 @@ function do_report_typo(character, command) {
         
         character.emitMessage("Ok. Thanks for reporting the typo.");
     }
+}
+
+function do_goto(character, command) {
+    character.goto(command.subInput.trim()).emit();
+}
+
+function do_home(character) {
+    character.goto(global.START_ROOM).emit();
 }
 
 function do_datetime(character) {
