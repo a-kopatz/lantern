@@ -334,6 +334,30 @@ playerSchema.methods.getFullnessIndex = function() {
 	return index;
 };
 
+playerSchema.methods.sendMail = function(recipientName) {
+	var output = new Output(this);
+	
+	output.toActor.push( { text: "This is not implemented fully yet." } );
+	
+	return output;
+};
+
+playerSchema.methods.checkMail = function() {
+	var output = new Output(this);
+	
+	output.toActor.push( { text: "This is not implemented fully yet." } );
+	
+	return output;
+};
+
+playerSchema.methods.receiveMail = function() {
+	var output = new Output(this);
+	
+	output.toActor.push( { text: "This is not implemented fully yet." } );
+	
+	return output;
+};
+
 playerSchema.methods.load = function(name, callback) {
 	playerModel.find({ name: name }, function(err, docs) {
 		callback(docs);

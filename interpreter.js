@@ -40,7 +40,7 @@ var COMMAND_LIST = [
 //           { command: "buy"      , minimumPosition: global.POS_RESTING , functionPointer: do_buy        , minimumLevel: 0, subCommand: 0 },
           
           { command: "cackle"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_CACKLE },
-//           { command: "check"    , minimumPosition: global.POS_RESTING , functionPointer: do_checkMail  , minimumLevel: 0, subCommand: 0 },
+          { command: "check"    , minimumPosition: global.POS_RESTING , functionPointer: do_checkMail  , minimumLevel: 0, subCommand: 0 },
           { command: "chuckle"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_CHUCKLE },
           { command: "clap"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_CLAP },
           { command: "close"    , minimumPosition: global.POS_RESTING , functionPointer: do_close_door , minomumLevel: 0, subCommand: 0 },
@@ -124,7 +124,7 @@ var COMMAND_LIST = [
           { command: "love"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_LOVE },
 
           { command: "massage"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_MASSAGE },
-//           { command: "mail"     , minimumPosition: global.POS_RESTING , functionPointer: do_sendMail   , minimumLevel: 0, subCommand: 0 },
+          { command: "mail"     , minimumPosition: global.POS_RESTING , functionPointer: do_sendMail   , minimumLevel: 0, subCommand: 0 },
           { command: "moan"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_MOAN },
 
           { command: "nibble"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NIBBLE },
@@ -154,7 +154,7 @@ var COMMAND_LIST = [
         //   { command: "quit"     , minimumPosition: global.POS_STANDING, functionPointer: do_quit       , minimumLevel: 0, subCommand: 0 },
 
           { command: "read"     , minimumPosition: global.POS_RESTING , functionPointer: do_read       , minimumLevel: 0, subCommand: 0 },
-//           { command: "receive"  , minimumPosition: global.POS_RESTING , functionPointer: do_receiveMail, minimumLevel: 0, subCommand: 0 },
+          { command: "receive"  , minimumPosition: global.POS_RESTING , functionPointer: do_receiveMail, minimumLevel: 0, subCommand: 0 },
 //           { command: "rescue"   , minimumPosition: global.POS_STANDING, functionPointer: do_rescue     , minimumLevel: 0, subCommand: 0 },
           { command: "remove"   , minimumPosition: global.POS_RESTING , functionPointer: do_remove     , minimumLevel: 0, subCommand: 0 },
 //           { command: "rent"     , minimumPosition: global.POS_RESTING , functionPointer: do_rent       , minimumLevel: 0, subCommand: 0 },
@@ -886,6 +886,44 @@ function do_read(character, command) {
     }
     else {
         character.readItem(command.tokens[0]).emit();
+    }
+}
+
+function do_sendMail(character, command) {
+    if(character.isAtPostOffice() === true) {
+        
+        if(character.money < global.PRICE_OF_STAMP) {
+            character.emitMessage("You can't afford the stamp!");
+        }
+        else {
+            if(command.tokens.length === 0) {
+                character.emitMessage("Who would you like to mail?");
+            }
+            else {
+                character.sendMail(command.tokens[0]);
+            }
+        }
+    }
+    else {
+        character.emitMessage(global.CANNOT_DO_THAT_HERE);
+    }
+}
+
+function do_checkMail(character) {
+    if(character.isAtPostOffice() === true) {
+        character.checkMail();
+    }
+    else {
+        character.emitMessage(global.CANNOT_DO_THAT_HERE);
+    }
+}
+
+function do_receiveMail(character) {
+    if(character.isAtPostOffice() === true) {
+        character.receiveMail();
+    }
+    else {
+        character.emitMessage(global.CANNOT_DO_THAT_HERE);
     }
 }
 

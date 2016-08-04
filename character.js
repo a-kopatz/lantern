@@ -1004,6 +1004,13 @@ characterSchema.methods.withdrawMoney = function(amount) {
 	return output;
 };
 
+/* Mail-related methods */
+
+characterSchema.methods.isAtPostOffice = function() {
+	// TODO: Make more complex -- postmaster, 'mail ATM', etc.
+	return true;
+};
+
 characterSchema.methods.openCloseExit = function(exit, verb, mode) {
 	var messages = [];
 
