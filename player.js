@@ -4,6 +4,9 @@ var extend = require('mongoose-schema-extend');
 var arrayExtensions = require('./arrayExtensions');
 var constants = require("./constants");
 var characterSchema = require("./character").schema;
+var _Mail = require("./mail");
+var Mail = require("./mail").mail;
+var note = require("./note").note;
 var utility = require("./utility");
 var Output = require("./output");
 
@@ -343,20 +346,73 @@ playerSchema.methods.sendMail = function(recipientName) {
 };
 
 playerSchema.methods.checkMail = function() {
+	// output.toActor.push( { text: "This is not implemented fully yet." } ).emit();
+	
+	// TODO: Pass postmaster?
+	_Mail.checkForMail(this, this.afterCheckMail);
+};
+
+//playerSchema.methods.afterCheckMail = function(character, postMaster, hasMail) {
+playerSchema.methods.afterCheckMail = function(character, hasMail) {
 	var output = new Output(this);
 	
-	output.toActor.push( { text: "This is not implemented fully yet." } );
+	if(hasMail === true) {
+		output.toActor( { text: "You have mail waiting." } );
+		// character.emitMessage(postMaster.name + " says, 'You have mail waiting.'");
+	}
+	else {
+		output.toActor( { text: "Sorry, you don't have any mail waiting." } );
+		// character.emitMessage(postMaster.name + " says, 'Sorry, you don't have any mail waiting.'");
+	}
 	
 	return output;
 };
 
 playerSchema.methods.receiveMail = function() {
+	//output.toActor.push( { text: "This is not implemented fully yet." } ).emit();
+	// TODO: postmaster, maybe?
+	_Mail.receiveMail(this, this.afterReceiveMail);
+};
+
+playerSchema.methods.afterReceiveMail = function(character, mail) {
 	var output = new Output(this);
 	
-	output.toActor.push( { text: "This is not implemented fully yet." } );
+	if(mail !== null) {
+		if(mail.length === 0) {
+			//character.emitMessage(postMaster.name + " says, 'Sorry, you don't have any mail waiting.'");
+			output.toActor( { text: "Sorry, you don't have any mail waiting." } );
+		}
+		else {
+			for(var i = 0; i < mail.length; i++) {
+				var pieceOfMail = new note();
+				pieceOfMail.shortDescription = "a piece of mail";
+				pieceOfMail.longDescription = "Someone has left a piece of mail here.";
+				pieceOfMail.written = "From:" + mail[i].senderName + "\n\r" + "To:" + mail[i].recipientName + "\n\r" + mail[i].body;
+				pieceOfMail.type = global.ITEM_NOTE;
+				pieceOfMail.keywords.push("mail");
+				
+				this.world.addItem(pieceOfMail);
+				this.inventory.push(pieceOfMail);
+			}
+			
+			if(mail.length === 1) {
+				// character.emitMessage(postMaster.name + " gives you a piece of mail.");
+				output.toActor( { text: "You receive a piece of mail." } );
+			}
+			else {
+				//character.emitMessage(postMaster.name + " gives a stack of mail.");
+				output.toActor( { text: "You receive a stack of mail." } );
+			}
+		}
+	}
+	else {
+		// character.emitMessage(postMaster.name + " says, 'Sorry, you don't have any mail waiting.'");
+		output.toActor( { text: "Sorry, you don't have any mail waiting." } );
+	}
 	
 	return output;
 };
+
 
 playerSchema.methods.load = function(name, callback) {
 	playerModel.find({ name: name }, function(err, docs) {
