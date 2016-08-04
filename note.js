@@ -11,12 +11,12 @@ noteSchema.methods.getType = function() {
 	return global.ITEM_NOTE;
 };
 
-noteSchema.methods.read = function() {
+noteSchema.methods.getWrittenContents = function() {
     if(this.written === undefined || this.written === null || this.written.length === 0) {
         return this.shortDescription + " -- There's nothing written on it.";
     }
     else {
-        return this.shortDescription + " --" + this.written;
+        return this.shortDescription + ": " + this.written;
     }
 };
 

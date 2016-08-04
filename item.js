@@ -54,8 +54,8 @@ itemSchema.methods.getDescription = function() {
     return result;
 };
 
-itemSchema.methods.read = function() {
-    return "You can't read that.";
+itemSchema.methods.getWrittenContents = function() {
+    return "You can't read THAT!";
 };
 
 function load(id, item, commands, world, previousThing, instructionNumber, callback) {

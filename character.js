@@ -1355,7 +1355,7 @@ characterSchema.methods.readItem = function(keyword) {
 	var output = new Output(this);
 	
 	var targetList = this.inventory.concat(this.wearing).concat(this.room.contents);
-	var result = this.wearing.findByKeyword(targetList);
+	var result = targetList.findByKeyword(keyword);
 
 	if(result.items.length === 0) {	
 		output.toActor.push( { text: "Read what?" } );
@@ -1363,7 +1363,7 @@ characterSchema.methods.readItem = function(keyword) {
 	}
 
 	for(var i = 0; i < result.items.length; i++) {
-		output.toActorMessage(result.items[i].read, result.items[i]);
+		output.toActorMessage(result.items[i].getWrittenContents(), result.items[i]);
 		output.toRoomMessage(this.room.id, "ACTOR_NAME reads FIRST_OBJECT_SHORTDESC.", result.items[i]);
 	}
 	
