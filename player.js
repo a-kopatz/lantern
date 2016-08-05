@@ -6,7 +6,11 @@ var constants = require("./constants");
 var characterSchema = require("./character").schema;
 var _Mail = require("./mail");
 var Mail = require("./mail").mail;
+// var Note = require('./note');
 var note = require("./note").note;
+var clothes = require("./clothes").clothes;
+var food = require("./food").food;
+var pen = require("./pen").pen;
 var utility = require("./utility");
 var Output = require("./output");
 
@@ -48,6 +52,43 @@ playerSchema.methods.enterGame = function(world) {
 	
 	this.groupId = '';
 	this.followers = [];
+	
+	
+	// THIS SHOULDN'T BE NECESSARY
+	for(var i = 0; i < this.inventory.length; i++) {
+		switch(this.inventory[i].type) {
+			case global.ITEM_FOOD:
+				this.inventory[i] = new food(this.inventory[i]);
+				break;			
+			case global.ITEM_NOTE:
+				this.inventory[i] = new note(this.inventory[i]);
+				break;
+			case global.ITEM_PEN:
+				this.inventory[i] = new pen(this.inventory[i]);
+				break;				
+			case global.ITEM_CLOTHES:
+				this.inventory[i] = new clothes(this.inventory[i]);
+				break;
+		}
+	}
+
+	for(var i = 0; i < this.wearing.length; i++) {
+		switch(this.wearing[i].type) {
+			case global.ITEM_FOOD:
+				this.wearing[i] = new food(this.wearing[i]);
+				break;				
+			case global.ITEM_NOTE:
+				this.wearing[i] = new note(this.wearing[i]);
+				break;
+			case global.ITEM_PEN:
+				this.wearing[i] = new pen(this.wearing[i]);
+				break;
+			case global.ITEM_CLOTHES:
+				this.wearing[i] = new clothes(this.wearing[i]);
+				break;
+		}
+	}
+	
 };
 
 playerSchema.methods.start = function() {
@@ -185,7 +226,7 @@ playerSchema.methods.toggleShout = function(mode) {
 
 playerSchema.methods.listInventory = function() {
 	var output = new Output(this);
-	
+
 	output.toActor.push( { text: "You are carrying:" } );
 	
 	if(this.inventory.length === 0) {
@@ -193,6 +234,10 @@ playerSchema.methods.listInventory = function() {
 	}
 	else {
 		for(var i = 0; i < this.inventory.length; i++) {
+			
+			// console.log(this.inventory[i]);
+			console.log(this.inventory[i] instanceof clothes);
+			
 			output.toActor.push( { text: "  " + this.inventory[i].shortDescription, color: "Green" } );
 		}
 	}
@@ -500,7 +545,7 @@ playerSchema.methods.writeNote = function(paperToken, penToken) {
 	var output = new Output(this);
 
 	var paper = this.inventory.findByKeyword(paperToken);
-	
+
 	if(paper === null) {
 		output.toActor.push( { text: "But what do you want to write on?" });
 		return output;

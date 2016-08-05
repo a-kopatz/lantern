@@ -9,7 +9,6 @@ var clothesSchema = itemSchema.extend({
 }, { collection : 'items' });
 
 clothesSchema.methods.getType = function() {
-	// 'item' is an abstract class
 	return global.ITEM_CLOTHES;
 };
 

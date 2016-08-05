@@ -6,6 +6,7 @@ var constants = require("./constants");
 var Social =  require("./social");
 var utility = require("./utility");
 var Output = require("./output");
+var clothes = require("./clothes").clothes;
 
 var characterSchema = new schema({
 	name: String,
@@ -553,6 +554,9 @@ characterSchema.methods.takeItem = function(keyword) {
 				// }
 				// else {
 					// messages.push(this.takeObject(result.items[i]));
+				
+				
+					console.log(result.items[i] instanceof clothes);
 				
 					var messages = this.takeObject(result.items[i]);
 					
@@ -1375,9 +1379,11 @@ characterSchema.methods.readItem = function(keyword) {
 	}
 
 	for(var i = 0; i < result.items.length; i++) {
-		
-		console.log('------- '  + result.items[i]);
-		
+
+		// TODO: Change to
+		// http://stackoverflow.com/questions/10827108/mongoose-check-if-object-is-mongoose-object
+		// if(result.items[i] instanceof Note) {
+
 		if(result.items[i].getType() !== global.ITEM_NOTE) {
 			output.toActorMessage("FIRST_OBJECT_SHORTDESC: you can't read that!", result.items[i]);
 		}
