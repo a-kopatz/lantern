@@ -56,9 +56,6 @@ Output.prototype.format = function(text, textTarget, itemArray) {
 
 Output.prototype.toActorMessage = function(message, item) {
     this.toActor.push( { text: message, items: [ item ] } );
-    
-    console.log('*****************');
-    console.log(this.toActor);
 };
 
 Output.prototype.toRoomMessage = function(roomId, message) {

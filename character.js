@@ -556,8 +556,6 @@ characterSchema.methods.takeItem = function(keyword) {
 					// messages.push(this.takeObject(result.items[i]));
 				
 				
-					console.log(result.items[i] instanceof clothes);
-				
 					var messages = this.takeObject(result.items[i]);
 					
 					output.toActor.push( { text: messages[0], items: [result.items[i] ] } );
