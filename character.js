@@ -1375,8 +1375,16 @@ characterSchema.methods.readItem = function(keyword) {
 	}
 
 	for(var i = 0; i < result.items.length; i++) {
-		output.toActorMessage(result.items[i].getWrittenContents(), result.items[i]);
-		output.toRoomMessage(this.room.id, "ACTOR_NAME reads FIRST_OBJECT_SHORTDESC.", result.items[i]);
+		
+		console.log('------- '  + result.items[i]);
+		
+		if(result.items[i].getType() !== global.ITEM_NOTE) {
+			output.toActorMessage("FIRST_OBJECT_SHORTDESC: you can't read that!", result.items[i]);
+		}
+		else {
+			output.toActorMessage(result.items[i].getWrittenContents(), result.items[i]);
+			output.toRoomMessage(this.room.id, "ACTOR_NAME reads FIRST_OBJECT_SHORTDESC.", result.items[i]);
+		}
 	}
 	
 	return output;

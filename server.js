@@ -15,7 +15,9 @@ var time = require('./time');
 var clothes = require('./clothes');
 var food = require('./food');
 var note = require('./note');
-// var npc = require('./npc');
+var pen = require('./pen');
+
+var npc = require('./npc');
 
 // TODO: Room
 // TODO: Zone

@@ -227,7 +227,7 @@ var COMMAND_LIST = [
           { command: "wink"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WINK },
           { command: "withdraw" , minimumPosition: global.POS_RESTING , functionPointer: do_withdraw   , minimumLevel: 0, subCommand: 0 },
           { command: "worship"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WORSHIP },
-//           { command: "write"    , minimumPosition: global.POS_RESTING , functionPointer: do_write      , minimumLevel: 0, subCommand: 0 },
+          { command: "write"    , minimumPosition: global.POS_RESTING , functionPointer: do_write      , minimumLevel: 0, subCommand: 0 },
 
           { command: "yawn"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_YAWN },
           { command: "yodel"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_YODEL },
@@ -925,6 +925,15 @@ function do_receiveMail(character) {
     else {
         character.emitMessage(global.CANNOT_DO_THAT_HERE);
     }
+}
+
+function do_write(character, command) {
+    if(command.tokens.length < 2) {
+        character.emitMessage("Write on what? And with what?");
+        return;
+    }
+    
+    character.writeNote(command.tokens[0], command.tokens[1]).emit();
 }
 
 // Exports

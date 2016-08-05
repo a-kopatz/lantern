@@ -348,6 +348,8 @@ playerSchema.methods.handleWriting = function(input) {
 		this.writingQueue.push("\n\r");
 	}
 	else {
+		var output = new Output(this);
+		
 		if(this.isMailing === true) {
 			var mail = new Mail({ senderName: this.name.toLowerCase(), recipientName: this.writingTo.toLowerCase(), body: this.writingQueue.join("")});
 	
@@ -357,17 +359,19 @@ playerSchema.methods.handleWriting = function(input) {
 	
 			this.writingTo = "";
 			
-			var output = new Output(this);
 			output.toActor.push( { text: "Your letter has been sent!" } );
 			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME drops a letter through the mail slot." } ] } );
-			output.emit();
 		}
-		// else if(this.isWritingNote === true) {
-		// 	this.paper.actionDescription =  this.writingQueue.join("");
-		// 	this.isWritingNote = false;
-		// 	this.emitMessage("Ok, got it!");
-		// 	this.emitRoomMessage(this.name + " stops writing a note.");
-		// }
+		else if(this.isWritingNote === true) {
+			this.paper.written =  this.writingQueue.join("");
+			this.paper = null;
+			this.isWritingNote = false;
+			
+			output.toActor.push( { text: "Ok, got it!" } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME stops writing a note." } ] } );
+		}
+		
+		output.emit();
 		
 		this.isMailing = false;
 		this.isWriting = false;
@@ -425,7 +429,6 @@ playerSchema.methods.checkMail = function() {
 	_Mail.checkForMail(this, postMaster, this.afterCheckMail);
 };
 
-// TODO: remove actor as parameter?
 playerSchema.methods.afterCheckMail = function(actor, postMaster, hasMail) {
 	var output = new Output(actor);
 	
@@ -493,6 +496,43 @@ playerSchema.methods.afterReceiveMail = function(actor, postMaster, mail) {
 	return output;
 };
 
+playerSchema.methods.writeNote = function(paperToken, penToken) {
+	var output = new Output(this);
+
+	var paper = this.inventory.findByKeyword(paperToken);
+	
+	if(paper === null) {
+		output.toActor.push( { text: "But what do you want to write on?" });
+		return output;
+	}
+	else if(paper.getType() !== global.ITEM_NOTE) {
+		output.toActorMessage("FIRST_OBJECT_SHORTDESC: you can't write on THAT!", paper);
+		return output;
+	}
+	
+	var pen = this.inventory.findByKeyword(penToken);
+	
+	if(pen === null) {
+		output.toActor.push( { text: "But what do you want to write with?" } );
+		return output;
+	}
+	else if(pen.getType() !== global.ITEM_PEN) {
+		output.toActorMessage("FIRST_OBJECT_SHORTDESC: you can't write with THAT!", pen);
+		return output;
+	}
+	
+	if(paper.getWrittenContents().length !== 0) {
+		output.toActor.push( { text: "But it's already been written on!" } );
+		return output;
+	}
+	
+	output.toActor.push( { text: "Write your note, use @ on a new line when done." } );
+	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME starts to write a note." } ] } );
+	this.isWriting = true;
+	this.isWritingNote = true;
+	this.paper = paper;
+	this.writingQueue = [];
+};
 
 playerSchema.methods.load = function(name, callback) {
 	playerModel.find({ name: name }, function(err, docs) {
