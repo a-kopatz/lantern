@@ -338,6 +338,43 @@ playerSchema.methods.getFullnessIndex = function() {
 };
 
 
+playerSchema.methods.handleWriting = function(input) {
+	if(this.writingQueue === undefined || this.writingQueue === null) {
+		this.writingQueue = [];
+	}
+	
+	if(input !== "@") {
+		this.writingQueue.push(input);
+		this.writingQueue.push("\n\r");
+	}
+	else {
+		if(this.isMailing === true) {
+			var mail = new Mail({ senderName: this.name.toLowerCase(), recipientName: this.writingTo.toLowerCase(), body: this.writingQueue.join("")});
+	
+			mail.save(function(err) {
+	            // TODO: Log error, I guess?
+	        });
+	
+			this.writingTo = "";
+			
+			var output = new Output(this);
+			output.toActor.push( { text: "Your letter has been sent!" } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME drops a letter through the mail slot." } ] } );
+			output.emit();
+		}
+		// else if(this.isWritingNote === true) {
+		// 	this.paper.actionDescription =  this.writingQueue.join("");
+		// 	this.isWritingNote = false;
+		// 	this.emitMessage("Ok, got it!");
+		// 	this.emitRoomMessage(this.name + " stops writing a note.");
+		// }
+		
+		this.isMailing = false;
+		this.isWriting = false;
+		this.writingQueue = [];
+	}
+};
+
 playerSchema.methods.getPostmaster = function() {
 	for(var i = 0; i < this.room.npcs.length; i++) {
 		if(this.room.npcs[i].isPostmaster() === true) {
@@ -349,11 +386,30 @@ playerSchema.methods.getPostmaster = function() {
 };
 
 playerSchema.methods.sendMail = function(recipientName) {
+	var postMaster = this.getPostmaster();
 	var output = new Output(this);
+
+	if(postMaster === null) {
+		// This condition should never be met -- already checked in interpreter
+		output.toActor.push( { text: "You can't do that here!" } ).emit();
+		return;
+	}
 	
-	output.toActor.push( { text: "This is not implemented fully yet." } );
+	if(this.money < global.PRICE_OF_STAMP) {
+		output.toActor.push( { text: postMaster.name + " says, 'A stamp costs " + global.PRICE_OF_STAMP + " dollars, which I see you can't afford.'" } ).emit();
+		return;		
+	}
 	
-	return output;
+	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME starts to write some mail." } ] } );
+	output.toActor.push( { text: postMaster.name + " says, 'That is " + global.PRICE_OF_STAMP + " dollars for the stamp.'" } );
+	output.toActor.push( { text: postMaster.name + " says, 'says, 'Write your message, use @ on a new line when done.'" } );
+	this.money = this.money - global.PRICE_OF_STAMP;
+	this.writingTo = recipientName;
+	this.isWriting = true;
+	this.isMailing = true;
+	this.writingQueue = [];
+	
+	output.emit();
 };
 
 playerSchema.methods.checkMail = function() {
@@ -374,10 +430,10 @@ playerSchema.methods.afterCheckMail = function(actor, postMaster, hasMail) {
 	var output = new Output(this);
 	
 	if(hasMail === true) {
-		output.toActor( { text: postMaster.name + " says, 'You have mail waiting.'" } );
+		output.toActor.push( { text: postMaster.name + " says, 'You have mail waiting.'" } );
 	}
 	else {
-		output.toActor( { text: postMaster.name + " says, 'Sorry, you don't have any mail waiting.'" } );
+		output.toActor.push( { text: postMaster.name + " says, 'Sorry, you don't have any mail waiting.'" } );
 	}
 	
 	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME checks ACTOR_PRONOUN_POSSESSIVE mail." } ] } );
@@ -394,7 +450,7 @@ playerSchema.methods.receiveMail = function() {
 		return;
 	}
 	
-	_Mail.receiveMail(this, this.afterReceiveMail);
+	_Mail.receiveMail(this, postMaster, this.afterReceiveMail);
 };
 
 // TODO: remove actor as parameter?
@@ -403,7 +459,7 @@ playerSchema.methods.afterReceiveMail = function(actor, postMaster, mail) {
 	
 	if(mail !== null) {
 		if(mail.length === 0) {
-			output.toActor( { text: postMaster.name + " says, 'Sorry, you don't have any mail waiting.'" } );
+			output.toActor.push( { text: postMaster.name + " says, 'Sorry, you don't have any mail waiting.'" } );
 		}
 		else {
 			for(var i = 0; i < mail.length; i++) {
@@ -419,7 +475,7 @@ playerSchema.methods.afterReceiveMail = function(actor, postMaster, mail) {
 			}
 			
 			if(mail.length === 1) {
-				output.toActor( { text: postMaster.name + " gives you a piece of mail." } );
+				output.toActor.push( { text: postMaster.name + " gives you a piece of mail." } );
 				output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME receives a piece of mail." } ] } );
 			}
 			else {
@@ -429,7 +485,7 @@ playerSchema.methods.afterReceiveMail = function(actor, postMaster, mail) {
 		}
 	}
 	else {
-		output.toActor( { text: postMaster.name + " says, 'Sorry, you don't have any mail waiting.'" } );
+		output.toActor.push( { text: postMaster.name + " says, 'Sorry, you don't have any mail waiting.'" } );
 		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME checks ACTOR_PRONOUN_POSSESSIVE mail." } ] } );
 	}
 	
