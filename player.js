@@ -427,7 +427,7 @@ playerSchema.methods.checkMail = function() {
 
 // TODO: remove actor as parameter?
 playerSchema.methods.afterCheckMail = function(actor, postMaster, hasMail) {
-	var output = new Output(this);
+	var output = new Output(actor);
 	
 	if(hasMail === true) {
 		output.toActor.push( { text: postMaster.name + " says, 'You have mail waiting.'" } );
@@ -436,7 +436,8 @@ playerSchema.methods.afterCheckMail = function(actor, postMaster, hasMail) {
 		output.toActor.push( { text: postMaster.name + " says, 'Sorry, you don't have any mail waiting.'" } );
 	}
 	
-	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME checks ACTOR_PRONOUN_POSSESSIVE mail." } ] } );
+	output.toRoom.push( { roomId: actor.room.id, textArray: [ { text: "ACTOR_NAME checks ACTOR_PRONOUN_POSSESSIVE mail." } ] } );
+	
 	return output;
 };
 
@@ -453,9 +454,8 @@ playerSchema.methods.receiveMail = function() {
 	_Mail.receiveMail(this, postMaster, this.afterReceiveMail);
 };
 
-// TODO: remove actor as parameter?
 playerSchema.methods.afterReceiveMail = function(actor, postMaster, mail) {
-	var output = new Output(this);
+	var output = new Output(actor);
 	
 	if(mail !== null) {
 		if(mail.length === 0) {
@@ -464,29 +464,30 @@ playerSchema.methods.afterReceiveMail = function(actor, postMaster, mail) {
 		else {
 			for(var i = 0; i < mail.length; i++) {
 				var pieceOfMail = new note();
+				pieceOfMail.canBeTaken = true;
 				pieceOfMail.shortDescription = "a piece of mail";
 				pieceOfMail.longDescription = "Someone has left a piece of mail here.";
-				pieceOfMail.written = "From:" + mail[i].senderName + "\n\r" + "To:" + mail[i].recipientName + "\n\r" + mail[i].body;
+				pieceOfMail.written = "\n\rFrom:" + mail[i].senderName + "\n\r" + "To:" + mail[i].recipientName + "\n\r" + mail[i].body;
 				pieceOfMail.type = global.ITEM_NOTE;
 				pieceOfMail.keywords.push("mail");
 				
-				this.world.addItem(pieceOfMail);
-				this.inventory.push(pieceOfMail);
+				actor.world.addItem(pieceOfMail);
+				actor.inventory.push(pieceOfMail);
 			}
 			
 			if(mail.length === 1) {
 				output.toActor.push( { text: postMaster.name + " gives you a piece of mail." } );
-				output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME receives a piece of mail." } ] } );
+				output.toRoom.push( { roomId: actor.room.id, textArray: [ { text: "ACTOR_NAME receives a piece of mail." } ] } );
 			}
 			else {
 				output.toActor( { text: postMaster.name + " gives a stack of mail." } );
-				output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME receives a stack of mail." } ] } );
+				output.toRoom.push( { roomId: actor.room.id, textArray: [ { text: "ACTOR_NAME receives a stack of mail." } ] } );
 			}
 		}
 	}
 	else {
 		output.toActor.push( { text: postMaster.name + " says, 'Sorry, you don't have any mail waiting.'" } );
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME checks ACTOR_PRONOUN_POSSESSIVE mail." } ] } );
+		output.toRoom.push( { roomId: actor.room.id, textArray: [ { text: "ACTOR_NAME checks ACTOR_PRONOUN_POSSESSIVE mail." } ] } );
 	}
 	
 	return output;
