@@ -234,10 +234,6 @@ playerSchema.methods.listInventory = function() {
 	}
 	else {
 		for(var i = 0; i < this.inventory.length; i++) {
-			
-			// console.log(this.inventory[i]);
-			console.log(this.inventory[i] instanceof clothes);
-			
 			output.toActor.push( { text: "  " + this.inventory[i].shortDescription, color: "Green" } );
 		}
 	}
@@ -544,39 +540,44 @@ playerSchema.methods.afterReceiveMail = function(actor, postMaster, mail) {
 playerSchema.methods.writeNote = function(paperToken, penToken) {
 	var output = new Output(this);
 
-	var paper = this.inventory.findByKeyword(paperToken);
+	var paperResult = this.inventory.findByKeyword(paperToken);
 
-	if(paper === null) {
+	if(paperResult.items.length === 0) {
 		output.toActor.push( { text: "But what do you want to write on?" });
 		return output;
 	}
-	else if(paper.getType() !== global.ITEM_NOTE) {
-		output.toActorMessage("FIRST_OBJECT_SHORTDESC: you can't write on THAT!", paper);
+	else if (paperResult.items[0] instanceof note === false) {
+		output.toActorMessage("FIRST_OBJECT_SHORTDESC: you can't write on THAT!", paperResult.items[0]);
+		
+		console.log(output);
 		return output;
 	}
 	
-	var pen = this.inventory.findByKeyword(penToken);
+	var penResult = this.inventory.findByKeyword(penToken);
 	
-	if(pen === null) {
+	if(penResult.items === null) {
 		output.toActor.push( { text: "But what do you want to write with?" } );
 		return output;
 	}
-	else if(pen.getType() !== global.ITEM_PEN) {
-		output.toActorMessage("FIRST_OBJECT_SHORTDESC: you can't write with THAT!", pen);
+	else if(penResult.items[0] instanceof pen === false) {
+		output.toActorMessage("FIRST_OBJECT_SHORTDESC: you can't write with THAT!", penResult.items[0]);
 		return output;
 	}
 	
-	if(paper.getWrittenContents().length !== 0) {
+	if(paperResult.items[0].isBlank() === false) {
+		console.log('==>' + paperResult.items[0].getWrittenContents());
 		output.toActor.push( { text: "But it's already been written on!" } );
 		return output;
 	}
 	
 	output.toActor.push( { text: "Write your note, use @ on a new line when done." } );
-	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME starts to write a note." } ] } );
+	output.toRoomMessage(this.room.id, "ACTOR_NAME starts to write a note.");
 	this.isWriting = true;
 	this.isWritingNote = true;
-	this.paper = paper;
+	this.paper = paperResult.items[0];
 	this.writingQueue = [];
+	
+	return output;
 };
 
 playerSchema.methods.load = function(name, callback) {

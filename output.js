@@ -56,6 +56,9 @@ Output.prototype.format = function(text, textTarget, itemArray) {
 
 Output.prototype.toActorMessage = function(message, item) {
     this.toActor.push( { text: message, items: [ item ] } );
+    
+    console.log('*****************');
+    console.log(this.toActor);
 };
 
 Output.prototype.toRoomMessage = function(roomId, message) {
@@ -92,6 +95,10 @@ Output.prototype.__emit = function(target, textArray) {
     
     for(var i = 0; i < textArray.length; i++) {
         if(textArray[i].color !== undefined) {
+            
+            console.log('--> ' + textArray[i].text);
+            console.log('--> ' + textArray[i].items);
+            
             result.push(target.emitMessage(this.format(textArray[i].text, target, textArray[i].items), textArray[i].color));
         } else {
             result.push(target.emitMessage(this.format(textArray[i].text, target, textArray[i].items)));

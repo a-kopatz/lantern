@@ -12,12 +12,20 @@ noteSchema.methods.getType = function() {
 };
 
 noteSchema.methods.getWrittenContents = function() {
-    if(this.written === undefined || this.written === null || this.written.length === 0) {
+    if(this.isBlank()) {
         return this.shortDescription + " -- There's nothing written on it.";
     }
     else {
         return this.shortDescription + ": " + this.written;
     }
+};
+
+noteSchema.methods.isBlank = function() {
+    if(this.written === undefined || this.written === null || this.written.length === 0) {
+        return true; 
+    }
+    
+    return false;
 };
 
 var noteModel = mongoose.model('note', noteSchema);
