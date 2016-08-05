@@ -64,12 +64,14 @@ roomSchema.methods.contains = function(item) {
 };
 
 roomSchema.methods.addCharacter = function(character) {
+
 	if(character.isNpc()) {
 		this.npcs.push(character);
 	}
 	else {
 		this.players.push(character);
 	}
+	
 	character.room = this;
 };
 
@@ -253,11 +255,10 @@ roomSchema.methods.showRoomToCharacter = function(character) {
  		}
  	}
  	
- 	// TODO: Add back when NPCs re-implemented
- 	// for(var j = 0; j < this.npcs.length; j++) {
- 	// 	// TODO: if character.canSee(this.npcs[i])
- 	// 	output.toActor.push( { text: this.mobs[j].longDescription, color: "Orange" } );
- 	// }
+ 	for(var j = 0; j < this.npcs.length; j++) {
+ 		// TODO: if character.canSee(this.npcs[i])
+ 		output.toActor.push( { text: this.npcs[j].getShortDescription(), color: "Orange" } );
+ 	}
 
  	for (var i = 0; i < this.contents.length; i++) {
  		output.toActor.push( { text: "FIRST_OBJECT_DESC", items: [ this.contents[i] ], color: 'Green' } );

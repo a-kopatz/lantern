@@ -3,7 +3,8 @@ var constants = require('./constants');
 var schema = mongoose.Schema;
 var Item = require('./item');
 var item = require('./item').item;
-
+var Npc = require('./npc');
+var npc = require('./npc').npc;
 
 var zoneSchema = new schema({
     id: Number,
@@ -32,15 +33,16 @@ function executeZoneResetCommands(commands, instructionNumber, world, lastThingL
         switch(command[0]) {
             case "*":  // ignore
                 break;
-            // case "M":  // mobile
-            //     var thisMob = new mob();
-            //     var mobId = parseInt(command[2], 10);
-            //     maxExisting = parseInt(command[3], 10);
+            case "N":  // npc (non-player character)
+                var thisNpc = new npc();
                 
-            //     if(world.countMobs(mobId) < maxExisting) {
-            //         Mob.load(mobId, thisMob, commands, world, instructionNumber, afterMobLoaded);
-            //     }
-            //     break;
+                var npcId = parseInt(command[2], 10);
+                maxExisting = parseInt(command[3], 10);
+                
+                if(world.countNPCs(npcId) < maxExisting) {
+                    Npc.load(npcId, thisNpc, commands, world, instructionNumber, afterNpcLoaded);
+                }
+                break;
             case "O":  // item
                 var roomItem = new item();
                 var roomItemId = parseInt(command[2], 10);
@@ -98,37 +100,38 @@ function executeZoneResetCommands(commands, instructionNumber, world, lastThingL
     }
 }
 
-// function afterMobLoaded(document, mob, commands, world, instructionNumber) {
-//     mob = document[0];
+function afterNpcLoaded(document, npc, commands, world, instructionNumber) {
+    npc = document[0];
 
-//     if(mob === undefined) {
-//         return;
-//     }
+    if(npc === undefined) {
+        return;
+    }
+
+    console.log('--> ' + npc.isNpc());
+    
+    npc.initialize();
 
     
-//     mob.initialize();
-
-    
-//      var command = commands[instructionNumber].split(" ");
-//      var roomId = parseInt(command[4], 10);
+     var command = commands[instructionNumber].split(" ");
+     var roomId = parseInt(command[4], 10);
 
 // //     mudlog.info("Loading " + mob.name + "(" + mob.id + ") with " + hitpointTotal + " hitpoints in room " + roomId);
 
 
-//     world.addCharacter(mob);
+    world.addCharacter(npc);
 
-//     var targetRoom = world.getRoom(roomId);
+    var targetRoom = world.getRoom(roomId);
     
-//     if(targetRoom === null) {
-//         return;
-//     }
+    if(targetRoom === null) {
+        return;
+    }
     
-//     targetRoom.addCharacter(mob);
+    targetRoom.addCharacter(npc);
 
 
     
-//     executeZoneResetCommands(commands, (instructionNumber + 1), world, mob);
-// }
+    executeZoneResetCommands(commands, (instructionNumber + 1), world, npc);
+}
 
 function afterRoomItemLoaded(document, item, commands, world, mob, instructionNumber) {
     item = document[0];

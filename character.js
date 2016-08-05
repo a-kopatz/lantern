@@ -1007,8 +1007,13 @@ characterSchema.methods.withdrawMoney = function(amount) {
 /* Mail-related methods */
 
 characterSchema.methods.isAtPostOffice = function() {
-	// TODO: Make more complex -- postmaster, 'mail ATM', etc.
-	return true;
+	for(var i = 0; i < this.room.npcs.length; i++) {
+		if(this.room.npcs[i].isPostmaster() === true) {
+			return true;
+		}
+	}
+	
+	return false;
 };
 
 characterSchema.methods.openCloseExit = function(exit, verb, mode) {
@@ -1381,5 +1386,5 @@ var characterModel = mongoose.model('character', characterSchema);
 
 module.exports = {
 	schema: characterSchema,
-	character: characterModel,
+	character: characterModel
 };

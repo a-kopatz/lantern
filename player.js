@@ -337,6 +337,17 @@ playerSchema.methods.getFullnessIndex = function() {
 	return index;
 };
 
+
+playerSchema.methods.getPostmaster = function() {
+	for(var i = 0; i < this.room.npcs.length; i++) {
+		if(this.room.npcs[i].isPostmaster() === true) {
+			return this.room.npcs[i];
+		}
+	}
+	
+	return null;
+};
+
 playerSchema.methods.sendMail = function(recipientName) {
 	var output = new Output(this);
 	
@@ -346,41 +357,53 @@ playerSchema.methods.sendMail = function(recipientName) {
 };
 
 playerSchema.methods.checkMail = function() {
-	// output.toActor.push( { text: "This is not implemented fully yet." } ).emit();
+	var postMaster = this.getPostmaster();
 	
-	// TODO: Pass postmaster?
-	_Mail.checkForMail(this, this.afterCheckMail);
+	if(postMaster === null) {
+		// This condition should never be met -- already checked in interpreter
+		var output = new Output(this);
+		output.toActor.push( { text: "You can't do that here!" } ).emit();
+		return;
+	}
+	
+	_Mail.checkForMail(this, postMaster, this.afterCheckMail);
 };
 
-//playerSchema.methods.afterCheckMail = function(character, postMaster, hasMail) {
-playerSchema.methods.afterCheckMail = function(character, hasMail) {
+// TODO: remove actor as parameter?
+playerSchema.methods.afterCheckMail = function(actor, postMaster, hasMail) {
 	var output = new Output(this);
 	
 	if(hasMail === true) {
-		output.toActor( { text: "You have mail waiting." } );
-		// character.emitMessage(postMaster.name + " says, 'You have mail waiting.'");
+		output.toActor( { text: postMaster.name + " says, 'You have mail waiting.'" } );
 	}
 	else {
-		output.toActor( { text: "Sorry, you don't have any mail waiting." } );
-		// character.emitMessage(postMaster.name + " says, 'Sorry, you don't have any mail waiting.'");
+		output.toActor( { text: postMaster.name + " says, 'Sorry, you don't have any mail waiting.'" } );
 	}
 	
+	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME checks ACTOR_PRONOUN_POSSESSIVE mail." } ] } );
 	return output;
 };
 
 playerSchema.methods.receiveMail = function() {
-	//output.toActor.push( { text: "This is not implemented fully yet." } ).emit();
-	// TODO: postmaster, maybe?
+	var postMaster = this.getPostmaster();
+	
+	if(postMaster === null) {
+		// This condition should never be met -- already checked in interpreter
+		var output = new Output(this);
+		output.toActor.push( { text: "You can't do that here!" } ).emit();
+		return;
+	}
+	
 	_Mail.receiveMail(this, this.afterReceiveMail);
 };
 
-playerSchema.methods.afterReceiveMail = function(character, mail) {
+// TODO: remove actor as parameter?
+playerSchema.methods.afterReceiveMail = function(actor, postMaster, mail) {
 	var output = new Output(this);
 	
 	if(mail !== null) {
 		if(mail.length === 0) {
-			//character.emitMessage(postMaster.name + " says, 'Sorry, you don't have any mail waiting.'");
-			output.toActor( { text: "Sorry, you don't have any mail waiting." } );
+			output.toActor( { text: postMaster.name + " says, 'Sorry, you don't have any mail waiting.'" } );
 		}
 		else {
 			for(var i = 0; i < mail.length; i++) {
@@ -396,18 +419,18 @@ playerSchema.methods.afterReceiveMail = function(character, mail) {
 			}
 			
 			if(mail.length === 1) {
-				// character.emitMessage(postMaster.name + " gives you a piece of mail.");
-				output.toActor( { text: "You receive a piece of mail." } );
+				output.toActor( { text: postMaster.name + " gives you a piece of mail." } );
+				output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME receives a piece of mail." } ] } );
 			}
 			else {
-				//character.emitMessage(postMaster.name + " gives a stack of mail.");
-				output.toActor( { text: "You receive a stack of mail." } );
+				output.toActor( { text: postMaster.name + " gives a stack of mail." } );
+				output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME receives a stack of mail." } ] } );
 			}
 		}
 	}
 	else {
-		// character.emitMessage(postMaster.name + " says, 'Sorry, you don't have any mail waiting.'");
-		output.toActor( { text: "Sorry, you don't have any mail waiting." } );
+		output.toActor( { text: postMaster.name + " says, 'Sorry, you don't have any mail waiting.'" } );
+		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME checks ACTOR_PRONOUN_POSSESSIVE mail." } ] } );
 	}
 	
 	return output;
