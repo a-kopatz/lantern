@@ -1394,6 +1394,14 @@ characterSchema.methods.readItem = function(keyword) {
 	return output;
 };
 
+/* Shopping and buying/selling-related methods */
+
+characterSchema.methods.getShop = function() {
+	return this.world.getShop(this.room.id);
+};
+
+
+
 var characterModel = mongoose.model('character', characterSchema);
 
 module.exports = {

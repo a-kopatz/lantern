@@ -1,9 +1,11 @@
 mongo lantern --eval "db.items.drop()"
 mongo lantern --eval "db.npcs.drop()"
 mongo lantern --eval "db.rooms.drop()"
+mongo lantern --eval "db.shops.drop()"
 mongo lantern --eval "db.zones.drop()"
 
 mongoimport --db lantern --collection items --file 30.obj.json
 mongoimport --db lantern --collection npcs --file 30.npc.json
 mongoimport --db lantern --collection rooms --file 30.wld.json
+mongoimport --db lantern --collection shops --file 30.shp.json
 mongoimport --db lantern --collection zones --file 30.zon.json

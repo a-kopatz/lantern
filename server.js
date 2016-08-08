@@ -7,6 +7,7 @@ var player = require('./player').player;
 var mongoose = require('mongoose');
 var world = require('./world');
 var room = require('./room');
+var shop = require('./shop');
 var zone = require('./zone');
 var interpreter = require('./interpreter');
 var time = require('./time');
@@ -61,14 +62,15 @@ room.load(function(roomDocs) {
             gameWorld.zones[i].reset();
         }
         
-//         shop.load(function(shopDocs) {
-//             gameWorld.shops = shopDocs;
+        shop.load(function(shopDocs) {
+            console.log(shopDocs);
+            gameWorld.shops = shopDocs;
             
 //             for(var i = 0; i < gameWorld.shops.length; i++) {
 //                 gameWorld.shops[i].world = gameWorld;
 //                 gameWorld.shops[i].initialize();
 //             }
-//         });
+        });
     });
 });
 

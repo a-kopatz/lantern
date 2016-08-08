@@ -267,6 +267,10 @@ roomSchema.methods.showRoomToCharacter = function(character) {
 	return output;
 };
 
+
+roomSchema.methods.isShop = function() {
+	return false;
+}
 function load(callback) {
 	roomModel.find({}, function(err, docs) {
 		// TODO: log error

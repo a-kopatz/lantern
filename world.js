@@ -8,7 +8,7 @@ function World() {
  	this.npcs = [];
  	this.items = [];
 	this.zones = [];
-// 	this.shops = [];
+	this.shops = [];
 	this.time = null;
 }
 
