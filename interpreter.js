@@ -118,7 +118,7 @@ var COMMAND_LIST = [
           { command: "look"     , minimumPosition: global.POS_RESTING , functionPointer: do_look       , minimumLevel: 0, subCommand: 0},
           { command: "laugh"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_LAUGH },
           { command: "lick"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_LICK },
-          { command: "list"     , minimumPosition: global.POS_RESTING , functionPointer: do_list       , minimumLevel: 0, subCommand: 0 },
+        //   { command: "list"     , minimumPosition: global.POS_RESTING , functionPointer: do_list       , minimumLevel: 0, subCommand: 0 },
 
           { command: "lock"     , minimumPosition: global.POS_RESTING , functionPointer: do_lock_door  , minimumLevel: 0, subCommand: 0 },
           { command: "love"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_LOVE },
@@ -936,16 +936,16 @@ function do_write(character, command) {
     character.writeNote(command.tokens[0], command.tokens[1]).emit();
 }
 
-function do_list(character) {
-    var shop = character.getShop();
+// function do_list(character) {
+//     var shop = character.getShop();
     
-    if(shop === null) {
-        character.emitMessage(global.CANNOT_DO_THAT_HERE);
-    }
-    else {
-        shop.listItemsForSale(character);
-    }
-}
+//     if(shop === null) {
+//         character.emitMessage(global.CANNOT_DO_THAT_HERE);
+//     }
+//     else {
+//         shop.listItemsForSale(character).emit();
+//     }
+// }
 
 // Exports
 module.exports = Interpreter;

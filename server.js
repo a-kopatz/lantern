@@ -62,15 +62,16 @@ room.load(function(roomDocs) {
             gameWorld.zones[i].reset();
         }
         
-        shop.load(function(shopDocs) {
-            console.log(shopDocs);
-            gameWorld.shops = shopDocs;
-            
-//             for(var i = 0; i < gameWorld.shops.length; i++) {
-//                 gameWorld.shops[i].world = gameWorld;
-//                 gameWorld.shops[i].initialize();
-//             }
-        });
+        // TODO: Put this back -- probably a timing issue?
+        // shop.load(function(shopDocs) {
+        //     console.log(shopDocs);
+        //     gameWorld.shops = shopDocs;
+
+        //     for(var i = 0; i < gameWorld.shops.length; i++) {
+        //         gameWorld.shops[i].world = gameWorld;
+        //         gameWorld.shops[i].initialize();
+        //     }
+        // });
     });
 });
 

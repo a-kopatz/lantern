@@ -23,17 +23,17 @@ var shopSchema = new schema({
 });
 
 shopSchema.methods.isShopOk = function() {
-    // if(this.shopKeeper === null || this.shopKeeper === undefined) {
-        
-    //     this.shopKeeper = this.world.getNPC(this.shopkeeperId);
-        
-    //     if(this.shopKeeper === null || this.shopKeeper === undefined) {
-    //         return false;
-    //     }
-    // }
-    
+    if(this.shopKeeper === null || this.shopKeeper === undefined) {
+        return false;
+    }
+
     // if player can do business here (is open, trades with type, in right room, etc)
     return true;
+};
+
+shopSchema.methods.initialize = function() {
+    this.shopKeeper = this.world.getNPC(this.shopKeeperId);
+    console.log('===}>' + this.shopKeeper);
 };
 
 shopSchema.methods.listItemsForSale = function(character) {
@@ -62,6 +62,7 @@ shopSchema.methods.listItemsForSale = function(character) {
     }
     else {
         // TODO: Shop is not ok
+        console.log('here!');
     }
     
     // TODO: "list shirt", "list pizza", etc

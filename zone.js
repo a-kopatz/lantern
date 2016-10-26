@@ -52,15 +52,15 @@ function executeZoneResetCommands(commands, instructionNumber, world, lastThingL
                     Item.load(roomItemId, roomItem, commands, world, null, instructionNumber, afterRoomItemLoaded);
                 }
                 break;
-            // case "G":
-            //     var givenItem = new item();
-            //     var givenItemId = parseInt(command[2], 10);
-            //     maxExisting = parseInt(command[3], 10);
+            case "G":
+                var givenItem = new item();
+                var givenItemId = parseInt(command[2], 10);
+                maxExisting = parseInt(command[3], 10);
                 
-            //     if(world.countItem(givenItemId) < maxExisting) {
-            //         Item.load(givenItemId, givenItem, commands, world, lastThingLoaded, instructionNumber, afterGivenItemLoaded);
-            //     }
-            //     break;
+                if(world.countItem(givenItemId) < maxExisting) {
+                    Item.load(givenItemId, givenItem, commands, world, lastThingLoaded, instructionNumber, afterGivenItemLoaded);
+                }
+                break;
             // case "E":
             //     var equippedItem = new item();
             //     var equippedItemId = parseInt(command[2], 10);
@@ -107,8 +107,6 @@ function afterNpcLoaded(document, npc, commands, world, instructionNumber) {
         return;
     }
 
-    console.log('--> ' + npc.isNpc());
-    
     npc.initialize();
 
     
@@ -155,20 +153,20 @@ function afterRoomItemLoaded(document, item, commands, world, mob, instructionNu
     }
 }
 
-// function afterGivenItemLoaded(document, item, commands, world, mob, instructionNumber) {
-//     item = document[0];
+function afterGivenItemLoaded(document, item, commands, world, npc, instructionNumber) {
+    item = document[0];
     
-//     if(item !== undefined) {
-//         world.addItem(item);
+    if(item !== undefined) {
+        world.addItem(item);
     
-// //         mudlog.info("Giving " + item.id + " to mob " + mob.id);
-//         mob.inventory.push(item);
-//         executeZoneResetCommands(commands, (instructionNumber + 1), world, mob);
+//         mudlog.info("Giving " + item.id + " to mob " + mob.id);
+        npc.inventory.push(item);
+        executeZoneResetCommands(commands, (instructionNumber + 1), world, npc);
+    }
+//     else {
+//         mudlog.warn("Undefined item load attempted - " + commands + " - " + instructionNumber);
 //     }
-// //     else {
-// //         mudlog.warn("Undefined item load attempted - " + commands + " - " + instructionNumber);
-// //     }
-// }
+}
 
 // function afterEquippedItemLoaded(document, item, commands, world, mob, instructionNumber) {
 //     item = document[0];

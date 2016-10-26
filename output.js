@@ -16,8 +16,6 @@ Output.prototype.format = function(text, textTarget, itemArray) {
     // TODO: Stuff like textTarget can see that actor or target --> name else 'someone'
     // Use function character.canSee(target)
 
-    // console.log(text);
-
     if(text === undefined || text === null) {
         console.log('WTF?');
         return '';
@@ -92,10 +90,6 @@ Output.prototype.__emit = function(target, textArray) {
     
     for(var i = 0; i < textArray.length; i++) {
         if(textArray[i].color !== undefined) {
-            
-            console.log('--> ' + textArray[i].text);
-            console.log('--> ' + textArray[i].items);
-            
             result.push(target.emitMessage(this.format(textArray[i].text, target, textArray[i].items), textArray[i].color));
         } else {
             result.push(target.emitMessage(this.format(textArray[i].text, target, textArray[i].items)));
