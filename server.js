@@ -141,6 +141,9 @@ io.sockets.on("connection", function(socket) {
                     case '1':
                         enterGame();
                         break;
+                    case '2':
+                        displayHelp();
+                        break;
                     default:
                         emitMessage("That's not a menu choice!\r\n");
                         emitMessage(menu);
@@ -269,6 +272,10 @@ io.sockets.on("connection", function(socket) {
         }
     }
     
+    function displayHelp() {
+        emitMessage(menuHelp);
+    }
+    
     function enterGame() {
         if (socket.player.experience === undefined) {
             // socket.player.start(gameWorld.time);
@@ -331,8 +338,8 @@ function hourElapsed() {
 
 var introMessage = "Welcome to Lantern.\n\rBy what name do you wish to be known?";
 var motd = "This is the message of the day.\n\rCurrently, there's not much here.\n\r*** PRESS RETURN: ";
-var menu = "Welcome to Lantern!\n\r0) Exit from Lantern.\n\r1) Enter the game.\n\r\n\r  Make a choice: ";
+var menu = "Welcome to Lantern!\n\r0) Exit from Lantern.\n\r1) Enter the game.\n\r2) Get Help!\n\r  Make a choice: ";
 var welcomeMessage = "\r\nWelcome to Lantern!  May your visit here be... Interesting.\r\n\r\n";
-
+var menuHelp = "Write something smart here.\n\r";
 
 exports.setConnectionModeMenu = setConnectionModeMenu;

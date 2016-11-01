@@ -67,6 +67,7 @@ var COMMAND_LIST = [
 
           { command: "eat"      , minimumPosition: global.POS_RESTING , functionPointer: do_eat        , minimumLevel: 0, subCommand: global.SCMD_EAT },
           { command: "embrace"  , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_EMBRACE },
+          { command: ":"        , minimumPosition: global.POS_RESTING , functionPointer: do_emote      , minimumLevel: 0, subCommand: 0 },
           { command: "emote"    , minimumPosition: global.POS_RESTING , functionPointer: do_emote      , minimumLevel: 0, subCommand: 0 },
           { command: "equipment", minimumPosition: global.POS_DEAD    , functionPointer: do_apparel    , minimumLevel: 0, subCommand: 0 },
           { command: "exits"    , minimumPosition: global.POS_RESTING , functionPointer: do_exits      , minimumLevel: 0, subCommand: 0 },
@@ -151,7 +152,7 @@ var COMMAND_LIST = [
           { command: "punch"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_PUNCH },
           { command: "purr"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_PURR },
 
-        //   { command: "quit"     , minimumPosition: global.POS_STANDING, functionPointer: do_quit       , minimumLevel: 0, subCommand: 0 },
+          { command: "quit"     , minimumPosition: global.POS_STANDING, functionPointer: do_quit       , minimumLevel: 0, subCommand: 0 },
 
           { command: "read"     , minimumPosition: global.POS_RESTING , functionPointer: do_read       , minimumLevel: 0, subCommand: 0 },
           { command: "receive"  , minimumPosition: global.POS_RESTING , functionPointer: do_receiveMail, minimumLevel: 0, subCommand: 0 },
@@ -498,18 +499,18 @@ function do_tog_shout(character, command) {
     }
 }
 
-// function do_quit(character) {
-//      character.emitMessage("Goodbye friend.... Come back soon!");
-//      character.emitRoomMessage(character.name + " has quit the game.");
+function do_quit(character) {
+     character.emitMessage("Goodbye friend.... Come back soon!");
+     character.emitRoomMessage(character.name + " has quit the game.");
 
-//      if(character.socket !== undefined) {
-//          character.socket.player = null;
-//          character.socket.disconnect();
-//      }
+     if(character.socket !== undefined) {
+         character.socket.player = null;
+         character.socket.disconnect();
+     }
     
-//      character.room.removeCharacter(character);
-//      character.world.removeCharacter(character);
-// }
+     character.room.removeCharacter(character);
+     character.world.removeCharacter(character);
+}
 
 function do_take(character, command) {
     if(command.tokens.length === 0) {
