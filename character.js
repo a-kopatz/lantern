@@ -782,7 +782,7 @@ characterSchema.methods.eatItem = function(keyword) {
 		return output;
 	}
 
-	var fullnessIndex = 0;
+	// var fullnessIndex = 0;
 
 	for(var i = 0; i < result.items.length; i++) {
 		if(result.items[i].type !== global.ITEM_FOOD) {
@@ -795,17 +795,17 @@ characterSchema.methods.eatItem = function(keyword) {
 		}
 	}
 
-	fullnessIndex = this.getFullnessIndex();
-	var fullnessMessages = global.FULLNESS[ fullnessIndex ];
+	// fullnessIndex = this.getFullnessIndex();
+	// var fullnessMessages = global.FULLNESS[ fullnessIndex ];
 
-	if(fullnessMessages != undefined) {
-		output.toActor.push( { text: fullnessMessages[0] } );
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: fullnessMessages[1] } ] } );
-	}
+	// if(fullnessMessages != undefined) {
+	// 	output.toActor.push( { text: fullnessMessages[0] } );
+	// 	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: fullnessMessages[1] } ] } );
+	// }
 			
-	if(fullnessIndex >= global.MAX_FULLNESS) {
-		this.position = global.POS_SLEEPING;
-	}
+	// if(fullnessIndex >= global.MAX_FULLNESS) {
+	// 	this.position = global.POS_SLEEPING;
+	// }
 	
 	return output;
 };
