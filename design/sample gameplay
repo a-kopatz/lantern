@@ -1,0 +1,228 @@
+Welcome to Lantern!
+By what name do you wish to be known?
+> Loramore
+
+Did I get that right, Loramore?
+> Yes
+
+New character.
+Enter a password for your character.
+> *********
+
+Re-enter your password.
+> *********
+
+What is your gender? (M/F)
+> F
+
+Welcome to Lantern!
+0) Exit and Disconnect
+1) Enter the Game
+2) Help me!
+Make a choice:
+> 1
+
+The Foyer of the Grand Hotel
+    You are in the foyer of the Hotel.  How you got here, nobody knows.  How
+you leave is equally a mystery.
+[ Obvious Exits: N, E, W ]
+A chandelier hangs overhead.
+A fountain bubbles merrily in the center of the room.
+> inventory
+
+You are carrying:
+   Nothing.
+> take fountain
+
+The fountain: You can't take that!
+> E
+
+The Dining Room of the Grand Hotel
+[ Obvious Exits: W ]
+A table full of food stretches before you.
+Davkas is here.
+> look at Davkas
+
+Davkas is a tall man with a bit of stubble on his face.  He's got some extra pounds
+around his midsection.
+> say Hi
+
+You say, 'Hi'
+Davkas says 'Hi Loramore.'
+> curtsey
+You curtsey gracefully.
+Davkas bows deeply.
+
+> say What are you doing today?
+You say, 'What are you doing today?'
+Davkas says, 'Just hanging out, eating.'
+
+> look at table
+The table contains:
+   [100] Hamburgers
+   [15] Tacos
+   [203] Cheeseburgers
+   [51] Chocolate Shakes
+   
+> take shake from table
+You take a shake from the table.
+
+> drink shake
+You drink a chocolate shake.
+Davkas drinks a chocolate shake.
+
+> take 10 hamburgers from table
+You take 10 hamburgers from the table.
+Davkas takes 3 tacos from the table.
+
+> eat hamburgers
+You eat a hamburger.
+Davkas eats 3 tacos... a button pops off his pants as his belly swells outward!
+
+> feed davkas hamburger
+You force-feed Davkas a hamburger. His belly bulges out!
+
+> laugh
+You laugh.
+Davkas chuckles.
+
+> emote pats Davkas's belly.
+Loramore pats Davkas's belly.
+Dakvas burps loudly.
+
+> inventory
+You are carrying:
+    [8] a hamburger
+
+> drop 2 hamburger
+You drop 2 hamburgers.
+
+> give hamburger to Davkas
+You give a hamburger to Davkas.
+
+> go west
+You leave west.
+
+The Foyer of the Grand Hotel
+    You are in the foyer of the Hotel.  How you got here, nobody knows.  How
+you leave is equally a mystery.
+[ Obvious Exits: N, E, W ]
+A chandelier hangs overhead.
+A fountain bubbles merrily in the center of the room.
+> north
+
+The Casino
+[ Obvious Exits: S ]
+The pitboss is here, running the games.
+The dealer is here, ready to take your wager.
+An ATM is here on the wall.
+A waitress is here, selling cocktails.
+
+> buy cocktail
+You buy a cocktail.
+
+> drink cocktail
+You drink a cocktail.  You feel a little bit drunk.
+
+> bet 100
+The dealer says, 'You don't have enough money!'
+
+> money
+You have 50 dollars with you and 2000 dollars in the bank.
+
+> withdraw 50
+You withdraw 50 dollars.
+
+> bet 100
+You wager 100.  Your hand is 11.  The dealer shows a 9.
+
+hit stick > wager 100
+You already bet.  Hit or Stick?
+
+hit stick > hit
+You get a 9.  You have 20.  The dealer has 19.  You win 100 dollars.
+
+> go south
+The Foyer of the Grand Hotel
+    You are in the foyer of the Hotel.  How you got here, nobody knows.  How
+you leave is equally a mystery.
+[ Obvious Exits: N, E, W ]
+A chandelier hangs overhead.
+A fountain bubbles merrily in the center of the room.
+
+> west
+The Nurse's Station
+   This is the place to come when an ailment strikes you.
+[ Obvious Exits: E ]
+Davkas is here.
+A bottle of Tums has been left behind.
+
+> say What's wrong?
+You say, 'What's wrong?'
+Davkas points to his belly.
+Davkas says, 'Belly ache.'
+
+> rofl
+You roll on the floor, laughing.
+
+> score
+You are Loramore.  You are 25 years old.
+You have been playing for 1 hours.
+You have 200 dollars with you and 1900 dollars in the bank.
+You are 5 feet 4 inches tall and weigh 162 pounds.
+You have a BMI of 24, which means you are slightly overweight.
+You are not hungry or thirsty.  You are slightly drunk.
+
+> list
+Things for sale here:
+    [ Infinite ] A bottle of slimfast
+    
+> buy
+Yes, buy.... but buy WHAT?
+
+> buy bottle
+You buy a bottle of slimfast.
+
+> drink slimfast
+You drink the bottle of slimfast... you feel thinner!
+
+> score
+You are Loramore.  You are 25 years old.
+You have been playing for 2 hours.
+You have 200 dollars with you and 1900 dollars in the bank.
+You are 5 feet 4 inches tall and weigh 152 pounds.
+You have a BMI of 17, which means you are thin.
+You are not hungry or thirsty.  You are slightly drunk.
+
+> achievements
+You have the following achievements:
+    Casino Winner: Win a game in the casino
+    Casual Drinker: Have an adult beverage
+    Crash Dieter: Drink a Slim-Fast Shake
+
+> who
+The following players are online:
+    Loramore - The Nurse's Station
+    Dakvas - The Nurse's Station
+    Warrax (AFK) - The Upstairs Lounge
+    Alinys - The Bakery
+
+> look
+The Nurse's Station
+   This is the place to come when an ailment strikes you.
+[ Obvious Exits: E ]
+Davkas is here.
+A bottle of Tums has been left behind.
+
+> take Tums
+You take a bottle of Tums.
+
+> apparel
+You are wearing:
+    <worn on head>     A Chicago Cubs World Series Hat
+    <worn about body>  An 'I Believe in the Great Pumpkin' Sweatshirt
+    <worn on legs>     A pair of jeans
+
+> quit
+Ok, friend... come back soon!
+

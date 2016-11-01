@@ -2,6 +2,20 @@ var Player = require("../player").player;
 
 /////////////////////////////////////////////////
 
+exports.player_nameWorks = function(test) {
+	var thisPlayer = new Player();
+	thisPlayer.name = "Rex";
+	test.equal(thisPlayer.name, "Rex");
+	test.done();
+};
+
+exports.player_passwordWorks = function(test) {
+    var thisPlayer = new Player();
+    thisPlayer.password = "Pa$$w0rd1";
+    test.equal(thisPlayer.password, "Pa$$w0rd1");
+    test.done();
+};
+
 
 exports.character_toggleAuction_togglesOnAndReturns = function(test) {
     var player = new Player();

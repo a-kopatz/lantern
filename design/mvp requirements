@@ -1,0 +1,62 @@
+1.) Character creation
+    - Name (no spaces)
+    - Password (confirmation)
+    - Gender
+    
+2.) Game Menu
+    - Exit to disconnect
+    - Enter the game
+    - Get a help screen (currently blank)
+    
+3.) Rooms
+    - Title
+    - Description
+
+4.) Exits
+    - Lead to other rooms
+    
+5.) 'Say' Command
+    - Visible to other players in the rooms
+
+6.) Inventory Command
+    - Lists items carried
+    
+7.) Take Command
+    - Removes item from room and places in inventory
+    - Some items cannot be taken
+
+8.) Move Commands (N/E/W/S/U/D)
+    - Changes rooms
+
+
+
+Who Command
+    - Lists other players online and their location
+    
+Apparel Command
+    - Lists worn items
+
+Social Commands
+    - Emits a message to other people in the room
+    - Messages are pre-determined
+    - Example: rofl -> (Name) rolls on the floor laughing.
+    
+Emote
+    - Emits a message to other people in the room
+    - Echos whatever is typed after it
+
+Score
+    - Lists details about the player
+
+Look
+    - When nothing specified -> gets description of room
+    - Name of player -> gets description of the player
+    - Keyword of NPC -> gets description on NPC
+    - Keyword of object -> gets description of object; if container, lists contents
+    
+Eat
+    - Consumes food item; removes from inventory
+
+
+    
+    
