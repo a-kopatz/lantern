@@ -939,7 +939,7 @@ characterSchema.methods.sipFromObject = function(object) {
 	var drink = global.DRINKS[object.containsLiquid];
 
 	messages.push(this.emitMessage("You sip the " + drink.name + "."));
-	messages.push(this.emitRoomMessage(this.name + " sips " + drink.name + " from " + object.shortDescription + "."));
+	messages.push(this.emitRoomMessage("ACTOR_NAME sips " + drink.name + " from FIRST_OBJECT_SHORTDESC."));
 
 	return messages;	
 };
@@ -957,7 +957,7 @@ characterSchema.methods.sipItem = function(keyword) {
 	
  	for(var i = 0; i < target.items.length; i++) {
 		if(target.items[i].type !== global.ITEM_DRINKCONTAINER && target.items[i].type !== global.ITEM_FOUNTAIN) {
-			output.toActor.push( { text: target.items[i].shortDescription + " -- You can't take a sip from THAT!" } );
+			output.toActor.push( { text: target.items[i].shortDescription + " -- You can't sip THAT!" } );
 			break;
 		}
 		else {
@@ -971,7 +971,7 @@ characterSchema.methods.sipItem = function(keyword) {
 				break;
 			}
 			
-			var messages = this.drinkFromObject(target.items[i]);
+			var messages = this.sipFromObject(target.items[i]);
 			output.toActor.push( { text: messages[0], items: [ target.items[i] ] } );
 			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ target.items[i] ] } ] } );
 		}

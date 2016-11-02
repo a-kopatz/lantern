@@ -178,7 +178,7 @@ var COMMAND_LIST = [
           { command: "shrug"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SHRUG },
           { command: "shout"    , minimumPosition: global.POS_RESTING,  functionPointer: do_gen_comm   , minimumLevel: 0, subCommand: global.SCMD_SHOUT },
 //           { command: "sing"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SING },
-        //   { command: "sip"      , minimumPosition: global.POS_RESTING , functionPointer: do_drink      , minimumLevel: 0, subCommand: global.SCMD_SIP },
+          { command: "sip"      , minimumPosition: global.POS_RESTING , functionPointer: do_sip        , minimumLevel: 0 },
           { command: "sit"      , minimumPosition: global.POS_RESTING , functionPointer: do_sit        , minimumLevel: 0, subCommand: 0 },
           { command: "slap"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SLAP },
 //           { command: "slay"     , minimumPosition: global.POS_RESTING , functionPointer: do_slay       , minimumLevel: 0, subCommand: 0 },
