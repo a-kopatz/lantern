@@ -11,6 +11,7 @@ var shop = require('./shop');
 var zone = require('./zone');
 var interpreter = require('./interpreter');
 var time = require('./time');
+var mail = require('./mail');
 
 // NOTE: These are here to force mongoose to register the schema prior to use
 var clothes = require('./clothes');
@@ -292,17 +293,17 @@ io.sockets.on("connection", function(socket) {
         socket.player.commandQueue = [];
         socket.player.enterGame(gameWorld);
 
-        // Mail.find({ recipientName: socket.player.name.toLowerCase() }, function(err, mail) {
-        //     if (err) {
-        //         // TODO: Log error, I guess?
-        //     }
+        mail.find({ recipientName: socket.player.name.toLowerCase() }, function(err, maildocs) {
+            if (err) {
+                // TODO: Log error, I guess?
+            }
             
-        //     if(mail !== null) {
-        //         if(mail.length > 0) {
-        //             socket.player.emitMessage("You have mail waiting.");
-        //         }
-        //     }
-        // });
+            if(maildocs !== null) {
+                if(maildocs.length > 0) {
+                    socket.player.emitMessage("You have mail waiting.");
+                }
+            }
+        });
     }
 
     function emitMessage(text, color, mask) {
