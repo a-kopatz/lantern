@@ -952,10 +952,10 @@ function do_write(character, command) {
 // }
 
 function do_help(character, command) {
-    // TODO: Use getPaddedWord to make pretty columns
     if(command.tokens.length < 1) {
         character.emitMessage("The following commands are available: ");
         
+        // TODO: Generalize this, maybe?
         var output = '';
         for(var i = 1; i <= COMMAND_LIST.length; i++) {
             output = output + utility.getPaddedWord(COMMAND_LIST[i - 1].command, 19);
@@ -971,9 +971,7 @@ function do_help(character, command) {
         }
     }
     else {
-        //character.emitMessage("Not implemented");
         helpdoc.display(command.tokens[0], function(helpdocsFromDb) {
-            //console.log(helpDocsFromDb);
             if(helpdocsFromDb.length === 0) {
                 character.emitMessage('No help is available on that topic.');
             }
@@ -981,6 +979,11 @@ function do_help(character, command) {
                 character.emitMessage(helpdocsFromDb[0].topic.toUpperCase());
                 character.emitMessage('------------------------------------------------------------------------------');
                 character.emitMessage(helpdocsFromDb[0].value);
+                
+                if(helpdocsFromDb[0].seeAlso !== null && helpdocsFromDb[0].seeAlso !== undefined) {
+                    var seeAlso = 'See Also: ' + helpdocsFromDb[0].seeAlso.join();
+                    character.emitMessage(seeAlso);
+                }
             }
         });
     }

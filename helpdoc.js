@@ -3,13 +3,13 @@ var schema = mongoose.Schema;
 
 var helpdocSchema = new schema({
     topic: String,
-    value: String
+    value: String,
+    seeAlso: [ String ]
 });
 
 function display(argument, callback) {
     console.log(argument);
     
-	//helpDocsModel.find({ topic: argument }, function(err, docs) {
 	helpdocModel.find({ }, function(err, docs) {
 	    console.log(docs);
 		console.log(err);
