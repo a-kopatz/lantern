@@ -20,6 +20,14 @@ function oppositeDirection(direction) {
 	}
 }
 
+function getPaddedWord(word, numberOfCharacters) {
+	while(word.length < numberOfCharacters) {
+		word = word + " ";
+	}
+	
+	return word;
+}
+
 function getFormattedLongString(originalString, startWithIndent) {
 	var result = "";
 	
@@ -210,5 +218,6 @@ exports.oppositeDirection = oppositeDirection;
 exports.getBmiDescription = getBmiDescription;
 exports.getFormattedLongString = getFormattedLongString;
 exports.getPastTenseOfWord = getPastTenseOfWord;
+exports.getPaddedWord = getPaddedWord;
 exports.alreadyWearing = alreadyWearing;
 exports.wearMessage = wearMessage;

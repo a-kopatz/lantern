@@ -6,7 +6,7 @@ var typo = require("./typo").typo;
 var Social =  require("./social");
 var Character = require("./character");
 var Output = require("./output");
-
+var utility = require("./utility");
 
 // Object constructor
 function Interpreter() {
@@ -100,6 +100,8 @@ var COMMAND_LIST = [
           { command: "growl"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_GROWL },
 //           { command: "gsay"     , minimumPosition: global.POS_SLEEPING, functionPointer: go_gsay       , minimumLevel: 0, subCommand: 0 },
 //           { command: "gtell"    , minimumPosition: global.POS_SLEEPING, functionPointer: go_gsay       , minimumLevel: 0, subCommand: 0 },
+
+          { command: "help"     , minimumPosition: global.POS_DEAD    , functionPointer: do_help       , minimumLevel: 0, subCommand: 0 },
 
           { command: "hiccup"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_HICCUP },
 //           { command: "hit"      , minimumPosition: global.POS_RESTING , functionPointer: do_hit        , minimumLevel: 0, subCommand: 0 },
@@ -947,6 +949,30 @@ function do_write(character, command) {
 //         shop.listItemsForSale(character).emit();
 //     }
 // }
+
+function do_help(character, command) {
+    // TODO: Use getPaddedWord to make pretty columns
+    if(command.tokens.length < 1) {
+        character.emitMessage("The following commands are available: ");
+        
+        var output = '';
+        for(var i = 1; i <= COMMAND_LIST.length; i++) {
+            output = output + utility.getPaddedWord(COMMAND_LIST[i - 1].command, 19);
+
+            if(i % 4 == 0) {
+                character.emitMessage("    " + output + "\n");
+                output = '';
+            }
+        }
+        
+        if(output.length > 0) {
+            character.emitMessage("    " + output);
+        }
+    }
+    else {
+        character.emitMessage("Not implemented");
+    }
+}
 
 // Exports
 module.exports = Interpreter;

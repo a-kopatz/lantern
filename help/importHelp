@@ -1,0 +1,3 @@
+mongo lantern --eval "db.help.drop()"
+
+mongoimport --db lantern --collection help --file help.json
