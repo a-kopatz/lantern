@@ -2,6 +2,7 @@ var constants = require("./constants");
 var bug = require("./bug").bug;
 var idea = require("./idea").idea;
 var typo = require("./typo").typo;
+var helpdoc = require("./helpdoc");
 
 var Social =  require("./social");
 var Character = require("./character");
@@ -960,7 +961,7 @@ function do_help(character, command) {
             output = output + utility.getPaddedWord(COMMAND_LIST[i - 1].command, 19);
 
             if(i % 4 == 0) {
-                character.emitMessage("    " + output + "\n");
+                character.emitMessage("    " + output);
                 output = '';
             }
         }
@@ -970,7 +971,18 @@ function do_help(character, command) {
         }
     }
     else {
-        character.emitMessage("Not implemented");
+        //character.emitMessage("Not implemented");
+        helpdoc.display(command.tokens[0], function(helpdocsFromDb) {
+            //console.log(helpDocsFromDb);
+            if(helpdocsFromDb.length === 0) {
+                character.emitMessage('No help is available on that topic.');
+            }
+            else {
+                character.emitMessage(helpdocsFromDb[0].topic.toUpperCase());
+                character.emitMessage('------------------------------------------------------------------------------');
+                character.emitMessage(helpdocsFromDb[0].value);
+            }
+        });
     }
 }
 
