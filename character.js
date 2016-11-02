@@ -848,91 +848,137 @@ characterSchema.methods.tasteItem = function(keyword) {
 };
 
 
-// characterSchema.methods.drinkFromObject = function(object, mode) {
-// 	var messages = [];
-// 	var amount = 0;
+characterSchema.methods.drinkFromObject = function(object) {
+	var messages = [];
 
-// 	var drink = global.DRINKS[object.containsLiquid];
-// 	var thirstAffect = drink.thirst;
-// 	var drunkAffect = drink.drunkness;
+	var drink = global.DRINKS[object.containsLiquid];
+	var thirstAffect = drink.thirst;
+	var drunkAffect = drink.drunkness;
 
-// 	if(mode === global.SCMD_DRINK) {
-// 		messages.push(this.emitMessage("You drink the " + drink.name + "."));
-// 		messages.push(this.emitRoomMessage(this.name + " drinks " + drink.name + " from " + object.shortDescription + "."));
-// 		amount = 8;
-// 	}
-// 	else if(mode === global.SCMD_SIP) {
-// 		messages.push(this.emitMessage("It tastes like " + drink.name + "."));
-// 		messages.push(this.emitRoomMessage(this.name + " sips from " + object.shortDescription + "."));
-// 		amount = 1;
+	messages.push(this.emitMessage("You drink the " + drink.name + "."));
+	messages.push(this.emitRoomMessage("ACTOR_NAME drinks " + drink.name + " from FIRST_OBJECT_SHORTDESC."));
+	var amount = 8;
+
+	// else if(mode === global.SCMD_SIP) {
+	// 	messages.push(this.emitMessage("It tastes like " + drink.name + "."));
+	// 	messages.push(this.emitRoomMessage(this.name + " sips from " + object.shortDescription + "."));
+	// 	amount = 1;
 		
-// 		if(thirstAffect > 0) {
-// 			thirstAffect = 1;
-// 		}
+	// 	if(thirstAffect > 0) {
+	// 		thirstAffect = 1;
+	// 	}
 
-// 		if(drunkAffect > 0) {
-// 			drunkAffect = 1;
-// 		}
-// 	}
+	// 	if(drunkAffect > 0) {
+	// 		drunkAffect = 1;
+	// 	}
+	// }
 
-// 	object.quantity = Math.max(0, (object.quantity - amount));
+	object.quantity = Math.max(0, (object.quantity - amount));
 
-// 	if(!this.isNpc()) {
-// 		if(this.thirst < 20 && this.thirst + thirstAffect > 20) {
-// 			messages.push(this.emitMessage("You don't feel thirsty anymore."));
-// 		}
+	// if(!this.isNpc()) {
+	// 	if(this.thirst < 20 && this.thirst + thirstAffect > 20) {
+	// 		messages.push(this.emitMessage("You don't feel thirsty anymore."));
+	// 	}
 		
-// 		if(this.drunk + drunkAffect > 20) {
-// 			messages.push(this.emitMessage("You are REALLY drunk!"));
-// 		}
-// 		else if(this.drunk < 12 && this.drunk + drunkAffect > 12) {
-// 			messages.push(this.emitMessage("You are drunk."));
-// 		}
+	// 	if(this.drunk + drunkAffect > 20) {
+	// 		messages.push(this.emitMessage("You are REALLY drunk!"));
+	// 	}
+	// 	else if(this.drunk < 12 && this.drunk + drunkAffect > 12) {
+	// 		messages.push(this.emitMessage("You are drunk."));
+	// 	}
 		
-// 		this.thirst = this.thirst + thirstAffect;
-// 		this.thirst = Math.min(this.thirst, 24);
+	// 	this.thirst = this.thirst + thirstAffect;
+	// 	this.thirst = Math.min(this.thirst, 24);
 		
-// 		this.drunk = this.drunk + drunkAffect;
-// 		this.drunk = Math.min(this.drunk, 24);		
-// 	}
+	// 	this.drunk = this.drunk + drunkAffect;
+	// 	this.drunk = Math.min(this.drunk, 24);		
+	// }
 	
-// 	return messages;	
-// };
+	return messages;	
+};
 
-// characterSchema.methods.drinkItem = function(keyword, mode) {
-// 	var messages = [];
+characterSchema.methods.drinkItem = function(keyword) {
+	var output = new Output(this);
 
-// 	var searchable = this.inventory.concat(this.room.contents);
-// 	var target = searchable.findByKeyword(keyword);
+	var searchable = this.inventory.concat(this.room.contents);
+	var target = searchable.findByKeyword(keyword);
 
-// 	if(target.items.length === 0) {
-// 		messages.push(this.emitMessage("Drink what?!?"));
-// 		return messages;
-// 	}
+	if(target.items.length === 0) {
+		output.toActor.push( { text: "Drink what?!?" } );
+		return output;
+	}
 	
-//  	for(var i = 0; i < target.items.length; i++) {
-// 		if(target.items[i].type !== global.ITEM_DRINKCONTAINER && target.items[i].type !== global.ITEM_FOUNTAIN) {
-// 			messages.push(this.emitMessage(target.items[i].shortDescription + " -- You can't drink from THAT!"));
-// 			break;
-// 		}
-		
-// 		else {
-// 			if(target.items[i].type === global.ITEM_DRINKCONTAINER && this.inventory.indexOf(target.items[i]) < 0) {
-// 				messages.push(this.emitMessage("You have to be holding that to drink from it."));
-// 				break;
-// 			}
+ 	for(var i = 0; i < target.items.length; i++) {
+		if(target.items[i].type !== global.ITEM_DRINKCONTAINER && target.items[i].type !== global.ITEM_FOUNTAIN) {
+			output.toActor.push( { text: target.items[i].shortDescription + " -- You can't drink THAT!" } );
+			break;
+		}
+		else {
+			if(target.items[i].type === global.ITEM_DRINKCONTAINER && this.inventory.indexOf(target.items[i]) < 0) {
+				output.toActor.push( { text: "You have to be holding that to drink from it." } );
+				break;
+			}
 			
-// 			if(target.items[i].quantity < 1) {
-// 				messages.push(this.emitMessage("It's empty!"));
-// 				break;
-// 			}
+			if(target.items[i].quantity < 1) {
+				output.toActor.push( { text: "It's empty!" } );
+				break;
+			}
 			
-// 			messages.push(this.drinkFromObject(target.items[i], mode));
-// 		}
-// 	}
+			var messages = this.drinkFromObject(target.items[i]);
+			output.toActor.push( { text: messages[0], items: [ target.items[i] ] } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ target.items[i] ] } ] } );
+		}
+	}
 	
-// 	return messages;
-// };
+	return output;
+};
+
+characterSchema.methods.sipFromObject = function(object) {
+	var messages = [];
+
+	var drink = global.DRINKS[object.containsLiquid];
+
+	messages.push(this.emitMessage("You sip the " + drink.name + "."));
+	messages.push(this.emitRoomMessage(this.name + " sips " + drink.name + " from " + object.shortDescription + "."));
+
+	return messages;	
+};
+
+characterSchema.methods.sipItem = function(keyword) {
+	var output = new Output(this);
+
+	var searchable = this.inventory.concat(this.room.contents);
+	var target = searchable.findByKeyword(keyword);
+
+	if(target.items.length === 0) {
+		output.toActor.push( { text: "Sip what?!?" } );
+		return output;
+	}
+	
+ 	for(var i = 0; i < target.items.length; i++) {
+		if(target.items[i].type !== global.ITEM_DRINKCONTAINER && target.items[i].type !== global.ITEM_FOUNTAIN) {
+			output.toActor.push( { text: target.items[i].shortDescription + " -- You can't take a sip from THAT!" } );
+			break;
+		}
+		else {
+			if(target.items[i].type === global.ITEM_DRINKCONTAINER && this.inventory.indexOf(target.items[i]) < 0) {
+				output.toActor.push( { text: "You have to be holding that to take a sip from it." } );
+				break;
+			}
+			
+			if(target.items[i].quantity < 1) {
+				output.toActor.push( { text: "It's empty!" } );
+				break;
+			}
+			
+			var messages = this.drinkFromObject(target.items[i]);
+			output.toActor.push( { text: messages[0], items: [ target.items[i] ] } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ target.items[i] ] } ] } );
+		}
+	}
+	
+	return output;
+};
 
 characterSchema.methods.giveObject = function(object, target) {
 	var messages = [];

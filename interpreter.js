@@ -61,7 +61,7 @@ var COMMAND_LIST = [
                     
           { command: "daydream" , minimumPosition: global.POS_SLEEPING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_DAYDREAM },
           { command: "deposit"  , minimumPosition: global.POS_RESTING , functionPointer: do_deposit    , minimumLevel: 0, subCommand: 0 },
-        //   { command: "drink"    , minimumPosition: global.POS_RESTING , functionPointer: do_drink      , minimumLevel: 0, subCommand: global.SCMD_DRINK },
+          { command: "drink"    , minimumPosition: global.POS_RESTING , functionPointer: do_drink      , minimumLevel: 0  },
           { command: "donate"   , minimumPosition: global.POS_RESTING , functionPointer: do_donate     , minimumLevel: 0, subCommand: 0 },
           { command: "drop"     , minimumPosition: global.POS_RESTING , functionPointer: do_drop       , minimumLevel: 0, subCommand: 0 },
           { command: "drool"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_DROOL },
@@ -593,24 +593,33 @@ function do_taste(character, command) {
     }
 }
 
-// function do_drink(character, command) {
-//     if(command.tokens.length === 0) {
-//         if(command.subCommand === global.SCMD_DRINK) {
-//             character.emitMessage("Drink what?");
-//         }
-//         else if(command.subCommand === global.SCMD_SIP) {
-//             character.emitMessage("Sip what?");
-//         }
-//     }
-//     else {
-//         if(command.tokens[0].toLowerCase() === 'from') {
-//             character.drinkItem(command.tokens[1], command.subCommand);
-//         }
-//         else {
-//             character.drinkItem(command.tokens[0], command.subCommand);
-//         }
-//     }
-// }
+function do_drink(character, command) {
+    if(command.tokens.length === 0) {
+        character.emitMessage("Drink what?");
+    }
+    else {
+        if(command.tokens[0].toLowerCase() === 'from') {
+            character.drinkItem(command.tokens[1]);
+        }
+        else {
+            character.drinkItem(command.tokens[0]);
+        }
+    }
+}
+
+function do_sip(character, command) {
+    if(command.tokens.length === 0) {
+        character.emitMessage("Sip what?");
+    }
+    else {
+        if(command.tokens[0].toLowerCase() === 'from') {
+            character.sipItem(command.tokens[1]);
+        }
+        else {
+            character.sipItem(command.tokens[0]);
+        }
+    }
+}
 
 function do_give(character, command) {
     if(command.tokens.length < 2) {

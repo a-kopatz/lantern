@@ -357,24 +357,24 @@ global.MAX_FULLNESS = 16;
 // global.FULLNESS_READYTOPOP      = 14;
 // global.FULLNESS_PASSEDOUT       = 15;
 
-global.DRINK_NAMES = [
-  "water",
-  "beer",
-  "wine",
-  "ale",
-  "dark ale",
-  "whisky",
-  "lemonade",
-  "firebreather",
-  "local speciality",
-  "slime mold juice",
-  "milk",
-  "tea",
-  "coffee",
-  "blood",
-  "salt water",
-  "clear water"
-];
+// global.DRINK_NAMES = [
+//   "water",
+//   "beer",
+//   "wine",
+//   "ale",
+//   "dark ale",
+//   "whisky",
+//   "lemonade",
+//   "firebreather",
+//   "local speciality",
+//   "slime mold juice",
+//   "milk",
+//   "tea",
+//   "coffee",
+//   "blood",
+//   "salt water",
+//   "clear water"
+// ];
 
 global.DRINKCONTAINER_FULLNESS = [
   "less than half",
@@ -382,24 +382,24 @@ global.DRINKCONTAINER_FULLNESS = [
   "more than half"
 ];
 
-global.DRINK_COLORS = [ 
-  "clear",
-  "brown",
-  "clear",
-  "brown",
-  "dark",
-  "golden",
-  "red",
-  "green",
-  "clear",
-  "light green",
-  "white",
-  "brown",
-  "black",
-  "red",
-  "clear",
-  "crystal clear"   
-];
+// global.DRINK_COLORS = [ 
+//   "clear",
+//   "brown",
+//   "clear",
+//   "brown",
+//   "dark",
+//   "golden",
+//   "red",
+//   "green",
+//   "clear",
+//   "light green",
+//   "white",
+//   "brown",
+//   "black",
+//   "red",
+//   "clear",
+//   "crystal clear"   
+// ];
 
 global.SOCIALS = [
     { social: "accuse", 
