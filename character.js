@@ -759,9 +759,9 @@ characterSchema.methods.eatObject = function(object) {
 	messages[0] = "You eat FIRST_OBJECT_SHORTDESC.";
 	messages[1] = "ACTOR_NAME eats FIRST_OBJECT_SHORTDESC.";
 
-	if(!this.isNpc()) {
-		this.caloriesConsumed[0] = this.caloriesConsumed[0] + object.calories;
-	}
+	// if(!this.isNpc()) {
+	// 	this.caloriesConsumed[0] = this.caloriesConsumed[0] + object.calories;
+	// }
 
 	this.inventory.splice(this.inventory.indexOf(object), 1);
 	this.world.removeItem(object);
@@ -807,6 +807,43 @@ characterSchema.methods.eatItem = function(keyword) {
 	// 	this.position = global.POS_SLEEPING;
 	// }
 	
+	return output;
+};
+
+characterSchema.methods.tasteObject = function(object) {
+	var messages = [];
+
+	// For now, all food is delicious.
+	messages[0] = "You taste FIRST_OBJECT_SHORTDESC.  It is delicious!!!";
+	messages[1] = "ACTOR_NAME tastes FIRST_OBJECT_SHORTDESC.";
+
+	// Should tasting an food change it?  Are there calories associated with tastes?
+
+	return messages;
+};
+
+characterSchema.methods.tasteItem = function(keyword) {
+	var output = new Output(this);
+	var result = this.inventory.findByKeyword(keyword);
+
+	if(result.items.length === 0) {
+		output.toActor.push( { text: "Taste what?!?" } );
+		return output;
+	}
+
+	// var fullnessIndex = 0;
+
+	for(var i = 0; i < result.items.length; i++) {
+		if(result.items[i].type !== global.ITEM_FOOD) {
+			output.toActor.push( { text: result.items[i].shortDescription + " -- You can't taste THAT!" } );
+		}
+		else {
+			var messages = this.tasteObject(result.items[i]);
+			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
+		}
+	}
+
 	return output;
 };
 

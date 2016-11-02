@@ -66,7 +66,7 @@ var COMMAND_LIST = [
           { command: "drop"     , minimumPosition: global.POS_RESTING , functionPointer: do_drop       , minimumLevel: 0, subCommand: 0 },
           { command: "drool"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_DROOL },
 
-          { command: "eat"      , minimumPosition: global.POS_RESTING , functionPointer: do_eat        , minimumLevel: 0, subCommand: global.SCMD_EAT },
+          { command: "eat"      , minimumPosition: global.POS_RESTING , functionPointer: do_eat        , minimumLevel: 0, subCommand: 0 },
           { command: "embrace"  , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_EMBRACE },
           { command: ":"        , minimumPosition: global.POS_RESTING , functionPointer: do_emote      , minimumLevel: 0, subCommand: 0 },
           { command: "emote"    , minimumPosition: global.POS_RESTING , functionPointer: do_emote      , minimumLevel: 0, subCommand: 0 },
@@ -203,7 +203,7 @@ var COMMAND_LIST = [
           { command: "tackle"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_TACKLE },
           { command: "take"     , minimumPosition: global.POS_RESTING , functionPointer: do_take       , minimumLevel: 0, subCommand: 0 },
           { command: "tango"    , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_TANGO },
-        //   { command: "taste"    , minimumPosition: global.POS_RESTING , functionPointer: do_eat        , minimumLevel: 0, subCommand: global.SCMD_TASTE },
+          { command: "taste"    , minimumPosition: global.POS_RESTING , functionPointer: do_taste      , minimumLevel: 0, subCommand: 0 },
           { command: "taunt"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_TAUNT },
           { command: "tell"     , minimumPosition: global.POS_DEAD    , functionPointer: do_tell       , minimumLevel: 0, subCommand: 0 },
           { command: "thank"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_THANK },
@@ -577,16 +577,19 @@ function do_junk(character, command) {
 
 function do_eat(character, command) {
     if(command.tokens.length === 0) {
-        // if(command.subCommand === global.SCMD_EAT) {
             character.emitMessage('Eat what?');
-        // }
-        // else if(command.subCommand === global.SCMD_TASTE) {
-            // character.emitMessage('Taste what?');
-        // }
     }
     else {
-        // character.eatItem(command.tokens[0], command.subCommand);
         character.eatItem(command.tokens[0]).emit();
+    }
+}
+
+function do_taste(character, command) {
+    if(command.tokens.length === 0) {
+        character.emitMessage('Taste what?');
+    }
+    else {
+        character.tasteItem(command.tokens[0]).emit();
     }
 }
 

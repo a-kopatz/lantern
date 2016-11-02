@@ -180,20 +180,20 @@ World.prototype.updateNPCs = function() {
 };
 
 World.prototype.hourElapsed = function() {
-    this.time.advanceHour();
-    this.time.save(function(err) {
-    	console.log(err);
-    });
+ //   this.time.advanceHour();
+ //   this.time.save(function(err) {
+ //   	console.log(err);
+ //   });
     
-    if(this.time.hour % 24 === 0) {
-		for(var i = 0; i < this.players.length; i++) {
-			this.players[i].dailyUpdate();
-		}
-    }
+ //   if(this.time.hour % 24 === 0) {
+	// 	for(var i = 0; i < this.players.length; i++) {
+	// 		this.players[i].dailyUpdate();
+	// 	}
+ //   }
     
-	for(var i = 0; i < this.players.length; i++) {
-		this.players[i].hourlyUpdate();
-	}
+	// for(var i = 0; i < this.players.length; i++) {
+	// 	this.players[i].hourlyUpdate();
+	// }
 	
 	// for(var i = 0; i < this.mobs.length; i++) {
 	// 	this.mobs[i].hourlyUpdate();
