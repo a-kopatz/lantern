@@ -67,6 +67,10 @@ itemSchema.methods.getWrittenContents = function() {
     return "You can't read THAT!";
 };
 
+itemSchema.methods.getCommands = function() {
+    return [];
+};
+
 function load(id, item, commands, world, previousThing, instructionNumber, callback) {
 	itemModel.find({id: id}, function(err, docs) {
 		console.log(err);

@@ -271,12 +271,13 @@ Interpreter.prototype.tokenize = function(input) {
     return tokens;
 };
 
-Interpreter.prototype.getCommand = function(input) {
+Interpreter.prototype.getCommand = function(character, input) {
     if(input.length === 0) {
         return null;
     }    
-
-    var tokens = this.tokenize(input);
+    
+    var cleanedInput = this.cleanInput(input);
+    var tokens = this.tokenize(cleanedInput);
     var cleanedTokens = this.dropFill(tokens);
 
     if(cleanedTokens.length < 1) {
@@ -297,6 +298,30 @@ Interpreter.prototype.getCommand = function(input) {
             command.subInput = input.replace(commandToken, '').trim();
             break;
         }
+    }
+
+    if(command === null) {
+        // Might be a command associated with an item (eventually the room or NPCs too)
+        // Special commands for items start with finding the item, I guess?
+        
+        var targetList = character.inventory.concat(character.wearing).concat(character.room.contents);
+		var target = targetList.findByKeyword(commandToken);
+		
+		if(target.items.length > 0) {
+    		var targetCommands = target.items[0].getCommands();
+    		commandToken = cleanedTokens[1];
+
+    		if(targetCommands !== null) {
+        		for(var i = 0; i < targetCommands.length; i++) {
+        		    if(targetCommands[i].command.substr(0, commandToken.length) === commandToken) {
+                        command = targetCommands[i];
+                        command.subInput = input.replace(commandToken, '').trim();
+                        command.isSpecial = true;
+                        break;
+        		    }
+        		}
+    		}
+		}
     }
 
     if(command !== null) {
@@ -321,31 +346,10 @@ Interpreter.prototype.handleInput = function(character, input) {
         return;
     }
     
-    var cleanedInput = this.cleanInput(input);
-	var command = this.getCommand(cleanedInput);
+	var command = this.getCommand(character, input);
 
     if(command === null) {
-        
-        // Not a standard command.  Maybe a command associated with something?
-        var specialTokens = this.tokenize(input);
-
-        if(specialTokens.length > 0) {
-            // specialTokens[0] must be the keyword of the target
-            var targetList = character.room.players.concat(character.room.npcs).concat(character.inventory)
-    			.concat(character.wearing).concat(character.room.contents);
-    		
-    		var target = targetList.findByKeyword(specialTokens[0]);
-    		
-    		if(target.items.length > 0) {
-    		    target[0].handleSpecialCommand(specialTokens);
-    		}
-    		else {
-    		    character.emitMessage("Huh?!?");
-    		}
-        }		
-        else {
-            character.emitMessage("Huh?!?");
-        }
+        character.emitMessage("Huh?!?");
     }
     else {
         if(character.position < command.minimumPosition) {
@@ -375,7 +379,12 @@ Interpreter.prototype.handleInput = function(character, input) {
             }
         }
         else {
-            command.functionPointer(character, command);
+            if(command.isSpecial === true) {
+                command.functionPointer(character, command).emit();
+            }
+            else {
+                command.functionPointer(character, command);
+            }
         }
     }
     
