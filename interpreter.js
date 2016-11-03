@@ -275,9 +275,8 @@ Interpreter.prototype.getCommand = function(input) {
     if(input.length === 0) {
         return null;
     }    
-    
-    var cleanedInput = this.cleanInput(input);
-    var tokens = this.tokenize(cleanedInput);
+
+    var tokens = this.tokenize(input);
     var cleanedTokens = this.dropFill(tokens);
 
     if(cleanedTokens.length < 1) {
@@ -322,10 +321,31 @@ Interpreter.prototype.handleInput = function(character, input) {
         return;
     }
     
-	var command = this.getCommand(input);
+    var cleanedInput = this.cleanInput(input);
+	var command = this.getCommand(cleanedInput);
 
     if(command === null) {
-        character.emitMessage("Huh?!?");
+        
+        // Not a standard command.  Maybe a command associated with something?
+        var specialTokens = this.tokenize(input);
+
+        if(specialTokens.length > 0) {
+            // specialTokens[0] must be the keyword of the target
+            var targetList = character.room.players.concat(character.room.npcs).concat(character.inventory)
+    			.concat(character.wearing).concat(character.room.contents);
+    		
+    		var target = targetList.findByKeyword(specialTokens[0]);
+    		
+    		if(target.items.length > 0) {
+    		    target[0].handleSpecialCommand(specialTokens);
+    		}
+    		else {
+    		    character.emitMessage("Huh?!?");
+    		}
+        }		
+        else {
+            character.emitMessage("Huh?!?");
+        }
     }
     else {
         if(character.position < command.minimumPosition) {
