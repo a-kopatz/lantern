@@ -1357,10 +1357,10 @@ characterSchema.methods.lookTarget = function(command) {
 		var target = targetList.findByKeyword(command.tokens[0]);
 		
 		if(target.items.length > 0) {
-			// output.toActor.push( { text: "You look at FIRST_OBJECT_SHORTDESC.", items: [ target.items[0] ] } );
-			output.toActorMessage("You look at FIRST_OBJECT_SHORTDESC.", target.items[i]);
+			output.toActor.push( { text: "You look at " + target.items[0].getShortDescription() + "." } );
 			
-			var descriptionArray = target.items[0].getDescription();
+			var descriptionArray = target.items[0].getDetailedDescription();
+			
 			for(var i = 0; i < descriptionArray.length; i++) {
 				output.toActor.push( { text: descriptionArray[i] } );
 			}

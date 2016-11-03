@@ -137,7 +137,7 @@ global.ITEM_BOAT = "Boat";
 global.ITEM_FOUNTAIN = "Fountain";
 global.ITEM_CORPSE = "Corpse";
 global.ITEM_BANK = "Bank";
-global.ITEM_BOARD = "Board";
+global.ITEM_BULLETINBOARD = "Board";
 global.ITEM_CLOTHES = "Clothes";
 
 global.MESSAGE_BUG = "Please report this using the 'bug' command.";

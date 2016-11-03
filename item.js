@@ -9,7 +9,7 @@ var itemSchema = new schema({
    	category: { type: Number, default: global.CATEGORY_ITEM },
     shortDescription: String,
     longDescription: String,
-    // actionDescription: String,
+    detailedDescription: String,
     canBeDonated: Boolean,
     canBeTaken: Boolean,
     type: String,
@@ -44,13 +44,22 @@ itemSchema.methods.listContents = function() {
 	return messages;
 };
 
+// Like when carried, dropped, etc.... "A brass key"
 itemSchema.methods.getShortDescription = function() {
     return this.shortDescription;
 };
 
+// Like when laying in a room... "A brass key has been left here"
 itemSchema.methods.getDescription = function() {
     var result = [];
     result.push(this.longDescription);
+    return result;
+};
+
+// Like when looked at... "The brass has been worn but the key is in good condition.  It must unlock a door somewhere... but where?"
+itemSchema.method.getDetailedDescription = function() {
+    var result = [];
+    result.push(this.detailedDescription);
     return result;
 };
 

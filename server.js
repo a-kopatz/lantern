@@ -13,11 +13,14 @@ var interpreter = require('./interpreter');
 var time = require('./time');
 var mail = require('./mail');
 
+var Post = require('./post').post;
+
 // NOTE: These are here to force mongoose to register the schema prior to use
 var clothes = require('./clothes');
 var food = require('./food');
 var note = require('./note');
 var pen = require('./pen');
+var bulletinboard = require('./bulletinboard')
 
 var npc = require('./npc');
 
@@ -47,6 +50,35 @@ time.load(function(time) {
     console.log('time:' + time);
     gameWorld.time = time[0];
 });
+
+gameWorld.postMap = new Map();
+
+// FIXME: duplicate code -> it's wrong.
+Post.find( { 'board':'social' } ).limit(30).sort({'id': -1}).exec(function(err, posts){
+    for (var i = 0; i < posts.length; i++) {
+        gameWorld.postMap.set('social', posts);
+    }
+    
+    console.log(gameWorld.postMap);
+});
+
+Post.find( { 'board':'bug' } ).limit(30).sort({'id': -1}).exec(function(err, posts){
+    for (var i = 0; i < posts.length; i++) {
+        gameWorld.postMap.set('bug', posts);
+        
+    }
+    
+    console.log(gameWorld.postMap);
+});
+
+Post.find( { 'board':'community' } ).limit(30).sort({'id': -1}).exec(function(err, posts){
+    for (var i = 0; i < posts.length; i++) {
+        gameWorld.postMap.set('community', posts);
+    }
+    
+    console.log(gameWorld.postMap);
+});
+
 
 room.load(function(roomDocs) {
     gameWorld.rooms = roomDocs;
@@ -293,17 +325,18 @@ io.sockets.on("connection", function(socket) {
         socket.player.commandQueue = [];
         socket.player.enterGame(gameWorld);
 
-        mail.find({ recipientName: socket.player.name.toLowerCase() }, function(err, maildocs) {
-            if (err) {
-                // TODO: Log error, I guess?
-            }
+        // TODO: Put this back later
+        // mail.find({ recipientName: socket.player.name.toLowerCase() }, function(err, maildocs) {
+        //     if (err) {
+        //         // TODO: Log error, I guess?
+        //     }
             
-            if(maildocs !== null) {
-                if(maildocs.length > 0) {
-                    socket.player.emitMessage("You have mail waiting.");
-                }
-            }
-        });
+        //     if(maildocs !== null) {
+        //         if(maildocs.length > 0) {
+        //             socket.player.emitMessage("You have mail waiting.");
+        //         }
+        //     }
+        // });
     }
 
     function emitMessage(text, color, mask) {
