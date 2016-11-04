@@ -1,5 +1,5 @@
 var Item = require('../item').item;
-var Corpse = require('../corpse').corpse;
+var Corpse = require('../items/corpse').corpse;
 
 exports.item_emptyCorpseReturnsNothing = function(test) {
     var corpse = new Corpse();

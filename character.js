@@ -6,7 +6,7 @@ var constants = require("./constants");
 var Social =  require("./social");
 var utility = require("./utility");
 var Output = require("./output");
-var clothes = require("./clothes").clothes;
+// var clothes = require("./items/clothes").clothes;
 
 var characterSchema = new schema({
 	name: String,

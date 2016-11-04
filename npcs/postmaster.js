@@ -1,11 +1,11 @@
 var mongoose = require('mongoose');
 var schema = mongoose.Schema;
 var extend = require('mongoose-schema-extend');
-var npcSchema = require("./npc").schema;
-var Output = require("./output");
-var _Mail = require("./mail");
-var Mail = require("./mail").mail;
-var note = require("./note").note;
+var npcSchema = require("../npc").schema;
+var Output = require("../output");
+var _Mail = require("../mail");
+var Mail = require("../mail").mail;
+var note = require("../items/note").note;
 
 var postmasterSchema = npcSchema.extend({
 }, { collection : 'npcs' });

@@ -2,7 +2,7 @@ var Character = require("../character").character;
 var Room = require("../room").room;
 var Exit = require("../room").exit;
 var Item = require('../item').item;
-var Clothes = require('../clothes').clothes;
+var Clothes = require('../items/clothes').clothes;
 var World = require('../world');
 
 ///////////////////////////////////////////////////////////

@@ -7,10 +7,10 @@ var characterSchema = require("./character").schema;
 var _Mail = require("./mail");
 var Mail = require("./mail").mail;
 // var Note = require('./note');
-var note = require("./note").note;
-var clothes = require("./clothes").clothes;
-var food = require("./food").food;
-var pen = require("./pen").pen;
+var note = require("./items/note").note;
+var clothes = require("./items/clothes").clothes;
+var food = require("./items/food").food;
+var pen = require("./items/pen").pen;
 var utility = require("./utility");
 var Output = require("./output");
 

@@ -22,16 +22,15 @@ var mail = require('./mail');
 
 var Post = require('./post').post;
 
-var clothes = require('./clothes');
-var food = require('./food');
-var note = require('./note');
-var pen = require('./pen');
-var bulletinboard = require('./bulletinboard');
-var bank = require('./bank');
-
+var bank = require('./items/bank');
+var bulletinboard = require('./items/bulletinboard');
+var clothes = require('./items/clothes');
+var food = require('./items/food');
+var note = require('./items/note');
+var pen = require('./items/pen');
 
 var npc = require('./npc');
-var postmaster = require('./postmaster');
+var postmaster = require('./npcs/postmaster');
 
 // TODO: Room
 // TODO: Zone

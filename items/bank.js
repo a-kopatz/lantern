@@ -1,8 +1,8 @@
 var mongoose = require('mongoose');
 var schema = mongoose.Schema;
 var extend = require('mongoose-schema-extend');
-var itemSchema = require("./item").schema;
-var Output = require("./output");
+var itemSchema = require("../item").schema;
+var Output = require("../output");
 
 var bankSchema = itemSchema.extend({
 }, { collection : 'items' });

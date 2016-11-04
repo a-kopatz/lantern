@@ -1,4 +1,4 @@
-var Note = require('../note').note;
+var Note = require('../items/note').note;
 
 exports.note_isBlankReturnsTrueWhenWrittenIsUndefined = function(test) {
     var note = new Note();
