@@ -419,6 +419,9 @@ playerSchema.methods.handleWriting = function(input) {
 				this.isWriting = true;
 				this.isPosting = true;
 				this.board = null;
+				
+				output.toActor.push( { text: "Ok, posted!" } );
+				output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME stops writing a post." } ] } );
 			}
 			else {
 				// WTF?  Posting on a board that doesn't exist?

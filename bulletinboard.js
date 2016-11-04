@@ -12,7 +12,9 @@ var bulletinboardSchema = itemSchema.extend({
 bulletinboardSchema.methods.getDetailedDescription = function() {
     var result = [];
 
-	result.push('BOARD VIEW <N> to view a particular post.  BOARD POST <TITLE> to write a new post.');  // BOARD REPLY <N> to reply to a post.');
+	result.push('BOARD VIEW <N> to view a particular post.  BOARD POST <TITLE> to write a new post.');  
+	result.push('BOARD REMOVE <N> to remove a post.');
+	// BOARD REPLY <N> to reply to a post.');
 	result.push('-------------------------------------------------------------');
 	var postArray = this.world.postMap.get(this.boardSource);
 
@@ -59,12 +61,35 @@ bulletinboardSchema.methods.viewPost = function(character, command) {
 	return output;
 };
 
+bulletinboardSchema.methods.removePost = function(character, command) {
+	var output = new Output(character);
+	
+	if(command.tokens.length < 2) {
+		output.toActor.push( { text: "But which post do you want to remove?!?" } );
+		return output;
+	}
+	
+	var postId = command.tokens[1];
+	
+	// FIXME: Is it awkward that boardId and boardSource are different names for the same thing?
+	Post.remove( { "id": postId }, function(err) {
+		if(!err) {
+			console.log('aaa' + command.item.boardSource);
+			
+			Post.find( { 'board': command.item.boardSource } ).limit(30).sort({'id': -1}).exec(function(err, posts) {
+    			character.world.postMap.set(command.item.boardSource, posts);
+			});			
+		}
+		// TODO: handle error
+	});
+	
+	output.toActor.push( { text: "Ok, post " + postId + " will be removed!" } );
+	output.toRoom.push( { roomId: character.room.id, textArray: [ { text: "ACTOR_NAME removes a post." } ] } );
+	
+	return output;
+};
+
 bulletinboardSchema.methods.composePost = function(character, command) {
-	
-	console.log(command);
-	
-	// TODO: Title
-	
 	var output = new Output(character);
 	
 	character.isWriting = true;
@@ -75,7 +100,8 @@ bulletinboardSchema.methods.composePost = function(character, command) {
 	command.tokens.shift();
 	character.postTitle = command.tokens.join(" ");
 	
-	output.toActor.push ( { text: 'Write your message, use @ on a new line when done.' } );
+	output.toActor.push( { text: 'Write your message, use @ on a new line when done.' } );
+	output.toRoom.push( { roomId: character.room.id, textArray: [ { text: "ACTOR_NAME begins writing a post." } ] } );
 	
 	return output;
 };
@@ -100,6 +126,7 @@ bulletinboardSchema.methods.getCommands = function() {
     return [
           { command: "view"     , minimumPosition: global.POS_RESTING , functionPointer: this.viewPost, minimumLevel: 0, subCommand: 0, item: this },
           { command: "post"     , minimumPosition: global.POS_RESTING , functionPointer: this.composePost, minimumLevel: 0, subCommand: 0, item: this },
+          { command: "remove"   , minimumPosition: global.POS_RESTING , functionPointer: this.removePost, minimumLevel: 0, subCommand: 0, item: this }
     ];
 };
 
