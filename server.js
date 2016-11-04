@@ -26,7 +26,9 @@ var clothes = require('./clothes');
 var food = require('./food');
 var note = require('./note');
 var pen = require('./pen');
-var bulletinboard = require('./bulletinboard')
+var bulletinboard = require('./bulletinboard');
+var bank = require('./bank');
+
 
 var npc = require('./npc');
 var postmaster = require('./postmaster');
