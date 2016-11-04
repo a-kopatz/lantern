@@ -411,6 +411,19 @@ playerSchema.methods.handleWriting = function(input) {
 			output.toActor.push( { text: "Ok, got it!" } );
 			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME stops writing a note." } ] } );
 		}
+		else if(this.isPosting === true) {
+			if(this.board !== undefined && this.board !== null) {
+
+				this.board.savePost(this.name, this.postId, this.writingQueue.join(""));
+				
+				this.isWriting = true;
+				this.isPosting = true;
+				this.board = null;
+			}
+			else {
+				// WTF?  Posting on a board that doesn't exist?
+			}
+		}
 		
 		output.emit();
 		

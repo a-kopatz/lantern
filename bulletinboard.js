@@ -3,6 +3,7 @@ var Output = require("./output");
 var schema = mongoose.Schema;
 var extend = require('mongoose-schema-extend');
 var itemSchema = require("./item").schema;
+var Post = require('./post').post;
 
 var bulletinboardSchema = itemSchema.extend({
 	boardSource: String
@@ -11,7 +12,7 @@ var bulletinboardSchema = itemSchema.extend({
 bulletinboardSchema.methods.getDetailedDescription = function() {
     var result = [];
 
-	result.push('BOARD VIEW <N> to view a particular post.'); //  BOARD COMPOSE to write a new post.  BOARD REPLY <N> to reply to a post.');
+	result.push('BOARD VIEW <N> to view a particular post.'); //  BOARD POST to write a new post.  BOARD REPLY <N> to reply to a post.');
 	var postArray = this.world.postMap.get(this.boardSource);
 
 	if(postArray === undefined) {
@@ -22,8 +23,8 @@ bulletinboardSchema.methods.getDetailedDescription = function() {
 			result.push(postArray[i].id + ": " + postArray[i].title);
 		}
 		
-		if(postArray.length < 2) {
-			result.post("It's empty!!!");
+		if(postArray.length < 1) {
+			result.push("It's empty!!!");
 		}
 	}
 	
@@ -57,13 +58,42 @@ bulletinboardSchema.methods.viewPost = function(character, command) {
 	return output;
 };
 
+bulletinboardSchema.methods.composePost = function(character, command) {
+	
+	console.log(command);
+	
+	// TODO: Title
+	
+	var output = new Output(character);
+	
+	character.isWriting = true;
+	character.isPosting = true;
+	character.postId = -1;
+	character.board = command.item;
+	
+	output.toActor.push ( { text: 'Write your message, use @ on a new line when done.' } );
+	
+	return output;
+};
+
+bulletinboardSchema.methods.savePost = function(author, postId, body) {
+	if(postId === -1) {
+		var post = new Post( { id: 2, creator: author, title: 'FIXME', text: body } );
+		
+		post.save(function (err) {
+			// TODO: Handle error
+		});
+	}
+};
+
 bulletinboardSchema.methods.getWrittenContents = function() {
     return "You can't read the whole board at once. View each post individually.";
 };
 
 bulletinboardSchema.methods.getCommands = function() {
     return [
-          { command: "view"     , minimumPosition: global.POS_RESTING , functionPointer: this.viewPost, minimumLevel: 0, subCommand: 0, item: this }
+          { command: "view"     , minimumPosition: global.POS_RESTING , functionPointer: this.viewPost, minimumLevel: 0, subCommand: 0, item: this },
+          { command: "post"     , minimumPosition: global.POS_RESTING , functionPointer: this.composePost, minimumLevel: 0, subCommand: 0, item: this },
     ];
 };
 
