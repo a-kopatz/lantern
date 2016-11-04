@@ -12,7 +12,8 @@ var bulletinboardSchema = itemSchema.extend({
 bulletinboardSchema.methods.getDetailedDescription = function() {
     var result = [];
 
-	result.push('BOARD VIEW <N> to view a particular post.'); //  BOARD POST to write a new post.  BOARD REPLY <N> to reply to a post.');
+	result.push('BOARD VIEW <N> to view a particular post.  BOARD POST <TITLE> to write a new post.');  // BOARD REPLY <N> to reply to a post.');
+	result.push('-------------------------------------------------------------');
 	var postArray = this.world.postMap.get(this.boardSource);
 
 	if(postArray === undefined) {
@@ -20,7 +21,7 @@ bulletinboardSchema.methods.getDetailedDescription = function() {
 	}
 	else {
 		for(var i = 0; i < postArray.length; i++) {
-			result.push(postArray[i].id + ": " + postArray[i].title);
+			result.push("  " + postArray[i].id + ": " + postArray[i].title);
 		}
 		
 		if(postArray.length < 1) {
@@ -71,17 +72,22 @@ bulletinboardSchema.methods.composePost = function(character, command) {
 	character.postId = -1;
 	character.board = command.item;
 	
+	command.tokens.shift();
+	character.postTitle = command.tokens.join(" ");
+	
 	output.toActor.push ( { text: 'Write your message, use @ on a new line when done.' } );
 	
 	return output;
 };
 
-bulletinboardSchema.methods.savePost = function(author, postId, body) {
+bulletinboardSchema.methods.savePost = function(author, postId, title, boardId, body) {
 	if(postId === -1) {
-		var post = new Post( { id: 2, creator: author, title: 'FIXME', text: body } );
+		var post = new Post( { creator: author.name, title: title, text: body, created: new Date(), board: boardId } );
 		
 		post.save(function (err) {
-			// TODO: Handle error
+			Post.find( { 'board':boardId } ).limit(30).sort({'id': -1}).exec(function(err, posts) {
+    			author.world.postMap.set(boardId, posts);
+			});
 		});
 	}
 };

@@ -3,8 +3,15 @@ var http = require('http');
 var path = require('path');
 var constants = require('./constants');
 var arrayExtensions = require('./arrayExtensions');
-var player = require('./player').player;
 var mongoose = require('mongoose');
+var autoIncrement = require('mongoose-auto-increment');
+
+// This needs to happen before our domain objects are loaded
+mongoose.connect('mongodb://localhost/lantern');
+autoIncrement.initialize(mongoose.connection);
+
+// These are here to force mongoose to register the schema prior to use
+var player = require('./player').player;
 var world = require('./world');
 var room = require('./room');
 var shop = require('./shop');
@@ -15,13 +22,11 @@ var mail = require('./mail');
 
 var Post = require('./post').post;
 
-// NOTE: These are here to force mongoose to register the schema prior to use
 var clothes = require('./clothes');
 var food = require('./food');
 var note = require('./note');
 var pen = require('./pen');
 var bulletinboard = require('./bulletinboard')
-
 var npc = require('./npc');
 
 // TODO: Room
@@ -32,7 +37,6 @@ var app = express();
 var server = app.listen(process.env.PORT);
 app.use(express.static(path.resolve(__dirname, 'client')));
 
-var dbConnection = mongoose.connect('mongodb://localhost/lantern');
 
 var sockets = [];
 var io = require('socket.io').listen(server);
@@ -54,30 +58,19 @@ time.load(function(time) {
 gameWorld.postMap = new Map();
 
 // FIXME: duplicate code -> it's wrong.
+// TODO: Make board types a collection and loop through each
 Post.find( { 'board':'social' } ).limit(30).sort({'id': -1}).exec(function(err, posts){
-    for (var i = 0; i < posts.length; i++) {
-        gameWorld.postMap.set('social', posts);
-    }
-    
-    console.log(gameWorld.postMap);
+    gameWorld.postMap.set('social', posts);
 });
 
 Post.find( { 'board':'bug' } ).limit(30).sort({'id': -1}).exec(function(err, posts){
-    for (var i = 0; i < posts.length; i++) {
-        gameWorld.postMap.set('bug', posts);
-        
-    }
-    
-    console.log(gameWorld.postMap);
+    gameWorld.postMap.set('bug', posts);
 });
 
 Post.find( { 'board':'community' } ).limit(30).sort({'id': -1}).exec(function(err, posts){
-    for (var i = 0; i < posts.length; i++) {
-        gameWorld.postMap.set('community', posts);
-    }
-    
-    console.log(gameWorld.postMap);
+    gameWorld.postMap.set('community', posts);
 });
+// End FIXME
 
 
 room.load(function(roomDocs) {

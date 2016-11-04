@@ -414,7 +414,7 @@ playerSchema.methods.handleWriting = function(input) {
 		else if(this.isPosting === true) {
 			if(this.board !== undefined && this.board !== null) {
 
-				this.board.savePost(this.name, this.postId, this.writingQueue.join(""));
+				this.board.savePost(this, this.postId, this.postTitle, this.board.boardSource, this.writingQueue.join(""));
 				
 				this.isWriting = true;
 				this.isPosting = true;
