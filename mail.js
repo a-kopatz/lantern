@@ -7,7 +7,7 @@ var mailSchema = new schema({
 	body: String
 });
 
-function checkForMail(character, postmaster, callback) {
+function checkForMail(character, command, callback) {
 	mailModel.find({ recipientName: character.name.toLowerCase() }, function(err, docs) {
  		if (err) {
             // TODO: Log error, I guess?
@@ -15,26 +15,26 @@ function checkForMail(character, postmaster, callback) {
  
 		if(docs !== null) {
 			if(docs.length > 0) {
-				callback(character, postmaster, true).emit();
+				callback(character, command, true).emit();
 			}
 			else {
-				callback(character, postmaster, false).emit();
+				callback(character, command, false).emit();
 			}
 		}
 		else {
-			callback(character, postmaster, false).emit();
+			callback(character, command, false).emit();
 		}
 	});
 }
 
-function receiveMail(character, postmaster, callback) {
+function receiveMail(character, command, callback) {
 	mailModel.find({ recipientName: character.name.toLowerCase() }, function(err, docs) {
  		if (err) {
             // TODO: Log error, I guess?
         }
 		else { 
 			mailModel.find({ recipientName: character.name.toLowerCase() }).remove().exec();
-			callback(character, postmaster, docs).emit();
+			callback(character, command, docs).emit();
 		}
 	});
 }

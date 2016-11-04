@@ -1091,15 +1091,15 @@ characterSchema.methods.withdrawMoney = function(amount) {
 
 /* Mail-related methods */
 
-characterSchema.methods.isAtPostOffice = function() {
-	for(var i = 0; i < this.room.npcs.length; i++) {
-		if(this.room.npcs[i].isPostmaster() === true) {
-			return true;
-		}
-	}
+// characterSchema.methods.isAtPostOffice = function() {
+// 	for(var i = 0; i < this.room.npcs.length; i++) {
+// 		if(this.room.npcs[i].isPostmaster() === true) {
+// 			return true;
+// 		}
+// 	}
 	
-	return false;
-};
+// 	return false;
+// };
 
 characterSchema.methods.openCloseExit = function(exit, verb, mode) {
 	var messages = [];

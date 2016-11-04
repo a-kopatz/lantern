@@ -27,7 +27,9 @@ var food = require('./food');
 var note = require('./note');
 var pen = require('./pen');
 var bulletinboard = require('./bulletinboard')
+
 var npc = require('./npc');
+var postmaster = require('./postmaster');
 
 // TODO: Room
 // TODO: Zone

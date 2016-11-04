@@ -25,14 +25,14 @@ npcSchema.methods.getShortDescription = function() {
 	return this.shortDescription;
 };
 
-npcSchema.methods.isPostmaster = function() {
-// TODO: Change implementation to avoid hardwiring specific numbers (or at least don't do that assignment here)
-	if(this.id === 3010) {
-		return true;
-	}
+// npcSchema.methods.isPostmaster = function() {
+// // TODO: Change implementation to avoid hardwiring specific numbers (or at least don't do that assignment here)
+// 	if(this.id === 3010) {
+// 		return true;
+// 	}
 	
-	return false;
-};
+// 	return false;
+// };
 
 npcSchema.methods.initialize = function() {
 
