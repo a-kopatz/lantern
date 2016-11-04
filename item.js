@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var schema = mongoose.Schema;
 var constants = require("./constants");
 var extra = require('./extra').schema;
+var Output = require("./output");
 
 var itemSchema = new schema({
     id: Number,
@@ -69,6 +70,27 @@ itemSchema.methods.getWrittenContents = function() {
 
 itemSchema.methods.getCommands = function() {
     return [];
+};
+
+itemSchema.methods.listCommands = function(character, command) {
+	var output = new Output(character);
+	var commands = command.item.getCommands();
+	
+	if(commands.length > 0) {
+    	output.toActor.push( { text: 'The following special commands are available: ' } );
+    	output.toActor.push( { text: '-------------------------------------------------------------------' } );
+
+		for(var i = 0; i < commands.length; i++) {
+			if(commands[i].command !== "list") {
+				output.toActor.push( { text: "   " + commands[i].command } );
+			}
+		}
+	}
+	else {
+	    output.toActor.push( { text: "There is nothing special you can do with that." } );
+	}
+	
+	return output;	
 };
 
 function load(id, item, commands, world, previousThing, instructionNumber, callback) {

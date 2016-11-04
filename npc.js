@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var schema = mongoose.Schema;
 var extend = require('mongoose-schema-extend');
 var constants = require("./constants");
+var Output = require("./output");
 //var character = require("./character");
 var characterSchema = require("./character").schema;
 // var utility = require("./utility");
@@ -25,14 +26,23 @@ npcSchema.methods.getShortDescription = function() {
 	return this.shortDescription;
 };
 
-// npcSchema.methods.isPostmaster = function() {
-// // TODO: Change implementation to avoid hardwiring specific numbers (or at least don't do that assignment here)
-// 	if(this.id === 3010) {
-// 		return true;
-// 	}
+npcSchema.methods.listCommands = function(character, command) {
+	var output = new Output(character);
+	var commands = command.npc.getCommands();
 	
-// 	return false;
-// };
+	output.toActor.push( { text: 'The following special commands are available: ' } );
+	output.toActor.push( { text: '-------------------------------------------------------------------' } );
+	
+	if(commands.length > 0) {
+		for(var i = 0; i < commands.length; i++) {
+			if(commands[i].command !== "list") {
+				output.toActor.push( { text: "   " + commands[i].command } );
+			}
+		}
+	}
+	
+	return output;	
+};
 
 npcSchema.methods.initialize = function() {
 

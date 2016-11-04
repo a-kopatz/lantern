@@ -88,6 +88,7 @@ bankSchema.methods.withdrawMoney = function(character, command) {
 
 bankSchema.methods.getCommands = function() {
     return [
+    	  { command: "list"		 , minimumPosition: global.POS_RESTING , functionPointer: this.listCommands, minimumLevel: 0, subCommand: 0, item: this },
           { command: "balance"  , minimumPosition: global.POS_RESTING , functionPointer: this.checkBalance , minimumLevel: 0, subCommand: 0, item: this },
           { command: "deposit"  , minimumPosition: global.POS_RESTING , functionPointer: this.depositMoney , minimumLevel: 0, subCommand: 0, item: this },
           { command: "withdraw" , minimumPosition: global.POS_RESTING , functionPointer: this.withdrawMoney, minimumLevel: 0, subCommand: 0, item: this }

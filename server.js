@@ -367,7 +367,7 @@ function hourElapsed() {
 }
 
 var introMessage = "Welcome to Lantern.\n\rBy what name do you wish to be known?";
-var motd = "This is the message of the day.\n\rCurrently, there's not much here.\n\r*** PRESS RETURN: ";
+var motd = "This is the message of the day.\n\rWe are under construction.  Pardon about the dust.\n\rThe game itself is highly unstable, so apologies in advance!\n\r*** PRESS RETURN: ";
 var menu = "Welcome to Lantern!\n\r0) Exit from Lantern.\n\r1) Enter the game.\n\r2) Get Help!\n\r  Make a choice: ";
 var welcomeMessage = "\r\nWelcome to Lantern!  May your visit here be... Interesting.\r\n\r\n";
 var menuHelp = "Write something smart here.\n\r";

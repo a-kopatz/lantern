@@ -1275,40 +1275,44 @@ characterSchema.methods.removeItem = function(keyword) {
 characterSchema.methods.lookTarget = function(command) {
 	var output = new Output(this);
 	
-	if(command.allTokens[0] !== "in") {
-		var targetList = this.room.players.concat(this.room.mobs).concat(this.inventory)
-			.concat(this.wearing).concat(this.room.contents).concat(this.room.extras)
-			.concat(this.getWornExtras()).concat(this.getInventoryExtras())
-			.concat(this.room.getContentsExtras());
+	// CRASH BUG HERE SOMEWHERE
+	
+	// if(command.allTokens[0] !== "in") {
+	// 	var targetList = this.room.players.concat(this.room.mobs).concat(this.inventory)
+	// 		.concat(this.wearing).concat(this.room.contents).concat(this.room.extras)
+	// 		.concat(this.getWornExtras()).concat(this.getInventoryExtras())
+	// 		.concat(this.room.getContentsExtras());
 		
-		var target = targetList.findByKeyword(command.tokens[0]);
+	// 	var target = targetList.findByKeyword(command.tokens[0]);
 		
-		if(target.items.length > 0) {
-			output.toActor.push( { text: "You look at " + target.items[0].getShortDescription() + "." } );
+	// 	if(target.items.length > 0) {
+	// 		output.toActor.push( { text: "You look at " + target.items[0].getShortDescription() + "." } );
 			
-			var descriptionArray = target.items[0].getDetailedDescription();
+	// 		var descriptionArray = target.items[0].getDetailedDescription();
 			
-			for(var i = 0; i < descriptionArray.length; i++) {
-				output.toActor.push( { text: descriptionArray[i] } );
-			}
+	// 		for(var i = 0; i < descriptionArray.length; i++) {
+	// 			output.toActor.push( { text: descriptionArray[i] } );
+	// 		}
 			
-			//output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.", items: [ target.items[0] ] } ] } );
-			output.toRoomMessage(this.room.id, "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.", target.items[0]);
-		}
-		else {
-			var exit = this.room.getExit(command.tokens[0]);
+	// 		//output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.", items: [ target.items[0] ] } ] } );
+	// 		output.toRoomMessage(this.room.id, "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.", target.items[0]);
+	// 	}
+	// 	else {
+	// 		var exit = this.room.getExit(command.tokens[0]);
 			
-			if(exit === null) {
-				output.toActor.push( { text: "You do not see that here." } );
-			}
-			else {
-				// output.toActor.push( { text: exit.getDescription() } );
-			}
-		}
-	}
-	else {
-		output = this.lookInTarget(command.tokens[0]);
-	}
+	// 		if(exit === null) {
+	// 			output.toActor.push( { text: "You do not see that here." } );
+	// 		}
+	// 		else {
+	// 			// output.toActor.push( { text: exit.getDescription() } );
+	// 		}
+	// 	}
+	// }
+	// else {
+	// 	output = this.lookInTarget(command.tokens[0]);
+	// }
+	
+	output.toActor.push( { text: 'Temporarily removed to prevent crash-bug.  Will be fixed and merged soon.' } );
 	
 	return output;
 };

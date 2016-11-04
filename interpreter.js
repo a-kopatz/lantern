@@ -204,7 +204,7 @@ var COMMAND_LIST = [
           { command: "thank"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_THANK },
           { command: "think"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_THINK },
           { command: "tickle"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_TICKLE },
-          { command: "time"     , minimumPosition: global.POS_DEAD    , functionPointer: do_datetime   , minimumLevel: 0, subCommand: 0 },
+        //   { command: "time"     , minimumPosition: global.POS_DEAD    , functionPointer: do_datetime   , minimumLevel: 0, subCommand: 0 },
           { command: "title"    , minimumPosition: global.POS_DEAD    , functionPointer: do_title      , minimumLevel: 0, subCommand: 0 },
           { command: "twiddle"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_TWIDDLE },
           { command: "typo"     , minimumPosition: global.POS_DEAD    , functionPointer: do_report_typo, minimumLevel: 0, subCommand: 0 },
@@ -898,6 +898,8 @@ function do_write(character, command) {
     
     character.writeNote(command.tokens[0], command.tokens[1]).emit();
 }
+
+
 
 // function do_list(character) {
 //     var shop = character.getShop();
