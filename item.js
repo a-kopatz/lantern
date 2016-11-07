@@ -58,9 +58,16 @@ itemSchema.methods.getDescription = function() {
 };
 
 // Like when looked at... "The brass has been worn but the key is in good condition.  It must unlock a door somewhere... but where?"
-itemSchema.method.getDetailedDescription = function() {
+itemSchema.methods.getDetailedDescription = function() {
     var result = [];
-    result.push(this.detailedDescription);
+    
+    if(this.detailedDescription !== undefined && this.detailedDescription !== null) {
+        result.push(this.detailedDescription);
+    }
+    else {
+        result.push("You see nothing special about it.");
+    }
+    
     return result;
 };
 

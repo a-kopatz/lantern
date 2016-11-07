@@ -29,6 +29,7 @@ var clothes = require('./items/clothes');
 var food = require('./items/food');
 var note = require('./items/note');
 var pen = require('./items/pen');
+var vendingmachine = require('./items/vendingmachine');
 
 var npc = require('./npc');
 var postmaster = require('./npcs/postmaster');

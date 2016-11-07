@@ -11,6 +11,13 @@ bankSchema.methods.getType = function() {
 	return global.ITEM_BANK;
 };
 
+bankSchema.methods.getDetailedDescription = function() {
+    var result = [];
+	result.push('ATM CHECK to check your bank balance.  ATM DEPOSIT <amount> to deposit money.');  
+	result.push('ATM WITHDRAW <amount> to withdraw money from your account.');
+    return result;
+};
+
 bankSchema.methods.checkBalance = function(character, command) {
 	var output = new Output(character);
 	

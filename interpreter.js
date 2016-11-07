@@ -307,7 +307,7 @@ Interpreter.prototype.getCommand = function(character, input) {
     		if(cleanedTokens.length > 1) {
         		commandToken = cleanedTokens[1];
         		
-        		console.log(targetCommands);
+        		//console.log(targetCommands);
     
         		if(targetCommands !== null) {
             		for(var i = 0; i < targetCommands.length; i++) {

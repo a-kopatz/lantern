@@ -768,24 +768,25 @@ exports.character_eatItemReturnsErrorWhenItemNotFound = function(test) {
     test.done();
 };
 
-exports.character_eatItemReturnsErrorWhenItemIsNotFood = function(test) {
-    var actor = new Character();
+// FIXME
+// exports.character_eatItemReturnsErrorWhenItemIsNotFood = function(test) {
+//     var actor = new Character();
     
-    var room = new Room();
-    room.id = 3001;
-    room.addCharacter(actor);
+//     var room = new Room();
+//     room.id = 3001;
+//     room.addCharacter(actor);
     
-    var socks = new Item();
-    socks.keywords.push("socks");
-    socks.shortDescription = "a pair of socks";
-    socks.type = global.ITEM_TRASH;
-    actor.inventory.push(socks);
+//     var socks = new Item();
+//     socks.keywords.push("socks");
+//     socks.shortDescription = "a pair of socks";
+//     socks.type = global.ITEM_TRASH;
+//     actor.inventory.push(socks);
 
-    var actual = actor.eatItem('socks');
-    test.equal(actual.toActor[0].text, "a pair of socks -- You can't eat THAT!");
-    test.equal(actor.inventory[0], socks);
-    test.done();
-};
+//     var actual = actor.eatItem('socks');
+//     test.equal(actual.toActor[0].text, "a pair of socks -- You can't eat THAT!");
+//     test.equal(actor.inventory[0], socks);
+//     test.done();
+// };
 
 exports.character_eatItemRemovesItemFromInventory = function(test) {
     var actor = new Character();

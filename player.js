@@ -274,12 +274,10 @@ playerSchema.methods.listScore = function() {
 	var bmi = this.getBMI();
 	output.toActor.push( { text: "Your BMI is " + bmi + ", which makes you " + utility.getBmiDescription(bmi) + "."} );
 
-	// output.toActor.push( { text: global.FULLNESS[this.getFullnessIndex()][0] } );
-	
+
 	output.toActor.push( { text: "caloriesConsumed: " + this.caloriesConsumed.total() } );
 	output.toActor.push( { text: "maximumFullness: " + this.maximumFullness } );
-	output.toActor.push( { text: "Fullness: " + this.getFullnessIndex() } );
-	
+
 	return output;
 };
 
@@ -351,36 +349,24 @@ playerSchema.methods.hourlyUpdate = function() {
 	// 	}
 	// }
 	
-	if(this.caloriesConsumed.total() > global.CALORIES_TO_GAIN_ONE_POUND) {
-		this.weight = this.weight + 1;
-		// Simple but gives extra credit for food eaten last hour(s)
-		
-		this.emitMessage("You feel fatter.");
+	var caloriesConsumedToday = 0;
+	var calorieCredit = [ 0.75, 0.5, 0.5, 0.5, 0.5, 0.25, 0.25, 0.1, 0.1, 0.1 ];
+	
+	for(var i = 0; i < this.caloriesConsumed.length; i++) {
+		caloriesConsumedToday = calorieCredit[i] * this.caloriesConsumed[i];
 	}
 	
-	
-};
-
-playerSchema.methods.getFullnessIndex = function() {
-	var sum = this.caloriesConsumed.total();
-	var index = Math.round(Math.max(0, (sum - this.maximumFullness)) / (Math.round(this.maximumFullness / 4)));
-	index = Math.min(index, global.MAX_FULLNESS);
-	return index;
+	if(caloriesConsumedToday > global.CALORIES_TO_GAIN_ONE_POUND) {
+		this.weight = this.weight + 1;
+		this.emitMessage("You feel fatter.");
+		this.emitRoomMessage(this.name + " looks fatter.");
+	}
 };
 
 playerSchema.methods.dailyUpdate = function() {
 	//this.emitMessage("Day....");
 	
-	if(this.caloriesConsumed.total() > global.CALORIES_TO_GAIN_ONE_POUND) {
-		this.weight++;
-	}
-};
 
-playerSchema.methods.getFullnessIndex = function() {
-	var sum = this.caloriesConsumed.total();
-	var index = Math.round(Math.max(0, (sum - this.maximumFullness)) / (Math.round(this.maximumFullness / 4)));
-	index = Math.min(index, global.MAX_FULLNESS);
-	return index;
 };
 
 

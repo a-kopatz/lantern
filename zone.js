@@ -52,6 +52,15 @@ function executeZoneResetCommands(commands, instructionNumber, world, lastThingL
                     Item.load(roomItemId, roomItem, commands, world, null, instructionNumber, afterRoomItemLoaded);
                 }
                 break;
+            case "P":  // place item inside item
+                var placedItem = new item();
+                var placedItemId = parseInt(command[2], 10);
+                maxExisting = parseInt(command[3], 10);
+                
+                if(world.countItem(givenItemId) < maxExisting) {
+                    Item.load(placedItemId, placedItem, commands, world, lastThingLoaded, instructionNumber, afterPlacedItemLoaded);
+                }
+                break;
             case "G":
                 var givenItem = new item();
                 var givenItemId = parseInt(command[2], 10);
@@ -179,6 +188,19 @@ function afterGivenItemLoaded(document, item, commands, world, npc, instructionN
 //     mob.wearing[location] = item;
 //     executeZoneResetCommands(commands, (instructionNumber + 1), world, mob);
 // }
+
+
+function afterPlacedItemLoaded(document, item, commands, world, containerItem, instructionNumber) {
+    item = document[0];
+    world.addItem(item);
+    
+    if(containerItem.contents === undefined || containerItem.contents === undefined) {
+        containerItem.contents = [];
+    }
+    
+    containerItem.contents.push(item);
+    executeZoneResetCommands(commands, (instructionNumber + 1), world, containerItem);
+}
 
 function load(callback) {
 	zoneModel.find({}, function(err, docs) {
