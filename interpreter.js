@@ -204,7 +204,7 @@ var COMMAND_LIST = [
           { command: "thank"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_THANK },
           { command: "think"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_THINK },
           { command: "tickle"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_TICKLE },
-        //   { command: "time"     , minimumPosition: global.POS_DEAD    , functionPointer: do_datetime   , minimumLevel: 0, subCommand: 0 },
+          { command: "time"     , minimumPosition: global.POS_DEAD    , functionPointer: do_datetime   , minimumLevel: 0, subCommand: 0 },
           { command: "title"    , minimumPosition: global.POS_DEAD    , functionPointer: do_title      , minimumLevel: 0, subCommand: 0 },
           { command: "twiddle"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_TWIDDLE },
           { command: "typo"     , minimumPosition: global.POS_DEAD    , functionPointer: do_report_typo, minimumLevel: 0, subCommand: 0 },
@@ -446,7 +446,8 @@ function do_say(character, command) {
 }
 
 function do_gen_comm(character, command) {
-    character.generalCommunication(command.subCommand, command.subInput.trim()).emit();
+    // FIXME: This is broken, I guess
+    //character.generalCommunication(command.subCommand, command.subInput.trim()).emit();
 }
 
 function do_tog_auction(character, command) {
@@ -565,7 +566,7 @@ function do_take(character, command) {
                 // character.takeItemFromContainer(command.tokens[0], command.tokens[2]).emit();
             }
             else {
-                command.emitMessage("I have no idea what you're trying to do.");
+                character.emitMessage("I have no idea what you're trying to do.");
             }
         }
     }

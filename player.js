@@ -351,9 +351,14 @@ playerSchema.methods.hourlyUpdate = function() {
 	// 	}
 	// }
 	
-	if(this.caloriesConsumed.total() > 3 * this.maximumFullness) {
-		this.maximumFullness++;
+	if(this.caloriesConsumed.total() > global.CALORIES_TO_GAIN_ONE_POUND) {
+		this.weight = this.weight + 1;
+		// Simple but gives extra credit for food eaten last hour(s)
+		
+		this.emitMessage("You feel fatter.");
 	}
+	
+	
 };
 
 playerSchema.methods.getFullnessIndex = function() {

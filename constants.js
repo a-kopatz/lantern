@@ -29,7 +29,7 @@ global.HOURLY_DOLLAR_BONUS = 100;
 
 global.PRICE_OF_STAMP = 1;
 
-global.CALORIES_TO_GAIN_ONE_POUND = 2000;
+global.CALORIES_TO_GAIN_ONE_POUND = 5000;
 
 global.SCMD_NORTH	= "N";
 global.SCMD_EAST	= "E";

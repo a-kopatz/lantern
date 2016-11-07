@@ -18,6 +18,7 @@ var shop = require('./shop');
 var zone = require('./zone');
 var interpreter = require('./interpreter');
 var time = require('./time');
+var Time = require('./time').time;
 var mail = require('./mail');
 
 var Post = require('./post').post;
@@ -54,8 +55,16 @@ http.createServer(app).listen(app.get('port'), function() {
 var gameWorld = new world();
 
 time.load(function(time) {
-    console.log('time:' + time);
-    gameWorld.time = time[0];
+    if(time.length === 0) {
+        gameWorld.time = new Time();
+        gameWorld.time.hour = 3;
+	    gameWorld.time.day = 1;
+	    gameWorld.time.month = 1;
+	    gameWorld.time.year = 2088;
+    }
+    else {
+        gameWorld.time = time[0];
+    }
 });
 
 gameWorld.postMap = new Map();

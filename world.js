@@ -191,9 +191,9 @@ World.prototype.hourElapsed = function() {
 	// 	}
  //   }
     
-	// for(var i = 0; i < this.players.length; i++) {
-	// 	this.players[i].hourlyUpdate();
-	// }
+	for(var i = 0; i < this.players.length; i++) {
+		this.players[i].hourlyUpdate();
+	}
 	
 	// for(var i = 0; i < this.mobs.length; i++) {
 	// 	this.mobs[i].hourlyUpdate();

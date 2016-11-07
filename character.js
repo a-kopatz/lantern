@@ -759,9 +759,9 @@ characterSchema.methods.eatObject = function(object) {
 	messages[0] = "You eat FIRST_OBJECT_SHORTDESC.";
 	messages[1] = "ACTOR_NAME eats FIRST_OBJECT_SHORTDESC.";
 
-	// if(!this.isNpc()) {
-	// 	this.caloriesConsumed[0] = this.caloriesConsumed[0] + object.calories;
-	// }
+	if(!this.isNpc()) {
+		this.caloriesConsumed[0] = this.caloriesConsumed[0] + object.calories;
+	}
 
 	this.inventory.splice(this.inventory.indexOf(object), 1);
 	this.world.removeItem(object);
@@ -782,16 +782,47 @@ characterSchema.methods.eatItem = function(keyword) {
 		return output;
 	}
 
-	// var fullnessIndex = 0;
+	var beforeFullnessIndex = this.caloriesConsumed[0] / this.maximumFullness;
 
 	for(var i = 0; i < result.items.length; i++) {
 		if(result.items[i].type !== global.ITEM_FOOD) {
 			output.toActor.push( { text: result.items[i].shortDescription + " -- You can't eat THAT!" } );
 		}
 		else {
-			var messages = this.eatObject(result.items[i]);
-			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
+			if((this.caloriesConsumed[0] + this.maximumFullness) > result.items[i].calories) {
+				output.toActor.push( { text: "Your stomach can't hold that much!!!" } );
+			}
+			else {			
+				var messages = this.eatObject(result.items[i]);
+				output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+				output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
+				
+				if(this.caloriesConsumed[0] > this.maximumFullness) {
+					
+					// "Stomach stretching" by 15 calories
+					this.maximumFullness = this.maximumFullness + 15;
+				}
+			}
+		}
+	}
+
+	var afterFullnessIndex = (this.caloriesConsumed[0] / this.maximumFullness);
+
+	console.log(beforeFullnessIndex);
+	console.log(afterFullnessIndex);
+
+	if(beforeFullnessIndex != afterFullnessIndex) {
+		if(beforeFullnessIndex < 3 && afterFullnessIndex >= 3) {
+			output.toActor.push( { text: "You are READY TO EXPLODE!" } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME is READY TO EXPLODE!" } ] } );
+		}
+		else if(beforeFullnessIndex < 2 && afterFullnessIndex >= 2) {
+			output.toActor.push( { text: "You are stuffed!" } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME is stuffed!" } ] } );
+		}
+		else if(beforeFullnessIndex < 1 && afterFullnessIndex >= 1) {
+			output.toActor.push( { text: "You are full!" } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME is full!" } ] } );
 		}
 	}
 
@@ -806,6 +837,7 @@ characterSchema.methods.eatItem = function(keyword) {
 	// if(fullnessIndex >= global.MAX_FULLNESS) {
 	// 	this.position = global.POS_SLEEPING;
 	// }
+
 	
 	return output;
 };
