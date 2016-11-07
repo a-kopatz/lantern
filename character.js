@@ -775,6 +775,37 @@ characterSchema.methods.eatObject = function(object) {
 };
 
 
+characterSchema.methods.stretchStomach = function() {
+	if(this.caloriesConsumed[0] > this.maximumFullness) {
+		// "Stomach stretching" by 1%
+		this.maximumFullness = Math.ceil(this.maximumFullness + (this.maximumFullness * 0.01));
+	}
+};
+
+characterSchema.methods.getOvereatingMessages = function(beforeIndex, afterIndex) {
+	var messages = [];
+	
+	// ACTOR_NAME is backwards when using 'feed' command :(
+	
+	if(beforeIndex < 4 && afterIndex >= 4) {
+		messages[0] = "You are ready to explode!";
+		messages[1] = this.name + " is ready to explode!";
+	}
+	else if(beforeIndex < 3 && afterIndex >= 3) {
+		messages[0] = "You are completely overstuffed!";
+		messages[1] =  this.name + " is completely overstuffed!";
+	}
+	else if(beforeIndex < 2 && afterIndex >= 2) {
+		messages[0] = "You are stuffed!";
+		messages[1] = this.name + " is stuffed!";
+	}
+	else if(beforeIndex < 1 && afterIndex >= 1) {
+		messages[0] = "You are full.";
+		messages[1] = this.name + " is full.";
+	}
+	
+	return messages;
+};
 
 characterSchema.methods.eatItem = function(keyword) {
 	var output = new Output(this);
@@ -788,7 +819,6 @@ characterSchema.methods.eatItem = function(keyword) {
 	var beforeFullnessIndex = this.caloriesConsumed[0] / this.maximumFullness;
 
 	for(var i = 0; i < result.items.length; i++) {
-		//if(result.items[i].type !== global.ITEM_FOOD) {
 		if((result.items[i] instanceof Food) === false) {
 			output.toActor.push( { text: result.items[i].shortDescription + " -- You can't eat THAT!" } );
 		}
@@ -800,34 +830,34 @@ characterSchema.methods.eatItem = function(keyword) {
 				var messages = this.eatObject(result.items[i]);
 				output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
 				output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
-				
-				if(this.caloriesConsumed[0] > this.maximumFullness) {
-					
-					// "Stomach stretching" by 1%
-					this.maximumFullness = Math.ceil(this.maximumFullness + (this.maximumFullness * 0.01));
-				}
 			}
 		}
 	}
+	
+	this.stretchStomach();
 
 	var afterFullnessIndex = (this.caloriesConsumed[0] / this.maximumFullness);
 
-	// console.log(beforeFullnessIndex);
-	// console.log(afterFullnessIndex);
+	// if(beforeFullnessIndex != afterFullnessIndex) {
+	// 	if(beforeFullnessIndex < 3 && afterFullnessIndex >= 3) {
+	// 		output.toActor.push( { text: "You are ready to explode!" } );
+	// 		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME is ready to explode!" } ] } );
+	// 	}
+	// 	else if(beforeFullnessIndex < 2 && afterFullnessIndex >= 2) {
+	// 		output.toActor.push( { text: "You are stuffed!" } );
+	// 		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME is stuffed!" } ] } );
+	// 	}
+	// 	else if(beforeFullnessIndex < 1 && afterFullnessIndex >= 1) {
+	// 		output.toActor.push( { text: "You are full!" } );
+	// 		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME is full!" } ] } );
+	// 	}
+	// }
 
-	if(beforeFullnessIndex != afterFullnessIndex) {
-		if(beforeFullnessIndex < 3 && afterFullnessIndex >= 3) {
-			output.toActor.push( { text: "You are ready to explode!" } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME is ready to explode!" } ] } );
-		}
-		else if(beforeFullnessIndex < 2 && afterFullnessIndex >= 2) {
-			output.toActor.push( { text: "You are stuffed!" } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME is stuffed!" } ] } );
-		}
-		else if(beforeFullnessIndex < 1 && afterFullnessIndex >= 1) {
-			output.toActor.push( { text: "You are full!" } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME is full!" } ] } );
-		}
+	var messages = this.getOvereatingMessages(beforeFullnessIndex, afterFullnessIndex);
+	
+	if(messages.length > 0) {
+		output.toActor.push( { text: messages[0] } );
+		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
 	}
 
 	// fullnessIndex = this.getFullnessIndex();
@@ -1058,6 +1088,76 @@ characterSchema.methods.giveItem = function(keyword, targetName) {
 		output.toTarget.push( { text: messages[1], items: [ result.items[i] ] } );
 		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[2], items: [ result.items[i] ] } ] } );
 	}
+	
+	return output;
+};
+
+characterSchema.methods.feedObject = function(object, target) {
+	var messages = [];
+	
+	messages[0] = "You feed FIRST_OBJECT_SHORTDESC to TARGET_NAME.";
+	messages[1] = "ACTOR_NAME feeds you FIRST_OBJECT_SHORTDESC.";
+	messages[2] = "ACTOR_NAME feeds FIRST_OBJECT_SHORTDESC to TARGET_NAME.";
+	
+	if(!target.isNpc()) {
+		target.caloriesConsumed[0] = target.caloriesConsumed[0] + object.calories;
+	}	
+	
+	this.inventory.splice(this.inventory.indexOf(object), 1);
+	target.inventory.push(object);
+	
+	return messages;
+};
+
+characterSchema.methods.feedItem = function(keyword, targetName) {
+	var output = new Output(this);
+	
+	var result = this.inventory.findByKeyword(keyword);
+
+	if(result.items.length === 0) {	
+		output.toActor.push( { text: "Feed what?" } );
+		return output;
+	}
+	
+	var target = this.room.getCharacter(targetName);
+	
+	if(target === null) {
+		output.toActor.push( { text: "No-one by that name here." } );
+		return output;
+	}
+	
+	if(target === this) {
+		output.toActor.push( { text: "Feed something to yourself?!?  Just eat it..." } );
+		return output;
+	}
+	
+	output.target = target;
+	var before = (target.caloriesConsumed[0] / target.maximumFullness);
+
+	for(var i = 0; i < result.items.length; i++) {
+		
+		if((result.items[i] instanceof Food) === false) {
+			output.toActor.push( { text: result.items[i].shortDescription + " -- That's not edible!" } );
+		}
+		else {		
+			var messages = this.feedObject(result.items[i], target);
+			
+			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+			output.toTarget.push( { text: messages[1], items: [ result.items[i] ] } );
+			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[2], items: [ result.items[i] ] } ] } );
+		}
+	}
+
+	var after = (target.caloriesConsumed[0] / target.maximumFullness);
+	var messages = target.getOvereatingMessages(before, after);
+	
+	if(messages.length > 0) {
+		output.toActor.push( { text: messages[1] } );
+		output.toTarget.push( { text: messages[0] } );
+		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+	}	
+	
+	target.stretchStomach();
 	
 	return output;
 };

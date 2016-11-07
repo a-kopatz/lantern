@@ -39,13 +39,18 @@ Output.prototype.format = function(text, textTarget, itemArray) {
         if(itemArray[0] !== undefined && itemArray[0] !== null) {
             // returnMessage = returnMessage.replace(/FIRST_OBJECT_SHORTDESC/g, itemArray[0].getShortDescription());
             returnMessage = returnMessage.replace(/FIRST_OBJECT_SHORTDESC/g, itemArray[0].shortDescription);
+            
+            // CRASH BUG BELOW
             returnMessage = returnMessage.replace(/FIRST_OBJECT_DESC/g, itemArray[0].getDescription());
+            
         }
         
         if(itemArray.length > 1) {
             if(itemArray[1] !== undefined && itemArray[1] !== null) {
                 //returnMessage = returnMessage.replace(/SECOND_OBJECT_SHORTDESC/g, itemArray[1].getShortDescription());
                 returnMessage = returnMessage.replace(/SECOND_OBJECT_SHORTDESC/g, itemArray[1].shortDescription);  
+
+            // CRASH BUG BELOW
                 returnMessage = returnMessage.replace(/SECOND_OBJECT_DESC/g, itemArray[1].getDescription());
             }
         }

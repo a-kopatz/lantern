@@ -71,6 +71,7 @@ var COMMAND_LIST = [
           { command: "exits"    , minimumPosition: global.POS_RESTING , functionPointer: do_exits      , minimumLevel: 0, subCommand: 0 },
 
           { command: "fart"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_FART },
+          { command: "feed"     , minimumPosition: global.POS_RESTING , functionPointer: do_feed       , minimumLevel: 0, subCommand: 0 },
           { command: "flip"     , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_FLIP },
           { command: "flirt"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_FLIRT },
 //           { command: "follow"   , minimumPosition: global.POS_RESTING , functionPointer: do_follow     , minimumLevel: 0, subCommand: 0 },
@@ -84,7 +85,6 @@ var COMMAND_LIST = [
           { command: "giggle"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_GIGGLE },
           { command: "give"     , minimumPosition: global.POS_RESTING , functionPointer: do_give       , minimumLevel: 0, subCommand: 0 },
           { command: "glare"    , minimumPosition: global.POS_RESTING,  functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_GLARE },
-//           { command: "gold"     , minimumPosition: global.POS_SLEEPING, functionPointer: do_gold       , minimumLevel: 0, subCommand: 0 },
           { command: "gossip"   , minimumPosition: global.POS_SLEEPING, functionPointer: do_gen_comm   , minimumLevel: 0, subCommand: global.SCMD_GOSSIP },
           { command: "goto"     , minimumPosition: global.POS_RESTING , functionPointer: do_goto       , minimumLevel: 0, subCommand: 0 },
 //           { command: "group"    , minimumPosition: global.POS_RESTING , functionPointer: do_group      , minimumLevel: 0, subCommand: 0 },
@@ -668,6 +668,25 @@ function do_give(character, command) {
             }
             else {
                 character.giveItem(command.tokens[0], command.tokens[2]);
+            }
+        }
+    }
+}
+
+function do_feed(character, command) {
+    if(command.tokens.length < 2) {
+        character.emitMessage('Feed what to who?');
+    }
+    else {
+        if(command.tokens[1].toLowerCase() !== 'to') {
+            character.feedItem(command.tokens[0], command.tokens[1]).emit();
+        }
+        else {
+            if(command.tokens.length < 3) {
+                character.emitMessage('Feed what to who?');
+            }
+            else {
+                character.feedItem(command.tokens[0], command.tokens[2]).emit();
             }
         }
     }
