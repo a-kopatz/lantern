@@ -4,6 +4,7 @@ var extend = require('mongoose-schema-extend');
 var itemSchema = require("../item").schema;
 var Output = require("../output");
 var Item = require('../item').item;
+var Food = require('./food').food;
 var utility = require("../utility");
 
 var vendingmachineSchema = itemSchema.extend({
@@ -45,8 +46,11 @@ vendingmachineSchema.methods.buyItem = function(character, command) {
 		else {
 			output.toActorMessage("You buy FIRST_OBJECT_SHORTDESC from " + command.item.getShortDescription() + ".", targetItem);
 			output.toRoom.push( { roomId: character.room.id, textArray: [ { text: "ACTOR_NAME buys FIRST_OBJECT_SHORTDESC from " + command.item.getShortDescription() + ".", items: [ targetItem ] } ] } );
+
 			character.money = character.money - targetItem.cost;
-			character.inventory.push(JSON.parse(JSON.stringify(targetItem)));
+
+			var newFood = new Food(targetItem);
+			character.inventory.push(newFood);
 		}
 		
 	}

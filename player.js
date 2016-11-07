@@ -275,7 +275,8 @@ playerSchema.methods.listScore = function() {
 	output.toActor.push( { text: "Your BMI is " + bmi + ", which makes you " + utility.getBmiDescription(bmi) + "."} );
 
 
-	output.toActor.push( { text: "caloriesConsumed: " + this.caloriesConsumed.total() } );
+	output.toActor.push( { text: "caloriesConsumedArrayTotal: " + this.caloriesConsumed.total() } );
+	output.toActor.push( { text: "caloriesConsumedTodayTotal: " + this.getCaloriesConsumedToday() } );
 	output.toActor.push( { text: "maximumFullness: " + this.maximumFullness } );
 
 	return output;
@@ -319,13 +320,24 @@ playerSchema.methods.goto = function(keyword) {
 	return output;
 };
 
+playerSchema.methods.getCaloriesConsumedToday = function() {
+	var caloriesConsumedToday = 0;
+	var calorieCredit = [ 0.75, 0.5, 0.5, 0.5, 0.5, 0.25, 0.25, 0.1, 0.1, 0.1 ];
+	
+	for(var i = 0; i < this.caloriesConsumed.length; i++) {
+		caloriesConsumedToday = caloriesConsumedToday + (calorieCredit[i] * this.caloriesConsumed[i]);
+	}
+	
+	return caloriesConsumedToday;
+}
+
 playerSchema.methods.hourlyUpdate = function() {
+// FIXME: Don't emit messages in a method like this.  Figure out a better way of doing it.
 	// this.emitMessage("Hour....");
 	
 	this.bank = this.bank + global.HOURLY_DOLLAR_BONUS;
 
-	this.caloriesConsumed.pop();
-	this.caloriesConsumed.unshift(0);
+
 	
 	// this.hunger = Math.max((this.hunger - 1), 0);
 	
@@ -349,18 +361,15 @@ playerSchema.methods.hourlyUpdate = function() {
 	// 	}
 	// }
 	
-	var caloriesConsumedToday = 0;
-	var calorieCredit = [ 0.75, 0.5, 0.5, 0.5, 0.5, 0.25, 0.25, 0.1, 0.1, 0.1 ];
 	
-	for(var i = 0; i < this.caloriesConsumed.length; i++) {
-		caloriesConsumedToday = calorieCredit[i] * this.caloriesConsumed[i];
-	}
-	
-	if(caloriesConsumedToday > global.CALORIES_TO_GAIN_ONE_POUND) {
+	if(this.getCaloriesConsumedToday() > global.CALORIES_TO_GAIN_ONE_POUND) {
 		this.weight = this.weight + 1;
 		this.emitMessage("You feel fatter.");
 		this.emitRoomMessage(this.name + " looks fatter.");
 	}
+	
+	this.caloriesConsumed.pop();
+	this.caloriesConsumed.unshift(0);
 };
 
 playerSchema.methods.dailyUpdate = function() {
@@ -439,7 +448,7 @@ playerSchema.methods.writeNote = function(paperToken, penToken) {
 	else if (paperResult.items[0] instanceof note === false) {
 		output.toActorMessage("FIRST_OBJECT_SHORTDESC: you can't write on THAT!", paperResult.items[0]);
 		
-		console.log(output);
+		// console.log(output);
 		return output;
 	}
 	

@@ -7,6 +7,7 @@ var Social =  require("./social");
 var utility = require("./utility");
 var Output = require("./output");
 // var clothes = require("./items/clothes").clothes;
+var Food = require('./items/food').food;
 
 var characterSchema = new schema({
 	name: String,
@@ -148,13 +149,17 @@ characterSchema.methods.getShortDescription = function() {
 	return "Override this function in child classes.";
 };
 
-characterSchema.methods.getDescription = function() {
+characterSchema.methods.getDetailedDescription = function() {
 	var result = [];
 	
 	for(var i = 0; i < global.MAX_WEARS; i++) {
 		if(this.wearing[i] !== null && this.wearing[i] !== undefined) {
 			result.push(global.WEAR_WHERE[i] + this.wearing[i].shortDescription);
 		}
+	}
+
+	if(result.length === 0) {
+		result.push("You see nothing special.");
 	}
 	
 	return result;
@@ -783,11 +788,11 @@ characterSchema.methods.eatItem = function(keyword) {
 	var beforeFullnessIndex = this.caloriesConsumed[0] / this.maximumFullness;
 
 	for(var i = 0; i < result.items.length; i++) {
-		if(result.items[i].type !== global.ITEM_FOOD) {
+		//if(result.items[i].type !== global.ITEM_FOOD) {
+		if((result.items[i] instanceof Food) === false) {
 			output.toActor.push( { text: result.items[i].shortDescription + " -- You can't eat THAT!" } );
 		}
 		else {
-
 			if((this.caloriesConsumed[0] + result.items[i].calories) > 4 * this.maximumFullness) {
 				output.toActor.push( { text: "Your stomach can't hold that much!!!" } );
 			}
@@ -807,8 +812,8 @@ characterSchema.methods.eatItem = function(keyword) {
 
 	var afterFullnessIndex = (this.caloriesConsumed[0] / this.maximumFullness);
 
-	console.log(beforeFullnessIndex);
-	console.log(afterFullnessIndex);
+	// console.log(beforeFullnessIndex);
+	// console.log(afterFullnessIndex);
 
 	if(beforeFullnessIndex != afterFullnessIndex) {
 		if(beforeFullnessIndex < 3 && afterFullnessIndex >= 3) {
@@ -861,8 +866,6 @@ characterSchema.methods.tasteItem = function(keyword) {
 		output.toActor.push( { text: "Taste what?!?" } );
 		return output;
 	}
-
-	// var fullnessIndex = 0;
 
 	for(var i = 0; i < result.items.length; i++) {
 		if(result.items[i].type !== global.ITEM_FOOD) {
@@ -1317,6 +1320,7 @@ characterSchema.methods.lookTarget = function(command) {
 		if(target.items.length > 0) {
 			output.toActor.push( { text: "You look at " + target.items[0].getShortDescription() + "." } );
 			
+			// CRASH BUG.....
 			var descriptionArray = target.items[0].getDetailedDescription();
 			
 			for(var i = 0; i < descriptionArray.length; i++) {

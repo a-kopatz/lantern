@@ -404,7 +404,7 @@ function do_action(character, command) {
     var social = new Social(action, command.subInput.trim(), character);
     
     var output = social.getOutput();
-    console.log(output);
+    // console.log(output);
     output.emit();
 }
 
