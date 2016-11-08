@@ -33,6 +33,7 @@ var vendingmachine = require('./items/vendingmachine');
 
 var npc = require('./npc');
 var postmaster = require('./npcs/postmaster');
+var cat = require('./npcs/cat');
 
 // TODO: Room
 // TODO: Zone
@@ -116,6 +117,7 @@ room.load(function(roomDocs) {
 
 setInterval(servicePlayerCommandQueues, 1);
 setInterval(hourElapsed, global.PULSE_MUD_HOUR * 1000);
+setInterval(npcActivity, global.PULSE_NPC * 1000);
 
 io.sockets.on("connection", function(socket) {
     sockets.push(socket);
@@ -374,6 +376,10 @@ function servicePlayerCommandQueues() {
 
 function hourElapsed() {
     gameWorld.hourElapsed();
+}
+
+function npcActivity() {
+    gameWorld.updateNPCs();
 }
 
 var introMessage = "Welcome to Lantern.\n\rBy what name do you wish to be known?";

@@ -175,14 +175,14 @@ World.prototype.getPlayer = function(name) {
 
 World.prototype.updateNPCs = function() {
 	for(var i = 0; i < this.npcs.length; i++) {
-// 		this.mobs[i].performActivity();
+ 		this.npcs[i].performActivity();
 	}
 };
 
 World.prototype.hourElapsed = function() {
     this.time.advanceHour();
     this.time.save(function(err) {
-    	console.log(err);
+    	// console.log(err);
     });
     
     if(this.time.hour % 24 === 0) {

@@ -1410,11 +1410,11 @@ characterSchema.methods.lookTarget = function(command) {
 	var output = new Output(this);
 	
 	if(command.allTokens[0] !== "in") {
-		var targetList = this.room.players.concat(this.room.mobs).concat(this.inventory)
+		var targetList = this.room.players.concat(this.room.npcs).concat(this.inventory)
 			.concat(this.wearing).concat(this.room.contents).concat(this.room.extras)
 			.concat(this.getWornExtras()).concat(this.getInventoryExtras())
 			.concat(this.room.getContentsExtras());
-		
+
 		var target = targetList.findByKeyword(command.tokens[0]);
 		
 		if(target.items.length > 0) {

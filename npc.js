@@ -48,6 +48,10 @@ npcSchema.methods.initialize = function() {
 
 };
 
+npcSchema.methods.performActivity = function() {
+	
+};
+
 function load(id, npc, commands, world, instructionNumber, callback) {
 	npcModel.find({id: id}, function(err, docs) {
 		//console.log(err);

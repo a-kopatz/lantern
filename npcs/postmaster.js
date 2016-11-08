@@ -95,23 +95,6 @@ postmasterSchema.methods.checkMail = function(character, command) {
     });
 };
 
-// postmasterSchema.methods.listCommands = function(character, command) {
-// 	var output = new Output(character);
-// 	var commands = command.npc.getCommands();
-	
-// 	output.toActor.push( { text: 'The following special commands are available: ' } );
-	
-// 	if(commands.length > 0) {
-// 		for(var i = 0; i < commands.length; i++) {
-// 			if(commands[i].command !== "list") {
-// 				output.toActor.push( { text: "   " + commands[i].command } );
-// 			}
-// 		}
-// 	}
-	
-// 	return output;	
-// };
-
 postmasterSchema.methods.getCommands = function() {
     return [
     		{ command: "list"		 , minimumPosition: global.POS_RESTING , functionPointer: this.listCommands, minimumLevel: 0, subCommand: 0, npc: this },
