@@ -2,12 +2,14 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var constants = require('./constants');
+var configuration = require('./configuration');
 var arrayExtensions = require('./arrayExtensions');
 var mongoose = require('mongoose');
 var autoIncrement = require('mongoose-auto-increment');
 
 // This needs to happen before our domain objects are loaded
-mongoose.connect('mongodb://localhost/lantern');
+mongoose.connect(global.LOCAL_MONGO);
+
 autoIncrement.initialize(mongoose.connection);
 
 // These are here to force mongoose to register the schema prior to use
@@ -34,6 +36,23 @@ var vendingmachine = require('./items/vendingmachine');
 var npc = require('./npc');
 var postmaster = require('./npcs/postmaster');
 var cat = require('./npcs/cat');
+
+// -----
+// Logging Test
+
+var winston = require('winston');
+require('winston-loggly-bulk');
+
+ winston.add(winston.transports.Loggly, {
+    token: global.WINSTON_TOKEN,
+    subdomain: global.WINSTON_SUBDOMAIN,
+    tags: ["Winston-NodeJS"],
+    json:true
+});
+
+winston.log('info',"Server startup -- sending log now!");
+
+// -----
 
 // TODO: Room
 // TODO: Zone
