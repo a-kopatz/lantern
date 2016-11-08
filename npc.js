@@ -22,8 +22,32 @@ npcSchema.methods.isNpc = function() {
 	return true;
 };
 
+// This replace name... "An annoying cat"
 npcSchema.methods.getShortDescription = function() {
+	return this.name;
+};
+
+// Like when standing in a room... "An annoying cat is meowing here."
+npcSchema.methods.getDescription = function() {
 	return this.shortDescription;
+};
+
+// Like when looked at... "The cat is furry and has a stupid look on his annoying face."
+npcSchema.methods.getDetailedDescription = function() {
+    var result = [];
+    result.push(this.longDescription);
+    
+    for(var i = 0; i < global.MAX_WEARS; i++) {
+		if(this.wearing[i] !== null && this.wearing[i] !== undefined) {
+			result.push(global.WEAR_WHERE[i] + this.wearing[i].shortDescription);
+		}
+	}
+	
+	if(result.length === 0) {
+		result.push("You see nothing special.");
+	}
+	
+    return result;
 };
 
 npcSchema.methods.listCommands = function(character, command) {

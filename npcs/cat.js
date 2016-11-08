@@ -8,7 +8,7 @@ var catSchema = npcSchema.extend({
 }, { collection : 'npcs' });
 
 catSchema.methods.performActivity = function() {
-	this.emitRoomMessage(this.name + " meows.");
+	//this.emitRoomMessage(this.name + " meows.");
 };
 
 

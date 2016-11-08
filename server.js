@@ -31,6 +31,7 @@ var clothes = require('./items/clothes');
 var food = require('./items/food');
 var note = require('./items/note');
 var pen = require('./items/pen');
+var key = require('./items/key');
 var vendingmachine = require('./items/vendingmachine');
 
 var npc = require('./npc');

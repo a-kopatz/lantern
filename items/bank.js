@@ -13,7 +13,7 @@ bankSchema.methods.getType = function() {
 
 bankSchema.methods.getDetailedDescription = function() {
     var result = [];
-	result.push('ATM CHECK to check your bank balance.  ATM DEPOSIT <amount> to deposit money.');  
+	result.push('ATM BALANCE to check your bank balance.  ATM DEPOSIT <amount> to deposit money.');  
 	result.push('ATM WITHDRAW <amount> to withdraw money from your account.');
     return result;
 };

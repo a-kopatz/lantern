@@ -37,6 +37,8 @@ vendingmachineSchema.methods.buyItem = function(character, command) {
 
 	var target = command.item.contents.findByKeyword(command.tokens[1]);
 	
+	console.log(target);
+	
 	if(target.items.length > 0) {
 		var targetItem = target.items[0];
 		
@@ -44,7 +46,9 @@ vendingmachineSchema.methods.buyItem = function(character, command) {
 			return output.toActor.push( { text: "You do not have enough money to buy that item." } );
 		}
 		else {
-			output.toActorMessage("You buy FIRST_OBJECT_SHORTDESC from " + command.item.getShortDescription() + ".", targetItem);
+			// FIXME
+			//output.toActor.push( { text: "You buy FIRST_OBJECT_SHORTDESC from " + command.item.getShortDescription() + ".", targetItem } );
+			output.toActor.push( { text: "You buy " + targetItem.getShortDescription() + " from " + command.item.getShortDescription() + ".", targetItem } );
 			output.toRoom.push( { roomId: character.room.id, textArray: [ { text: "ACTOR_NAME buys FIRST_OBJECT_SHORTDESC from " + command.item.getShortDescription() + ".", items: [ targetItem ] } ] } );
 
 			character.money = character.money - targetItem.cost;
@@ -52,12 +56,10 @@ vendingmachineSchema.methods.buyItem = function(character, command) {
 			var newFood = new Food(targetItem);
 			character.inventory.push(newFood);
 		}
-		
 	}
 	else {
-		return output.toActor.push( { text: "That does not seem to be for sale in this vending machine." } );
+		output.toActor.push( { text: "That does not seem to be for sale in this vending machine." } );
 	}
-
 	
 	return output;
 };

@@ -8,6 +8,7 @@ var utility = require("./utility");
 var Output = require("./output");
 // var clothes = require("./items/clothes").clothes;
 var Food = require('./items/food').food;
+var Item = require('./item').item;
 
 var characterSchema = new schema({
 	name: String,
@@ -1418,17 +1419,29 @@ characterSchema.methods.lookTarget = function(command) {
 		var target = targetList.findByKeyword(command.tokens[0]);
 		
 		if(target.items.length > 0) {
-			output.toActor.push( { text: "You look at " + target.items[0].getShortDescription() + "." } );
 			
-			// CRASH BUG.....
+			// output.toActor.push( { text: "Temporarily removed due to bug..." } );
+			
+			// if(target.items[0] instanceof Item) {
+			// 	output.toActor.push( { text: "You look at " + target.items[0].getShortDescription() + "." } );
+			// }
+			// // else if(target.items[0] instanceof character) {
+			// // 	output.toActor.push( { text: "You look at " + target.items[0].name + "." } );
+			// // }
+			
+			output.toActor.push ( { text: "You look at " + target.items[0].getShortDescription() + "." } );
+			
+			console.log(target.items[0]);
+			
+			// CRASH BUG..... rented items?
 			var descriptionArray = target.items[0].getDetailedDescription();
 			
 			for(var i = 0; i < descriptionArray.length; i++) {
 				output.toActor.push( { text: descriptionArray[i] } );
 			}
 			
-			//output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.", items: [ target.items[0] ] } ] } );
-			output.toRoomMessage(this.room.id, "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.", target.items[0]);
+			// //output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.", items: [ target.items[0] ] } ] } );
+			// output.toRoomMessage(this.room.id, "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.", target.items[0]);
 		}
 		else {
 			var exit = this.room.getExit(command.tokens[0]);

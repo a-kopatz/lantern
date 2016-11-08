@@ -1,0 +1,18 @@
+var mongoose = require('mongoose');
+var schema = mongoose.Schema;
+var extend = require('mongoose-schema-extend');
+var itemSchema = require("../item").schema;
+
+var keySchema = itemSchema.extend({
+}, { collection : 'items' });
+
+// keySchema.methods.getType = function() {
+// 	return global.ITEM_CLOTHES;
+// };
+
+var keyModel = mongoose.model('key', keySchema);
+
+module.exports = {
+	schema: keySchema,
+	key: keyModel
+};

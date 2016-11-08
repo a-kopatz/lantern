@@ -127,8 +127,32 @@ playerSchema.methods.getNameAndTitle = function() {
 	return result.trim();
 };
 
+// This replace name... "Warrax"
 playerSchema.methods.getShortDescription = function() { 
+	return this.name;
+};
+
+// Like when standing in a room... "An annoying cat is meowing here."
+playerSchema.methods.getDescription = function() {
 	return this.name + " " + this.title;
+};
+
+// Like when looked at... "Warrax is awesome."
+playerSchema.methods.getDetailedDescription = function() {
+    var result = [];
+    //result.push(this.longDescription);
+    
+    for(var i = 0; i < global.MAX_WEARS; i++) {
+		if(this.wearing[i] !== null && this.wearing[i] !== undefined) {
+			result.push(global.WEAR_WHERE[i] + this.wearing[i].shortDescription);
+		}
+	}
+	
+	if(result.length === 0) {
+		result.push("You see nothing special.");
+	}
+	
+    return result;
 };
 
 playerSchema.methods.toggle = function(mode, property) {
@@ -329,7 +353,7 @@ playerSchema.methods.getCaloriesConsumedToday = function() {
 	}
 	
 	return caloriesConsumedToday;
-}
+};
 
 playerSchema.methods.hourlyUpdate = function() {
 // FIXME: Don't emit messages in a method like this.  Figure out a better way of doing it.
