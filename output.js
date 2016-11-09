@@ -119,15 +119,18 @@ Output.prototype.emitToRoom = function() {
     
     for(var i = 0; i < this.toRoom.length; i++) {
          var room = this.actor.world.getRoom(this.toRoom[i].roomId);
-         var players = room.getPlayers();
-
-        for (var j = 0; j < players.length; j++) {
-            var textTarget = players[j];
-        
-             if (textTarget !== this.actor && textTarget !== this.target) {
-                result.push(this.__emit(textTarget, this.toRoom[i].textArray));
+         
+         if(room !== null) {
+             var players = room.getPlayers();
+    
+            for (var j = 0; j < players.length; j++) {
+                var textTarget = players[j];
+            
+                 if (textTarget !== this.actor && textTarget !== this.target) {
+                    result.push(this.__emit(textTarget, this.toRoom[i].textArray));
+                }
             }
-        }
+         }
     }
     
     return result;

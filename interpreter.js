@@ -177,7 +177,7 @@ var COMMAND_LIST = [
           { command: "sit"      , minimumPosition: global.POS_RESTING , functionPointer: do_sit        , minimumLevel: 0, subCommand: 0 },
           { command: "slap"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SLAP },
 //           { command: "slay"     , minimumPosition: global.POS_RESTING , functionPointer: do_slay       , minimumLevel: 0, subCommand: 0 },
-          { command: "sleep"    , minimumPosition: global.POS_SLEEPING, functionPointer: do_sleep      , minimumLevel: 0, subCommand: 0 },
+        //   { command: "sleep"    , minimumPosition: global.POS_SLEEPING, functionPointer: do_sleep      , minimumLevel: 0, subCommand: 0 },
           { command: "smile"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SMILE },
           { command: "smirk"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SMIRK },
           { command: "snap"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SNAP },
@@ -448,6 +448,9 @@ function do_say(character, command) {
 function do_gen_comm(character, command) {
     // FIXME: This is broken, I guess
     //character.generalCommunication(command.subCommand, command.subInput.trim()).emit();
+    
+    // var x = character.generalCommunication(command.subCommand, command.subInput.trim());
+    // console.log(x);
 }
 
 function do_tog_auction(character, command) {

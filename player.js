@@ -333,12 +333,15 @@ playerSchema.methods.goto = function(keyword) {
 	var newRoom = this.world.getRoom(parseInt(keyword, 10));
 	
 	if(newRoom !== null) {
+		
+		var oldRoomId = this.room.id;
+		
 	 	this.room.removeCharacter(this);
 	 	newRoom.addCharacter(this);
 		output = newRoom.showRoomToCharacter(this);
 
-		output.toRoomMessage(this.room.roomId, "ACTOR_NAME disappears in a puff of smoke.");
-	 	output.toRoomMessage(newRoom.roomId, "ACTOR_NAME appears with an ear-splitting bang.");
+		output.toRoom.push( { roomId: oldRoomId, textArray: [ { text: "ACTOR_NAME shimmers and vanishes." } ] } );
+		output.toRoom.push( { roomId: newRoom.id, textArray: [ { text: "ACTOR_NAME shimmers and appears." } ] } );
 	}
 	
 	return output;

@@ -251,13 +251,13 @@ roomSchema.methods.showRoomToCharacter = function(character) {
  	for (var i = 0; i < this.players.length; i++) {
  		if (this.players[i] !== character) {
  			// TODO: if character.canSee(this.players[i])
- 			output.toActor.push( { text: this.players[i].getShortDescription() + " is here.", color: "Orange" } );
+ 			output.toActor.push( { text: this.players[i].getDescription() + " is here.", color: "Orange" } );
  		}
  	}
  	
  	for(var j = 0; j < this.npcs.length; j++) {
  		// TODO: if character.canSee(this.npcs[i])
- 		output.toActor.push( { text: this.npcs[j].getShortDescription(), color: "Orange" } );
+ 		output.toActor.push( { text: this.npcs[j].getDescription(), color: "Orange" } );
  	}
 
  	for (var i = 0; i < this.contents.length; i++) {

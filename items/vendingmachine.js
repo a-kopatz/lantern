@@ -35,26 +35,48 @@ vendingmachineSchema.methods.buyItem = function(character, command) {
 		return output;
 	}
 
-	var target = command.item.contents.findByKeyword(command.tokens[1]);
+	var target;
+	var quantity = parseInt(command.tokens[1], 10);
+			
+	if(isNaN(quantity)) {
+		quantity = 1;
+		target = command.item.contents.findByKeyword(command.tokens[1]);
+	}
+	else {
+		if(command.tokens.length < 3) {
+			output.toActor.push( { text: "But how much of what?!?" } );
+			return output;			
+		}
+		else {
+			target = command.item.contents.findByKeyword(command.tokens[2]);
+		}
+	}
 	
 	console.log(target);
 	
 	if(target.items.length > 0) {
 		var targetItem = target.items[0];
 		
-		if(targetItem.cost > character.money) {
-			return output.toActor.push( { text: "You do not have enough money to buy that item." } );
+		if((targetItem.cost * quantity) > character.money) {
+			if(quantity === 1) {
+				return output.toActor.push( { text: "You do not have enough money to buy that item." } );
+			}
+			else {
+				return output.toActor.push( { text: "You do not have enough money to buy that many." } );
+			}
 		}
 		else {
 			// FIXME
 			//output.toActor.push( { text: "You buy FIRST_OBJECT_SHORTDESC from " + command.item.getShortDescription() + ".", targetItem } );
-			output.toActor.push( { text: "You buy " + targetItem.getShortDescription() + " from " + command.item.getShortDescription() + ".", targetItem } );
-			output.toRoom.push( { roomId: character.room.id, textArray: [ { text: "ACTOR_NAME buys FIRST_OBJECT_SHORTDESC from " + command.item.getShortDescription() + ".", items: [ targetItem ] } ] } );
+			output.toActor.push( { text: "You buy " + quantity + " of " + targetItem.getShortDescription() + " from " + command.item.getShortDescription() + ".", targetItem } );
+			output.toRoom.push( { roomId: character.room.id, textArray: [ { text: "ACTOR_NAME buys " + quantity + " of FIRST_OBJECT_SHORTDESC from " + command.item.getShortDescription() + ".", items: [ targetItem ] } ] } );
 
-			character.money = character.money - targetItem.cost;
+			character.money = character.money - (targetItem.cost * quantity);
 
-			var newFood = new Food(targetItem);
-			character.inventory.push(newFood);
+			for(var i = 0; i < quantity; i++) {
+				var newFood = new Food(targetItem);
+				character.inventory.push(newFood);
+			}
 		}
 	}
 	else {
