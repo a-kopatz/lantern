@@ -94,6 +94,148 @@ function getBmiDescription(bmi) {
 	return "morbidly obese";
 }
 
+function getHeightAdjective(gender, height) {
+	if(gender === global.GENDER_MALE) {
+		if(height < 60) {
+			return "short";
+		}
+		else if(height < 66) {
+			return "average";
+		}
+		else if(height < 72) {
+			return "tall";
+		}
+		else {
+			return "towering";
+		}
+	}
+	else {
+		if(height < 63) {
+			return "short";
+		}
+		else if(height < 69) {
+			return "average";
+		}
+		else if(height < 77) {
+			return "tall";
+		}
+		else {
+			return "towering";
+		}
+	}
+}
+
+function getDetailedBmiDescription(bmi) {
+	if(bmi < 18) {
+		return "nothing but skin and bones.";
+	}
+	else if(bmi < 19) {
+		return "very skinny.";
+	}
+	else if(bmi < 21) {
+		return "too skinny.";
+	}
+	else if(bmi < 23) {
+		return "very thin.";
+	}
+	else if(bmi < 25) {
+		return "average weight -- not fat or thin.";
+	}
+	else if(bmi < 27) {
+		return "slightly chubby.";
+	}
+	else if(bmi < 28) {
+		return "quite chubby.";
+	}
+	else if(bmi < 30) {
+		return "overweight.";
+	}
+	else if(bmi < 32) {
+		return "fat.";
+	}
+	else if(bmi < 34) {
+		return "very fat.";
+	}
+	else if(bmi < 36) {
+		return "extremely fat.";
+	}
+	else if(bmi < 38) {
+		return "enormously fat.";
+	}
+	else if(bmi < 40) {
+		return "obese.";
+	}
+	else if(bmi < 42) {
+		return "a huge pile of fat.";
+	}
+	else if(bmi < 42) {
+		return "a round, jiggly ball of fat.";
+	}
+	else if(bmi < 45) {
+		return "extremely obese.";
+	}
+	else if(bmi < 50) {
+		return "morbidly obese.";
+	}
+	else {
+		return "a huge, quivering mass of fat.";
+	}
+}
+
+function getHungerAdjective(fullnessIndex0, fullnessIndex1, fullnessIndex2, fullnessIndex3) {
+	
+	var sum = fullnessIndex0 + fullnessIndex1 + fullnessIndex2 + fullnessIndex3;
+	
+	if(sum === 0) {
+		return "starving.";
+	}
+	else if(sum < 2) {
+		return "hungry.";
+	}
+	else if(sum < 4) {
+		return "satisfied.";
+	}
+	else if(sum < 6) {
+		return "stuffed.";
+	}
+	else if(sum < 9) {
+		return "completely overstuffed.";
+	}
+	else if(sum < 12) {
+		return "ready to burst.";
+	}
+	else if(sum < 15) {
+		return "painfully overfull, stomach bloated and swollen.";
+	}
+}
+
+function getGenderNoun(gender) {
+	if(gender === global.GENDER_MALE) {
+		return "man";
+	}
+	else {
+		return "woman";
+	}
+}
+
+function getPositionDescription(position) {
+	if(position === global.POS_STANDING) {
+		return "is standing here.";
+	}
+	else if(position === global.POS_SITTING) {
+		return "is sitting here.";
+	}
+	else if(position === global.POS_RESTING) {
+		return "is resting here.";
+	}
+	else if(position === global.POS_SLEEPING) {
+		return "is sleeping here.";
+	}
+	else if(position === global.POS_DEAD) {
+		return "is lying here, dead.";
+	}
+}
+
 function alreadyWearing(location) {
     switch(location) {
         case 0:
@@ -216,8 +358,13 @@ function wearMessage(location) {
 exports.randomNumber = randomNumber;
 exports.oppositeDirection = oppositeDirection;
 exports.getBmiDescription = getBmiDescription;
+exports.getDetailedBmiDescription = getDetailedBmiDescription;
+exports.getHeightAdjective = getHeightAdjective;
+exports.getGenderNoun = getGenderNoun;
+exports.getHungerAdjective = getHungerAdjective;
 exports.getFormattedLongString = getFormattedLongString;
 exports.getPastTenseOfWord = getPastTenseOfWord;
+exports.getPositionDescription = getPositionDescription;
 exports.getPaddedWord = getPaddedWord;
 exports.alreadyWearing = alreadyWearing;
 exports.wearMessage = wearMessage;

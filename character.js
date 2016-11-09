@@ -839,20 +839,6 @@ characterSchema.methods.eatItem = function(keyword) {
 
 	var afterFullnessIndex = (this.caloriesConsumed[0] / this.maximumFullness);
 
-	// if(beforeFullnessIndex != afterFullnessIndex) {
-	// 	if(beforeFullnessIndex < 3 && afterFullnessIndex >= 3) {
-	// 		output.toActor.push( { text: "You are ready to explode!" } );
-	// 		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME is ready to explode!" } ] } );
-	// 	}
-	// 	else if(beforeFullnessIndex < 2 && afterFullnessIndex >= 2) {
-	// 		output.toActor.push( { text: "You are stuffed!" } );
-	// 		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME is stuffed!" } ] } );
-	// 	}
-	// 	else if(beforeFullnessIndex < 1 && afterFullnessIndex >= 1) {
-	// 		output.toActor.push( { text: "You are full!" } );
-	// 		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME is full!" } ] } );
-	// 	}
-	// }
 
 	var messages = this.getOvereatingMessages(beforeFullnessIndex, afterFullnessIndex);
 	
@@ -1434,6 +1420,7 @@ characterSchema.methods.lookTarget = function(command) {
 			console.log(target.items[0]);
 			
 			// CRASH BUG..... rented items?
+			// It's because a "key" isn't a proper object derived from the schema.  Fix when player un-rents.
 			var descriptionArray = target.items[0].getDetailedDescription();
 			
 			for(var i = 0; i < descriptionArray.length; i++) {

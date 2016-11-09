@@ -137,22 +137,31 @@ playerSchema.methods.getDescription = function() {
 	return this.name + " " + this.title;
 };
 
-// Like when looked at... "Warrax is awesome."
+// Like when looked at... "Warrax is an awesome dude who looks, acts, and smells awesome."
 playerSchema.methods.getDetailedDescription = function() {
     var result = [];
-    //result.push(this.longDescription);
-    
+
+	var personalPronoun = this.getPersonalPronoun();
+	var formattedPersonalPronoun = personalPronoun.charAt(0).toUpperCase() + personalPronoun.slice(1);
+	var fullnessIndex0 = (this.caloriesConsumed[0] / this.maximumFullness);
+	var fullnessIndex1 = (this.caloriesConsumed[1] / this.maximumFullness);
+	var fullnessIndex2 = (this.caloriesConsumed[2] / this.maximumFullness);
+	var fullnessIndex3 = (this.caloriesConsumed[3] / this.maximumFullness);
+	
+	var description = this.name + " is a " + utility.getHeightAdjective(this.gender, this.height) + " " + utility.getGenderNoun(this.gender) + ".  " + 
+		formattedPersonalPronoun + " is " + utility.getDetailedBmiDescription(this.getBMI()) + "  " + formattedPersonalPronoun + " appears to be " + 
+		utility.getHungerAdjective(fullnessIndex0, fullnessIndex1, fullnessIndex2, fullnessIndex3);
+
+    result.push(description);
+	result.push(this.name + " " + utility.getPositionDescription(this.position));
+
     for(var i = 0; i < global.MAX_WEARS; i++) {
 		if(this.wearing[i] !== null && this.wearing[i] !== undefined) {
 			result.push(global.WEAR_WHERE[i] + this.wearing[i].shortDescription);
 		}
 	}
 	
-	if(result.length === 0) {
-		result.push("You see nothing special.");
-	}
-	
-    return result;
+	return result;
 };
 
 playerSchema.methods.toggle = function(mode, property) {
