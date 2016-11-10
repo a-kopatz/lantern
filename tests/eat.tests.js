@@ -107,7 +107,7 @@ exports.character_eatTwoItemsEatsBoth = function(test) {
     myWorld.addItem(donut2);
 
     var actual = actor.eatItems('2', 'donut');
-    test.equal(actual.toActor[0].text, "You eat a vanilla donut and a chocolate donut.");
+    test.equal(actual.toActor[0].text.slice(-38), "a vanilla donut and a chocolate donut.");
     test.equal(actor.inventory.length, 0);
     test.done();
 };
@@ -134,7 +134,7 @@ exports.character_eatTenItemsEatsAll = function(test) {
     }
     
     var actual = actor.eatItems('10', 'donut');
-    test.equal(actual.toActor[0].text, "You eat 10 vanilla donuts.");
+    test.equal(actual.toActor[0].text.slice(-18), "10 vanilla donuts.");
     test.equal(actor.inventory.length, 0);
     test.done();
 };
@@ -161,7 +161,7 @@ exports.character_eatFiveItemsEatsTheRightNumber = function(test) {
     }
     
     var actual = actor.eatItems('5', 'donut');
-    test.equal(actual.toActor[0].text, "You eat 5 vanilla donuts.");
+    test.equal(actual.toActor[0].text.slice(-17), "5 vanilla donuts.");
     test.equal(actor.inventory.length, 5);
     test.done();
 };

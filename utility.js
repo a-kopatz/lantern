@@ -66,6 +66,23 @@ function getPastTenseOfWord(word) {
 	}
 }
 
+function getRandomSynonym(word) {
+	switch(word.toUpperCase()) {
+		case "EAT":
+			var i = randomNumber(1, 5);
+			switch(i) {
+				case 1: return [ "eat", "eats" ];
+				case 2: return [ "gobble up", "gobbles up" ];
+				case 3: return [ "savagely devour", "savagely devours" ];
+				case 4: return [ "gorge on", "gorges on" ];
+				case 5: return [ "chow down on", "chows down on" ];
+				case 6: return [ "pigs out on", "pigs out on" ];
+				case 7: return [ "gobbles up", "gobbles up" ];
+			}
+			break;
+	}
+}
+
 function getBmiDescription(bmi) {
 	if(bmi < 18) {
 		return "underweight";
@@ -362,6 +379,7 @@ exports.getGenderNoun = getGenderNoun;
 exports.getHungerAdjective = getHungerAdjective;
 exports.getFormattedLongString = getFormattedLongString;
 exports.getPastTenseOfWord = getPastTenseOfWord;
+exports.getRandomSynonym = getRandomSynonym;
 exports.getPositionDescription = getPositionDescription;
 exports.getPaddedWord = getPaddedWord;
 exports.alreadyWearing = alreadyWearing;

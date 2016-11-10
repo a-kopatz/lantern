@@ -962,14 +962,18 @@ characterSchema.methods.eatItems = function(quantityToken, keywordToken) {
 		}
 	}
 
-	var toActor = 'You eat ';
-	var toRoom =  this.name + ' eats ';
+	var randomizedSynonym = utility.getRandomSynonym('eat');
+	var toActor = 'You ' + randomizedSynonym[0] + ' ';
+	var toRoom =  this.name + ' ' + randomizedSynonym[1] + ' ';
+	var first = true;
 
     for (var value of itemMap.values()) {
-    	if(toActor.length > 10) {
+    	if(first === false) {
     		toActor = toActor + " and ";
     		toRoom = toRoom + " and ";
     	}
+    	
+    	first = false;
     	
     	if(value.quantity > 1) {
     		toActor = toActor + value.quantity + " " + value.plural;
