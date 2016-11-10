@@ -165,3 +165,33 @@ exports.character_eatFiveItemsEatsTheRightNumber = function(test) {
     test.equal(actor.inventory.length, 5);
     test.done();
 };
+
+exports.character_eatStopsWhenPlayerIsFull = function(test) {
+    var actor = new Character();
+    actor.caloriesConsumed = [ 0 ];
+    actor.maximumFullness = 50;
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+
+    var myWorld = new World();
+    myWorld.addCharacter(actor);
+    
+    for(var i = 0; i < 3; i++) {
+        var donut = new Food();
+        donut.id = 1;
+        donut.keywords.push("donut");
+        donut.shortDescription = "a vanilla donut";
+        donut.pluralDescription = "vanilla donuts";
+        donut.calories = 200;
+        actor.inventory.push(donut);
+        myWorld.addItem(donut);
+    }
+    
+    var actual = actor.eatItems('2', 'donut');
+    test.equal(actual.toActor[1].text, "Your stomach can't hold any more!!!");
+    test.equal(actor.inventory.length, 2);
+    test.done();
+};
+

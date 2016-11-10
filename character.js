@@ -853,7 +853,6 @@ characterSchema.methods.eatItems = function(quantityToken, keywordToken) {
 	}
 
 	var result = this.inventory.findByKeyword('all.' + keywordToken);
-	
 	return this._handleEat(quantity, keywordToken, result);
 };
 

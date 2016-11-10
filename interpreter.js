@@ -888,21 +888,23 @@ function do_wear(character, command) {
     if(command.tokens.length === 0) {
         character.emitMessage("Wear what?");
     }
-    else if(command.tokens.length === 1) {
-        character.wearItem(command.tokens[0]).emit();
-    }
-    else {
-        var locationToken = command.tokens[1].toLowerCase();
+    // else if(command.tokens.length === 1) {
+    //     character.wearItem(command.tokens[0]).emit();
+    // }
+    // else {
+    //     var locationToken = command.tokens[1].toLowerCase();
         
-        for(var i = 0; i < global.WEAR_LIST.length; i++) {
-            if(global.WEAR_LIST[i].substr(0, locationToken.length) === locationToken) {
-                character.wearItemAtLocation(command.tokens[0], i).emit();
-                return;
-            }
-        }
+    //     for(var i = 0; i < global.WEAR_LIST.length; i++) {
+    //         if(global.WEAR_LIST[i].substr(0, locationToken.length) === locationToken) {
+    //             character.wearItemAtLocation(command.tokens[0], i).emit();
+    //             return;
+    //         }
+    //     }
         
-        character.emitMessage("Wear what where?");
-    }
+    //     character.emitMessage("Wear what where?");
+    // }
+    
+    character.emitMessage("Temporarily removed... crash bugs.");
 }
 
 function do_remove(character, command) {
