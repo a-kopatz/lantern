@@ -57,10 +57,12 @@ vendingmachineSchema.methods.buyItem = function(character, command) {
 		
 		if((targetItem.cost * quantity) > character.money) {
 			if(quantity === 1) {
-				return output.toActor.push( { text: "You do not have enough money to buy that item." } );
+				output.toActor.push( { text: "You do not have enough money to buy that item." } );
+				return output;
 			}
 			else {
-				return output.toActor.push( { text: "You do not have enough money to buy that many." } );
+				output.toActor.push( { text: "You do not have enough money to buy that many." } );
+				return output;
 			}
 		}
 		else {

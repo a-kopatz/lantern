@@ -7,25 +7,27 @@ var World = require('../world');
 
 ///////////////////////////////////////////////////////////
 
-exports.character_dropItemReturnsErrorWhenNoKeyword = function(test) {
+exports.character_junkItemReturnsErrorWhenNoKeyword = function(test) {
     var actor = new Character();
     
-    var actual = actor.dropItem('');
-    test.equal(actual.toActor[0].text, "drop what?!?");
+    var actual = actor.junkItem('');
+    test.equal(actual.toActor[0].text, "junk what?!?");
     test.done();
 };
 
-exports.character_dropItemReturnsErrorWhenItemNotFound = function(test) {
+exports.character_junkItemReturnsErrorWhenItemNotFound = function(test) {
     var actor = new Character();
     
-    var actual = actor.dropItem('computer');
-    test.equal(actual.toActor[0].text, "drop what?!?");
+    var actual = actor.junkItem('computer');
+    test.equal(actual.toActor[0].text, "junk what?!?");
     test.done();
 };
 
-exports.character_dropItemAddsToRoomInventory = function(test) {
+exports.character_junkItemDoesNotAddToRoomInventory = function(test) {
     var actor = new Character();
     actor.name = "Joe";
+
+    var world = new World();
     
     var room = new Room();
     room.id = 3001;
@@ -35,24 +37,29 @@ exports.character_dropItemAddsToRoomInventory = function(test) {
     gloves.keywords.push("gloves");
     gloves.shortDescription = "a pair of gloves";
 
+    world.addCharacter(actor);
+    world.addItem(gloves);
+
     actor.inventory.push(gloves);
     
-    var actual = actor.dropItem('gloves');
-    test.equal(actual.toActor[0].text, "You drop a pair of gloves.");
-    test.equal(actual.toRoom[0].textArray[0].text, "Joe drops a pair of gloves.");
+    var actual = actor.junkItem('gloves');
+    test.equal(actual.toActor[0].text, "You junk a pair of gloves.");
+    test.equal(actual.toRoom[0].textArray[0].text, "Joe junks a pair of gloves.");
     test.equal(actor.inventory.length, 0);
-    test.equal(room.contents.length, 1);
-    test.equal(room.contents[0], gloves);
+    test.equal(room.contents.length, 0);
+    test.equal(world.items.length, 0);
     test.done();
 };
 
-exports.character_dropAllDotItemAddsToRoomContents = function(test) {
+exports.character_junkAllDotItemDoesNotAddToRoomContents = function(test) {
     var actor = new Character();
     actor.name = "Joe";
 
     var room = new Room();
     room.id = 3001;
     room.addCharacter(actor);
+    
+    var world = new World();
     
     var gloves1 = new Item();
     gloves1.id = 1;
@@ -73,25 +80,31 @@ exports.character_dropAllDotItemAddsToRoomContents = function(test) {
     pizza.shortDescription = "a cheese pizza";
     actor.inventory.push(pizza);
     
-    var actual = actor.dropItem('all.gloves');
+    world.addCharacter(actor);
+    world.addItem(gloves1);
+    world.addItem(gloves2);
+    world.addItem(pizza);
     
-    test.equal(actual.toActor[0].text, "You drop a pair of blue gloves and a pair of black gloves.");
-    test.equal(actual.toRoom[0].textArray[0].text, "Joe drops a pair of blue gloves and a pair of black gloves.");
+    var actual = actor.junkItem('all.gloves');
+    
+    test.equal(actual.toActor[0].text, "You junk a pair of blue gloves and a pair of black gloves.");
+    test.equal(actual.toRoom[0].textArray[0].text, "Joe junks a pair of blue gloves and a pair of black gloves.");
     test.equal(actor.inventory.length, 1);
     test.equal(actor.inventory[0], pizza);
-    test.equal(room.contents.length, 2);
-    test.equal(room.contents[0], gloves1);
-    test.equal(room.contents[1], gloves2);
+    test.equal(room.contents.length, 0);
+    test.equal(world.items.length, 1);
     test.done();
 };
 
-exports.character_dropAllDropsEverythingToRoom = function(test) {
+exports.character_junkAllDoesEverything = function(test) {
     var actor = new Character();
     actor.name = "Joe";
     
     var room = new Room();
     room.id = 3001;
     room.addCharacter(actor);
+    
+    var world = new World();
     
     var gloves1 = new Item();
     gloves1.id = 1;
@@ -121,15 +134,19 @@ exports.character_dropAllDropsEverythingToRoom = function(test) {
     anotherPizza.pluralDescription = "cheese pizzas";
     actor.inventory.push(anotherPizza);
     
+    world.addCharacter(actor);
+    world.addItem(gloves1);
+    world.addItem(gloves2);
+    world.addItem(pizza);
+    world.addItem(anotherPizza);
     
-    var actual = actor.dropItem('all');
+    var actual = actor.junkItem('all');
     
-    test.equal(actual.toActor[0].text, "You drop a pair of blue gloves and a pair of black gloves and 2 cheese pizzas.");
-    test.equal(actual.toRoom[0].textArray[0].text, "Joe drops a pair of blue gloves and a pair of black gloves and 2 cheese pizzas.");
+    test.equal(actual.toActor[0].text, "You junk a pair of blue gloves and a pair of black gloves and 2 cheese pizzas.");
+    test.equal(actual.toRoom[0].textArray[0].text, "Joe junks a pair of blue gloves and a pair of black gloves and 2 cheese pizzas.");
     test.equal(actor.inventory.length, 0);
-    test.equal(room.contents.length, 4);
-    test.equal(room.contents[0], gloves1);
-    test.equal(room.contents[1], gloves2);
-    test.equal(room.contents[2], pizza);
+    test.equal(room.contents.length, 0);
+    test.equal(world.items.length, 0);
     test.done();
 };
+
