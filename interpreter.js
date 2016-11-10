@@ -383,6 +383,8 @@ Interpreter.prototype.handleInput = function(character, input) {
             if(command.isSpecial === true) {
                 var output = command.functionPointer(character, command);
                 
+                console.log(output);
+                
                 if(output !== undefined) {
                     output.emit();
                 }

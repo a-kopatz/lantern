@@ -839,82 +839,33 @@ characterSchema.methods.getOvereatingMessages = function(beforeIndex, afterIndex
 };
 
 characterSchema.methods.eatItem = function(keyword) {
-	var output = new Output(this);
 	var result = this.inventory.findByKeyword(keyword);
-
-	if(result.items.length === 0) {
-		output.toActor.push( { text: "Eat what?!?" } );
-		return output;
-	}
-
-	var beforeFullnessIndex = this.caloriesConsumed[0] / this.maximumFullness;
-
-	for(var i = 0; i < result.items.length; i++) {
-		if((result.items[i] instanceof Food) === false) {
-			output.toActor.push( { text: result.items[i].shortDescription + " -- You can't eat THAT!" } );
-		}
-		else {
-			if((this.caloriesConsumed[0] + result.items[i].calories) > 4 * this.maximumFullness) {
-				output.toActor.push( { text: "Your stomach can't hold that much!!!" } );
-			}
-			else {			
-				var messages = this.eatObject(result.items[i]);
-				output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
-				output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
-			}
-		}
-	}
-	
-	this.stretchStomach();
-
-	var afterFullnessIndex = (this.caloriesConsumed[0] / this.maximumFullness);
-
-
-	var messages = this.getOvereatingMessages(beforeFullnessIndex, afterFullnessIndex);
-	
-	if(messages.length > 0) {
-		output.toActor.push( { text: messages[0] } );
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
-	}
-
-	// fullnessIndex = this.getFullnessIndex();
-	// var fullnessMessages = global.FULLNESS[ fullnessIndex ];
-
-	// if(fullnessMessages != undefined) {
-	// 	output.toActor.push( { text: fullnessMessages[0] } );
-	// 	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: fullnessMessages[1] } ] } );
-	// }
-			
-	// if(fullnessIndex >= global.MAX_FULLNESS) {
-	// 	this.position = global.POS_SLEEPING;
-	// }
-
-	
-	return output;
+	return this._handleEat(result.items.length, keyword, result);
 };
 
-
-
-
-
 characterSchema.methods.eatItems = function(quantityToken, keywordToken) {
-	var output = new Output(this);
-	
 	var quantity = parseInt(quantityToken, 10);
 	
 	if(isNaN(quantity)) {
+		var output = new Output(this);
 		output.toActor.push( { text: "Eat how many of what?!?" } );
 		return output;
 	}
 
 	var result = this.inventory.findByKeyword('all.' + keywordToken);
 	
-	if(result.items.length === 0) {
+	return this._handleEat(quantity, keywordToken, result);
+};
+
+characterSchema.methods._handleEat = function(quantity, keywordToken, itemArray) {
+	var output = new Output(this);
+	
+	if(itemArray.items.length === 0) {
 		output.toActor.push( { text: "Eat what?!?" } );
 		return output;
 	}
 
-    if(result.items.length < quantity) {
+    if(itemArray.items.length < quantity) {
         output.toActor.push( { text: "You don't have " + quantity + " of '" + keywordToken + "'."  } );
         return output;
     }
@@ -925,39 +876,43 @@ characterSchema.methods.eatItems = function(quantityToken, keywordToken) {
 	var itemMap = new Map();
     var brokenLoop = false;
 	
-	for(var i = 0; i < result.items.length; i++) {
+	for(var i = 0; i < itemArray.items.length; i++) {
 		if(i >= quantity) {
 			break;
 		}
 		
-		if((result.items[i] instanceof Food) === false) { 
-			output.toActor.push( { text: result.items[i].shortDescription + " -- You can't eat THAT!" } );
+		if((itemArray.items[i] instanceof Food) === false) { 
+			output.toActor.push( { text: itemArray.items[i].shortDescription + " -- You can't eat THAT!" } );
 		}
 		else {
-			if((this.caloriesConsumed[0] + result.items[i].calories) > 4 * this.maximumFullness) {
+			if((this.caloriesConsumed[0] + itemArray.items[i].calories) > 4 * this.maximumFullness) {
 			    brokenLoop = true;
                 break;
 			}
             else {
-                if(itemMap.has(result.items[i].id)) {
-                    itemMap.set(result.items[i].id, 
+                if(itemMap.has(itemArray.items[i].id)) {
+                    itemMap.set(itemArray.items[i].id, 
                     	{ 
-                    		quantity: itemMap.get(result.items[i].id).quantity + 1, 
-                    		singular: result.items[i].getShortDescription(),
-                    		plural: result.items[i].getPluralDescription()
+                    		quantity: itemMap.get(itemArray.items[i].id).quantity + 1, 
+                    		singular: itemArray.items[i].getShortDescription(),
+                    		plural: itemArray.items[i].getPluralDescription()
                     	} );
                 }
                 else {
-                    itemMap.set(result.items[i].id, 
+                    itemMap.set(itemArray.items[i].id, 
                     	{ 
                     		quantity: 1, 
-                    		singular: result.items[i].getShortDescription(),
-                    		plural: result.items[i].getPluralDescription() 
+                    		singular: itemArray.items[i].getShortDescription(),
+                    		plural: itemArray.items[i].getPluralDescription() 
                     	} );
                 }
 
-                this.inventory.splice(this.inventory.indexOf(result.items[i]), 1);
-                this.world.removeItem(result.items[i]);
+				if(!this.isNpc()) {
+					this.caloriesConsumed[0] = this.caloriesConsumed[0] + itemArray.items[i].calories;
+				}
+
+                this.inventory.splice(this.inventory.indexOf(itemArray.items[i]), 1);
+                this.world.removeItem(itemArray.items[i]);
             }
 		}
 	}
@@ -1003,10 +958,8 @@ characterSchema.methods.eatItems = function(quantityToken, keywordToken) {
 		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
 	}    
 	
-	return output;
+	return output;	
 };
-
-
 
 
 
