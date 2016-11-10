@@ -139,6 +139,9 @@ global.ITEM_CORPSE = "Corpse";
 global.ITEM_BANK = "Bank";
 global.ITEM_BULLETINBOARD = "Board";
 global.ITEM_CLOTHES = "Clothes";
+global.ITEM_SHIRT = "Shirt";
+global.ITEM_SHIRT = "Pants";
+
 
 global.MESSAGE_BUG = "Please report this using the 'bug' command.";
 global.CANNOT_DO_THAT_HERE = "Sorry, but you can't do that here.";

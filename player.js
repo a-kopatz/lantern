@@ -9,6 +9,8 @@ var Mail = require("./mail").mail;
 // var Note = require('./note');
 var note = require("./items/note").note;
 var clothes = require("./items/clothes").clothes;
+var shirt = require("./items/shirt").shirt;
+var pants = require("./items/shirt").pants;
 var food = require("./items/food").food;
 var pen = require("./items/pen").pen;
 var utility = require("./utility");
@@ -55,6 +57,7 @@ playerSchema.methods.enterGame = function(world) {
 	
 	
 	// THIS SHOULDN'T BE NECESSARY
+	// TODO: Combine loops
 	for(var i = 0; i < this.inventory.length; i++) {
 		switch(this.inventory[i].type) {
 			case global.ITEM_FOOD:
@@ -65,7 +68,13 @@ playerSchema.methods.enterGame = function(world) {
 				break;
 			case global.ITEM_PEN:
 				this.inventory[i] = new pen(this.inventory[i]);
-				break;				
+				break;		
+			case global.ITEM_SHIRT:
+				this.inventory[i] = new shirt(this.inventory[i]);
+				break;
+			case global.ITEM_PANTS:
+				this.inventory[i] = new pants(this.inventory[i]);
+				break;
 			case global.ITEM_CLOTHES:
 				this.inventory[i] = new clothes(this.inventory[i]);
 				break;
@@ -83,6 +92,12 @@ playerSchema.methods.enterGame = function(world) {
 			case global.ITEM_PEN:
 				this.wearing[i] = new pen(this.wearing[i]);
 				break;
+			case global.ITEM_SHIRT:
+				this.wearing[i] = new shirt(this.wearing[i]);
+				break;
+			case global.ITEM_PANTS:
+				this.wearing[i] = new pants(this.wearing[i]);
+				break;				
 			case global.ITEM_CLOTHES:
 				this.wearing[i] = new clothes(this.wearing[i]);
 				break;
@@ -143,21 +158,25 @@ playerSchema.methods.getDetailedDescription = function() {
 
 	var personalPronoun = this.getPersonalPronoun();
 	var formattedPersonalPronoun = personalPronoun.charAt(0).toUpperCase() + personalPronoun.slice(1);
-	var fullnessIndex0 = (this.caloriesConsumed[0] / this.maximumFullness);
-	var fullnessIndex1 = (this.caloriesConsumed[1] / this.maximumFullness);
-	var fullnessIndex2 = (this.caloriesConsumed[2] / this.maximumFullness);
-	var fullnessIndex3 = (this.caloriesConsumed[3] / this.maximumFullness);
+	// var fullnessIndex0 = (this.caloriesConsumed[0] / this.maximumFullness);
+	// var fullnessIndex1 = (this.caloriesConsumed[1] / this.maximumFullness);
+	// var fullnessIndex2 = (this.caloriesConsumed[2] / this.maximumFullness);
+	// var fullnessIndex3 = (this.caloriesConsumed[3] / this.maximumFullness);
+	var fullnessIndex = this.caloriesConsumed[3] / this.maximumFullness;
 	
 	var description = this.name + " is a " + utility.getHeightAdjective(this.gender, this.height) + " " + utility.getGenderNoun(this.gender) + ".  " + 
-		formattedPersonalPronoun + " is " + utility.getDetailedBmiDescription(this.getBMI()) + "  " + formattedPersonalPronoun + " appears to be " + 
-		utility.getHungerAdjective(fullnessIndex0, fullnessIndex1, fullnessIndex2, fullnessIndex3);
+		formattedPersonalPronoun + " is " + utility.getDetailedBmiDescription(this.getBMI()) + ".  " + formattedPersonalPronoun + " appears to be " + 
+		//utility.getHungerAdjective(fullnessIndex0, fullnessIndex1, fullnessIndex2, fullnessIndex3) + ".";
+		utility.getHungerAdjective(fullnessIndex) + ".";
 
     result.push(description);
 	result.push(this.name + " " + utility.getPositionDescription(this.position));
 
+	var currentBmi = this.getBMI();
+
     for(var i = 0; i < global.MAX_WEARS; i++) {
 		if(this.wearing[i] !== null && this.wearing[i] !== undefined) {
-			result.push(global.WEAR_WHERE[i] + this.wearing[i].shortDescription);
+			result.push(global.WEAR_WHERE[i] + this.wearing[i].getWornDescription(currentBmi));
 		}
 	}
 	
@@ -402,7 +421,22 @@ playerSchema.methods.hourlyUpdate = function() {
 		this.weight = this.weight + 1;
 		this.emitMessage("You feel fatter.");
 		this.emitRoomMessage(this.name + " looks fatter.");
+		
+		var newBmi = this.getBMI();
+		
+		for(var i = 0; i < global.MAX_WEARS; i++) {
+			if(this.wearing[i] !== null && this.wearing[i] !== undefined) {
+				
+				var result = this.wearing[i].weightUpdate(this.name, newBmi);
+				
+				if(result !== undefined && result.length > 0) {
+					this.emitMessage(result[0]);
+					this.emitRoomMessage(result[1]);
+				}
+			}
+		}
 	}
+
 	
 	this.caloriesConsumed.pop();
 	this.caloriesConsumed.unshift(0);

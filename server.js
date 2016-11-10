@@ -28,6 +28,8 @@ var Post = require('./post').post;
 var bank = require('./items/bank');
 var bulletinboard = require('./items/bulletinboard');
 var clothes = require('./items/clothes');
+var shirt = require('./items/shirt');
+var pants = require('./items/pants');
 var food = require('./items/food');
 var note = require('./items/note');
 var pen = require('./items/pen');
@@ -265,7 +267,7 @@ io.sockets.on("connection", function(socket) {
                             sockets[i].player.emitRoomMessage(sockets[i].player.name + " suddenly keels over in pain, surrounded by a white aura...");
                             sockets[i].player.emitRoomMessage(sockets[i].player.name + "'s body has been taken over by a new spirit!!!");
                     
-                            emitMessage("You take over your own body, already in use!");
+                            emitMessage("You take over your own body, already in use!", "Yellow");
                             socket.player = sockets[i].player;
                             sockets[i].disconnect();
                             
@@ -338,6 +340,22 @@ io.sockets.on("connection", function(socket) {
     }
     
     function enterGame() {
+        for(var i = 0; i < gameWorld.players. length; i++) {
+            if(gameWorld.players[i].name === socket.player.name) {
+                
+                if(gameWorld.players[i].socket !== null) {
+                    gameWorld.players[i].socket.disconnect();    
+                }
+                
+                socket.player = gameWorld.players[i];
+                emitMessage("You take over your own body, already in use!", "Yellow");
+                socket.connectionState = global.CON_PLAYING;
+                socket.player.socket = socket;
+                socket.player.commandQueue = [];
+                return;                
+            }
+        }
+
         if (socket.player.experience === undefined) {
             // socket.player.start(gameWorld.time);
             socket.player.start();

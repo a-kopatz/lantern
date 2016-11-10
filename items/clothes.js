@@ -5,11 +5,20 @@ var itemSchema = require("../item").schema;
 
 var clothesSchema = itemSchema.extend({
 	wearSlots: [ Number ],
+	condition: Number,
 	maximumBmi: Number
 }, { collection : 'items' });
 
 clothesSchema.methods.getType = function() {
 	return global.ITEM_CLOTHES;
+};
+
+clothesSchema.methods.getWornDescription = function() {
+	return this.shortDescription;
+};
+
+clothesSchema.methods.weightUpdate = function() {
+	return [];
 };
 
 var clothesModel = mongoose.model('clothes', clothesSchema);

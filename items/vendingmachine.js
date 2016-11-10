@@ -4,6 +4,8 @@ var extend = require('mongoose-schema-extend');
 var itemSchema = require("../item").schema;
 var Output = require("../output");
 var Item = require('../item').item;
+var Shirt = require('./shirt').shirt;
+var Pants = require('./pants').pants;
 var Food = require('./food').food;
 var utility = require("../utility");
 
@@ -73,9 +75,23 @@ vendingmachineSchema.methods.buyItem = function(character, command) {
 
 			character.money = character.money - (targetItem.cost * quantity);
 
-			for(var i = 0; i < quantity; i++) {
-				var newFood = new Food(targetItem);
-				character.inventory.push(newFood);
+			if(targetItem instanceof Food === true) {
+				for(var i = 0; i < quantity; i++) {
+					var newFood = new Food(targetItem);
+					character.inventory.push(newFood);
+				}
+			}
+			else if(targetItem instanceof Shirt === true) {
+				for(var i = 0; i < quantity; i++) {
+					var newShirt = new Shirt(targetItem);
+					character.inventory.push(newShirt);
+				}
+			}
+			else if(targetItem instanceof Pants === true) {
+				for(var i = 0; i < quantity; i++) {
+					var newPants = new Pants(targetItem);
+					character.inventory.push(newPants);
+				}
 			}
 		}
 	}

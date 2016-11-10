@@ -1318,10 +1318,22 @@ characterSchema.methods.wearItem = function(keyword) {
 	}
 
 	for(var i = 0; i < result.items.length; i++) {
-		if(result.items[i].wearSlots.length === 0) {
-			output.toActor.push( { text: "You can't wear FIRST_OBJECT_SHORTDESC." } );
+		console.log('b' + result.items[i]);
+		console.log('x' + result.items[i].shortDescription);
+		console.log('d' + result.items[i].wearSlots);
+		console.log('z' + result.items[i].maximumBmi);
+		console.log('zzz' + result.items[i].condition);
+		
+		if(result.items[i].wearSlots === undefined || result.items[i].wearSlots.length === 0) {
+			output.toActor.push( { text: "You can't wear " + result.items[i].shortDescription + "." } );
 		}
 		else {
+			if(this.getBMI() > result.items[i].maximumBmi) {
+				output.toActorMessage( { text: "You can't wear " + result.items[i].getShortDescription() + ".  You're too fat for that!" } );
+				output.toRoom.push( { roomId: this.room.id, textArray: [ { text: this.name + " tries to wear " + result.items[i].getShortDescription() + " but is too fat to wear it." } ] } );
+				return output;
+			}
+			
 			var messages = this.wearObject(result.items[i], result.items[i].wearSlots[0]);
 			output.toActorMessage(messages[0], result.items[i]);
 			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );

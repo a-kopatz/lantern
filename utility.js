@@ -127,85 +127,108 @@ function getHeightAdjective(gender, height) {
 
 function getDetailedBmiDescription(bmi) {
 	if(bmi < 18) {
-		return "nothing but skin and bones.";
+		return "nothing but skin and bones";
 	}
 	else if(bmi < 19) {
-		return "very skinny.";
+		return "very skinny";
 	}
 	else if(bmi < 21) {
-		return "too skinny.";
+		return "too skinny";
 	}
 	else if(bmi < 23) {
-		return "very thin.";
+		return "very thin";
 	}
 	else if(bmi < 25) {
-		return "average weight -- not fat or thin.";
+		return "average weight -- not fat or thin";
 	}
 	else if(bmi < 27) {
-		return "slightly chubby.";
+		return "slightly chubby";
 	}
 	else if(bmi < 28) {
-		return "quite chubby.";
+		return "quite chubby";
 	}
 	else if(bmi < 30) {
-		return "overweight.";
+		return "overweight";
 	}
 	else if(bmi < 32) {
-		return "fat.";
+		return "fat";
 	}
 	else if(bmi < 34) {
-		return "very fat.";
+		return "very fat";
 	}
 	else if(bmi < 36) {
-		return "extremely fat.";
+		return "extremely fat";
 	}
 	else if(bmi < 38) {
-		return "enormously fat.";
+		return "enormously fat";
 	}
 	else if(bmi < 40) {
-		return "obese.";
+		return "obese";
 	}
 	else if(bmi < 42) {
-		return "a huge pile of fat.";
+		return "a huge pile of fat";
 	}
 	else if(bmi < 42) {
-		return "a round, jiggly ball of fat.";
+		return "a round, jiggly ball of fat";
 	}
 	else if(bmi < 45) {
-		return "extremely obese.";
+		return "extremely obese";
 	}
 	else if(bmi < 50) {
-		return "morbidly obese.";
+		return "morbidly obese";
 	}
 	else {
-		return "a huge, quivering mass of fat.";
+		return "a huge, quivering mass of fat";
 	}
 }
 
-function getHungerAdjective(fullnessIndex0, fullnessIndex1, fullnessIndex2, fullnessIndex3) {
+// function getHungerAdjective(fullnessIndex0, fullnessIndex1, fullnessIndex2, fullnessIndex3) {
+// 	var sum = fullnessIndex0 + fullnessIndex1 + fullnessIndex2 + fullnessIndex3;
 	
-	var sum = fullnessIndex0 + fullnessIndex1 + fullnessIndex2 + fullnessIndex3;
-	
-	if(sum === 0) {
-		return "starving.";
+// 	if(sum === 0) {
+// 		return "starving";
+// 	}
+// 	else if(sum < 2) {
+// 		return "hungry";
+// 	}
+// 	else if(sum < 4) {
+// 		return "satisfied";
+// 	}
+// 	else if(sum < 6) {
+// 		return "stuffed";
+// 	}
+// 	else if(sum < 9) {
+// 		return "completely overstuffed";
+// 	}
+// 	else if(sum < 12) {
+// 		return "ready to burst";
+// 	}
+// 	else {
+// 		return "painfully overfull, stomach bloated and swollen";
+// 	}
+// }
+function getHungerAdjective(fullnessIndex) {
+
+	if(fullnessIndex === 0) {
+		return "starving";
 	}
-	else if(sum < 2) {
-		return "hungry.";
+	else if(fullnessIndex < 1) {
+		return "hungry";
 	}
-	else if(sum < 4) {
-		return "satisfied.";
+	else if(fullnessIndex < 2) {
+		return "satisfied";
 	}
-	else if(sum < 6) {
-		return "stuffed.";
+	else if(fullnessIndex < 3) {
+		return "stuffed";
 	}
-	else if(sum < 9) {
-		return "completely overstuffed.";
+	else if(fullnessIndex < 4) {
+		return "completely overstuffed";
 	}
-	else if(sum < 12) {
-		return "ready to burst.";
+	else if(fullnessIndex < 5) {
+		return "ready to burst";
 	}
-	else if(sum < 15) {
-		return "painfully overfull, stomach bloated and swollen.";
+	else {
+		return "painfully overfull, stomach bloated and swollen";
 	}
 }
 
