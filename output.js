@@ -143,9 +143,9 @@ Output.prototype.emitToWorld = function() {
         
      	for(var i = 0; i < players.length; i++) {
      		if(players[i] !== this.actor) {
-     	        if(this.players[i].room !== undefined) {
+     	        if(players[i].room !== undefined) {
      	            if(players[i].room.isSoundproof === false) {
-     	                this.checkWorldMessage(players[i]);
+     	                this.checkAndEmitWorldMessage(players[i]);
      	            }
                 }
      		}
@@ -153,7 +153,7 @@ Output.prototype.emitToWorld = function() {
 	}
 };
 
-Output.prototype.checkWorldMessage = function(targetPlayer) {
+Output.prototype.checkAndEmitWorldMessage = function(targetPlayer) {
     switch(this.subCommand) {
         case global.SCMD_HOLLER:
         	if(targetPlayer.isNoHoller === false) {

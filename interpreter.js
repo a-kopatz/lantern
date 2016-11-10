@@ -446,11 +446,7 @@ function do_say(character, command) {
 }
 
 function do_gen_comm(character, command) {
-    // FIXME: This is broken, I guess
-    //character.generalCommunication(command.subCommand, command.subInput.trim()).emit();
-    
-    // var x = character.generalCommunication(command.subCommand, command.subInput.trim());
-    // console.log(x);
+    character.generalCommunication(command.subCommand, command.subInput.trim()).emit();
 }
 
 function do_tog_auction(character, command) {
