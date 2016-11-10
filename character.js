@@ -440,7 +440,7 @@ characterSchema.methods.generalCommunication = function(subCommand, message) {
 
 characterSchema.methods.tell = function(targetName, message) {
 	var output = new Output(this);
-	var target = this.world.getCharacter(targetName);
+	var target = this.world.getPlayer(targetName);
 	
 	if(target === null) {
 		output.toActor.push( { text: "No-one by that name here." } );
@@ -448,8 +448,38 @@ characterSchema.methods.tell = function(targetName, message) {
 	else {
 		// TODO: Implement this
 		//if(this.canTellTarget(target)) {
+			output.target = target;
 			output.toActor.push( { text: "You tell " + target.name + ", '" + message + "'", color: "Red" } );
 			output.toTarget.push( { text: "ACTOR_NAME tells you, '" + message + "'",  color: "Red" } );
+			
+			target.replyTo = this.name;
+		//}
+	}
+	
+	return output;
+};
+
+characterSchema.methods.reply = function(message) {
+	var output = new Output(this);
+	
+	if(this.replyTo === undefined || this.replyTo === null) {
+		output.toActor.push( { text: "Reply to who, exactly?" } );
+		return output;
+	}
+	
+	var target = this.world.getPlayer(this.replyTo);
+	
+	if(target === null) {
+		output.toActor.push( { text: "That player must have left..." } );
+	}
+	else {
+		// TODO: Implement this
+		//if(this.canTellTarget(target)) {
+			output.target = target;
+			output.toActor.push( { text: "You tell " + target.name + ", '" + message + "'", color: "Red" } );
+			output.toTarget.push( { text: "ACTOR_NAME tells you, '" + message + "'",  color: "Red" } );
+			
+			target.replyTo = this.name;
 		//}
 	}
 	

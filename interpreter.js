@@ -158,6 +158,7 @@ var COMMAND_LIST = [
           { command: "remove"   , minimumPosition: global.POS_RESTING , functionPointer: do_remove     , minimumLevel: 0, subCommand: 0 },
 //           { command: "rent"     , minimumPosition: global.POS_RESTING , functionPointer: do_rent       , minimumLevel: 0, subCommand: 0 },
 //           { command: "report"   , minimumPosition: global.POS_RESTING , functionPointer: do_report     , minimumLevel: 0, subCommand: 0 },
+          { command: "reply"    , minimumPosition: global.POS_DEAD    , functionPointer: do_reply      , minimumLevel: 0, subCommand: 0 },
           { command: "rest"     , minimumPosition: global.POS_RESTING , functionPointer: do_rest       , minimumLevel: 0, subCommand: 0 },
           { command: "roll"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_ROLL },
           { command: "ruffle"   , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_RUFFLE },
@@ -230,7 +231,8 @@ var COMMAND_LIST = [
           { command: "yawn"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_YAWN },
           { command: "yodel"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_YODEL },
           
-          { command: "/"        , minimumPosition: global.POS_STANDING, functionPointer: do_home       , minimumLevel: 0, subCommand: 0 }
+          { command: "/"        , minimumPosition: global.POS_STANDING, functionPointer: do_home       , minimumLevel: 0, subCommand: 0 },
+          { command: "@"        , minimumPosition: global.POS_DEAD    , functionPointer: do_tell       , minimumLevel: 0, subCommand: 0 }
     ];
 
 
@@ -718,11 +720,15 @@ function do_title(character, command) {
 
 function do_tell(character, command) {
     if(command.tokens.length > 0) {
-        character.tell(command.tokens[0], command.subInput.replace(command.tokens[0], '').trim());
+        character.tell(command.tokens[0], command.subInput.replace(command.tokens[0], '').trim()).emit();
     }
     else {
         character.emitMessage("Tell what to who?");
     }
+}
+
+function do_reply(character, command) {
+    character.reply(command.subInput.trim()).emit();
 }
 
 function do_report_bug(character, command) {
