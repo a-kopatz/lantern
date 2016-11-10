@@ -611,10 +611,16 @@ function do_junk(character, command) {
 
 function do_eat(character, command) {
     if(command.tokens.length === 0) {
-            character.emitMessage('Eat what?');
+        character.emitMessage('Eat what?');
+    }
+    else if(command.tokens.length === 1) {
+        character.eatItem(command.tokens[0]).emit();
+    }
+    else if(command.tokens.length === 2) {
+        character.eatItems(command.tokens[0], command.tokens[1]).emit();
     }
     else {
-        character.eatItem(command.tokens[0]).emit();
+        character.emitMessage('Eat what?');
     }
 }
 

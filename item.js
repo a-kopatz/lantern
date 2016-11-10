@@ -10,6 +10,7 @@ var itemSchema = new schema({
    	category: { type: Number, default: global.CATEGORY_ITEM },
     shortDescription: String,
     longDescription: String,
+    pluralDescription: String,
     detailedDescription: String,
     canBeDonated: Boolean,
     canBeTaken: Boolean,
@@ -48,6 +49,11 @@ itemSchema.methods.listContents = function() {
 // Like when carried, dropped, etc.... "A brass key"
 itemSchema.methods.getShortDescription = function() {
     return this.shortDescription;
+};
+
+// Like when dealing with mulitple of the same item... "brass keys"
+itemSchema.methods.getPluralDescription = function() {
+    return this.pluralDescription;
 };
 
 // Like when laying in a room... "A brass key has been left here"

@@ -851,7 +851,8 @@ exports.character_wearItemReturnsErrorWhenItemIsNotWearable = function(test) {
     actor.inventory.push(hat);
 
     var output = actor.wearItem("hat");
-    test.equal(output.toActor[0].text, "You can't wear FIRST_OBJECT_SHORTDESC.");
+    //test.equal(output.toActor[0].text, "You can't wear FIRST_OBJECT_SHORTDESC.");
+    test.equal(output.toActor[0].text, "You can't wear a hat.");
     test.equal(actor.inventory[0], hat);
     test.done();
 };

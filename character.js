@@ -893,6 +893,120 @@ characterSchema.methods.eatItem = function(keyword) {
 	return output;
 };
 
+
+
+
+
+characterSchema.methods.eatItems = function(quantityToken, keywordToken) {
+	var output = new Output(this);
+	
+	var quantity = parseInt(quantityToken, 10);
+	
+	if(isNaN(quantity)) {
+		output.toActor.push( { text: "Eat how many of what?!?" } );
+		return output;
+	}
+
+	var result = this.inventory.findByKeyword('all.' + keywordToken);
+	
+	if(result.items.length === 0) {
+		output.toActor.push( { text: "Eat what?!?" } );
+		return output;
+	}
+
+    if(result.items.length < quantity) {
+        output.toActor.push( { text: "You don't have " + quantity + " of '" + keywordToken + "'."  } );
+        return output;
+    }
+    
+    // Sort of shitty -- only players have this concept (at the moment)
+    var beforeFullnessIndex = this.caloriesConsumed[0] / this.maximumFullness;
+    
+	var itemMap = new Map();
+    var brokenLoop = false;
+	
+	for(var i = 0; i < result.items.length; i++) {
+		if(i >= quantity) {
+			break;
+		}
+		
+		if((result.items[i] instanceof Food) === false) { 
+			output.toActor.push( { text: result.items[i].shortDescription + " -- You can't eat THAT!" } );
+		}
+		else {
+			if((this.caloriesConsumed[0] + result.items[i].calories) > 4 * this.maximumFullness) {
+			    brokenLoop = true;
+                break;
+			}
+            else {
+                if(itemMap.has(result.items[i].id)) {
+                    itemMap.set(result.items[i].id, 
+                    	{ 
+                    		quantity: itemMap.get(result.items[i].id).quantity + 1, 
+                    		singular: result.items[i].getShortDescription(),
+                    		plural: result.items[i].getPluralDescription()
+                    	} );
+                }
+                else {
+                    itemMap.set(result.items[i].id, 
+                    	{ 
+                    		quantity: 1, 
+                    		singular: result.items[i].getShortDescription(),
+                    		plural: result.items[i].getPluralDescription() 
+                    	} );
+                }
+
+                this.inventory.splice(this.inventory.indexOf(result.items[i]), 1);
+                this.world.removeItem(result.items[i]);
+            }
+		}
+	}
+
+	var toActor = 'You eat ';
+	var toRoom =  this.name + ' eats ';
+
+    for (var value of itemMap.values()) {
+    	if(toActor.length > 10) {
+    		toActor = toActor + " and ";
+    		toRoom = toRoom + " and ";
+    	}
+    	
+    	if(value.quantity > 1) {
+    		toActor = toActor + value.quantity + " " + value.plural;
+    		toRoom = toRoom + value.quantity + " " + value.plural;
+    	}
+    	else {
+    		toActor = toActor + value.singular;
+    		toRoom = toRoom + value.singular;
+    	}
+    }
+    
+    output.toActor.push( { text: toActor + "." });
+	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: toRoom + "." } ] } );
+	
+    if(brokenLoop === true) {
+        output.toActor.push( { text: "Your stomach can't hold any more!!!" } );
+    }
+
+    this.stretchStomach();
+
+	var afterFullnessIndex = (this.caloriesConsumed[0] / this.maximumFullness);
+
+	var messages = this.getOvereatingMessages(beforeFullnessIndex, afterFullnessIndex);
+	
+	if(messages.length > 0) {
+		output.toActor.push( { text: messages[0] } );
+		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+	}    
+	
+	return output;
+};
+
+
+
+
+
+
 characterSchema.methods.tasteObject = function(object) {
 	var messages = [];
 
@@ -1348,12 +1462,6 @@ characterSchema.methods.wearItem = function(keyword) {
 	}
 
 	for(var i = 0; i < result.items.length; i++) {
-		console.log('b' + result.items[i]);
-		console.log('x' + result.items[i].shortDescription);
-		console.log('d' + result.items[i].wearSlots);
-		console.log('z' + result.items[i].maximumBmi);
-		console.log('zzz' + result.items[i].condition);
-		
 		if(result.items[i].wearSlots === undefined || result.items[i].wearSlots.length === 0) {
 			output.toActor.push( { text: "You can't wear " + result.items[i].shortDescription + "." } );
 		}

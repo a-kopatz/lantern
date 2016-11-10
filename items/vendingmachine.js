@@ -30,8 +30,6 @@ vendingmachineSchema.methods.getCommands = function() {
 vendingmachineSchema.methods.buyItem = function(character, command) {
 	var output = new Output(character);
 	
-	console.log(command);
-	
 	if(command.tokens.length < 2) {
 		output.toActor.push( { text: "But what do you want to buy?!?" } );
 		return output;
@@ -53,9 +51,7 @@ vendingmachineSchema.methods.buyItem = function(character, command) {
 			target = command.item.contents.findByKeyword(command.tokens[2]);
 		}
 	}
-	
-	console.log(target);
-	
+
 	if(target.items.length > 0) {
 		var targetItem = target.items[0];
 		
