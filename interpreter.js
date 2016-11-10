@@ -386,7 +386,9 @@ Interpreter.prototype.handleInput = function(character, input) {
                 console.log(output);
                 
                 if(output !== undefined) {
-                    output.emit();
+                    if(output.emit !== undefined && output.emit !== null) {
+                        output.emit();
+                    }
                 }
             }
             else {

@@ -723,25 +723,94 @@ characterSchema.methods.donateObject = function(object) {
 	return messages;
 };
 
+
 characterSchema.methods.dropItem = function(keyword) {
-	var output = new Output(this);
 	var result = this.inventory.findByKeyword(keyword);
+	return this._handleDrop(result.items.length, keyword, result);
+};
+
+characterSchema.methods.dropItems = function(quantityToken, keywordToken) {
+	var quantity = parseInt(quantityToken, 10);
 	
-	if(result.items.length === 0) {
+	if(isNaN(quantity)) {
+		var output = new Output(this);
+		output.toActor.push( { text: "Drop how many of what?!?" } );
+		return output;
+	}
+
+	var result = this.inventory.findByKeyword('all.' + keywordToken);
+	return this._handleDrop(quantity, keywordToken, result);
+};
+
+characterSchema.methods._handleDrop = function(quantity, keywordToken, itemArray) {
+	var output = new Output(this);
+	
+	if(itemArray.items.length === 0) {
 		output.toActor.push( { text: "Drop what?!?" } );
 		return output;
 	}
-	
-	// TODO: Curse / NoDrop
 
-	for(var i = 0; i < result.items.length; i++) {
-		var messages = this.dropObject(result.items[i]);
-		output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
+    if(itemArray.items.length < quantity) {
+        output.toActor.push( { text: "You don't have " + quantity + " of '" + keywordToken + "'."  } );
+        return output;
+    }
+    
+	var itemMap = new Map();
+
+	for(var i = 0; i < itemArray.items.length; i++) {
+		if(i >= quantity) {
+			break;
+		}
+
+        if(itemMap.has(itemArray.items[i].id)) {
+            itemMap.set(itemArray.items[i].id, 
+            	{ 
+            		quantity: itemMap.get(itemArray.items[i].id).quantity + 1, 
+            		singular: itemArray.items[i].getShortDescription(),
+            		plural: itemArray.items[i].getPluralDescription()
+            	} );
+        }
+        else {
+            itemMap.set(itemArray.items[i].id, 
+            	{ 
+            		quantity: 1, 
+            		singular: itemArray.items[i].getShortDescription(),
+            		plural: itemArray.items[i].getPluralDescription() 
+            	} );
+        }
+
+        this.inventory.splice(this.inventory.indexOf(itemArray.items[i]), 1);
+        this.room.addItem(itemArray.items[i]);
 	}
 	
-	return output;
+	var toActor = 'You drop ';
+	var toRoom =  this.name + ' drops ';
+	var first = true;
+
+    for (var value of itemMap.values()) {
+    	if(first === false) {
+    		toActor = toActor + " and ";
+    		toRoom = toRoom + " and ";
+    	}
+    	
+    	first = false;
+    	
+    	if(value.quantity > 1) {
+    		toActor = toActor + value.quantity + " " + value.plural;
+    		toRoom = toRoom + value.quantity + " " + value.plural;
+    	}
+    	else {
+    		toActor = toActor + value.singular;
+    		toRoom = toRoom + value.singular;
+    	}
+    }
+    
+    output.toActor.push( { text: toActor + "." });
+	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: toRoom + "." } ] } );
+	return output;	
 };
+
+
 
 characterSchema.methods.junkItem = function(keyword) {
 	var output = new Output(this);
