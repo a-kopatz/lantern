@@ -152,22 +152,21 @@ playerSchema.methods.getDescription = function() {
 	return this.name + " " + this.title;
 };
 
+playerSchema.methods.getFullnessIndex = function() {
+	return this.caloriesConsumed[0] / this.maximumFullness;	
+};
+
 // Like when looked at... "Warrax is an awesome dude who looks, acts, and smells awesome."
 playerSchema.methods.getDetailedDescription = function() {
     var result = [];
 
 	var personalPronoun = this.getPersonalPronoun();
 	var formattedPersonalPronoun = personalPronoun.charAt(0).toUpperCase() + personalPronoun.slice(1);
-	// var fullnessIndex0 = (this.caloriesConsumed[0] / this.maximumFullness);
-	// var fullnessIndex1 = (this.caloriesConsumed[1] / this.maximumFullness);
-	// var fullnessIndex2 = (this.caloriesConsumed[2] / this.maximumFullness);
-	// var fullnessIndex3 = (this.caloriesConsumed[3] / this.maximumFullness);
-	var fullnessIndex = this.caloriesConsumed[3] / this.maximumFullness;
+	//var fullnessIndex = this.caloriesConsumed[0] / this.maximumFullness;
 	
 	var description = this.name + " is a " + utility.getHeightAdjective(this.gender, this.height) + " " + utility.getGenderNoun(this.gender) + ".  " + 
 		formattedPersonalPronoun + " is " + utility.getDetailedBmiDescription(this.getBMI()) + ".  " + formattedPersonalPronoun + " appears to be " + 
-		//utility.getHungerAdjective(fullnessIndex0, fullnessIndex1, fullnessIndex2, fullnessIndex3) + ".";
-		utility.getHungerAdjective(fullnessIndex) + ".";
+		utility.getHungerAdjective(this.getFullnessIndex()) + ".";
 
     result.push(description);
 	result.push(this.name + " " + utility.getPositionDescription(this.position));
@@ -326,6 +325,7 @@ playerSchema.methods.listScore = function() {
 	var bmi = this.getBMI();
 	output.toActor.push( { text: "Your BMI is " + bmi + ", which makes you " + utility.getBmiDescription(bmi) + "."} );
 
+	output.toActor.push( { text: "You are " + utility.getHungerAdjective(this.getFullnessIndex()) + "." } );
 
 	output.toActor.push( { text: "caloriesConsumedArrayTotal: " + this.caloriesConsumed.total() } );
 	output.toActor.push( { text: "caloriesConsumedTodayTotal: " + this.getCaloriesConsumedToday() } );

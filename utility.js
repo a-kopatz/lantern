@@ -182,31 +182,6 @@ function getDetailedBmiDescription(bmi) {
 	}
 }
 
-// function getHungerAdjective(fullnessIndex0, fullnessIndex1, fullnessIndex2, fullnessIndex3) {
-// 	var sum = fullnessIndex0 + fullnessIndex1 + fullnessIndex2 + fullnessIndex3;
-	
-// 	if(sum === 0) {
-// 		return "starving";
-// 	}
-// 	else if(sum < 2) {
-// 		return "hungry";
-// 	}
-// 	else if(sum < 4) {
-// 		return "satisfied";
-// 	}
-// 	else if(sum < 6) {
-// 		return "stuffed";
-// 	}
-// 	else if(sum < 9) {
-// 		return "completely overstuffed";
-// 	}
-// 	else if(sum < 12) {
-// 		return "ready to burst";
-// 	}
-// 	else {
-// 		return "painfully overfull, stomach bloated and swollen";
-// 	}
-// }
 function getHungerAdjective(fullnessIndex) {
 
 	if(fullnessIndex === 0) {
