@@ -935,13 +935,11 @@ characterSchema.methods.feedItems = function(quantityToken, keywordToken, target
 };
 
 characterSchema.methods._handleFeed = function(quantity, keywordToken, itemArray, target) {
-	console.log(quantity + " " + keywordToken + " " + itemArray + " " + target);
-	
 	var output = new Output(this);
 	output.target = target;
 	
 	if(itemArray.items.length === 0) {
-		output.toActor.push( { text: "Feed what?!?" } );
+		output.toActor.push( { text: "Feed what to who?!?" } );
 		return output;
 	}
 
@@ -975,7 +973,7 @@ characterSchema.methods._handleFeed = function(quantity, keywordToken, itemArray
         this.inventory.splice(this.inventory.indexOf(itemMapResult.mapItems[i]), 1);
         this.world.removeItem(itemMapResult.mapItems[i]);
     }
-    
+
 	output.toActor.push( { text: "You feed " + itemMapResult.output + " to " + target.name + "." });
 	output.toTarget.push( { text: this.name + " feeds you " + itemMapResult.output + "." } );
 	output.toRoom.push( { roomId: this.room.id, text: this.name + " feeds " + itemMapResult.output + " to " + target.name + "." } );
@@ -1229,77 +1227,6 @@ characterSchema.methods.giveItem = function(keyword, targetName) {
 	
 	return output;
 };
-
-// characterSchema.methods.feedObject = function(object, target) {
-// 	var messages = [];
-	
-// 	messages[0] = "You feed FIRST_OBJECT_SHORTDESC to TARGET_NAME.";
-// 	messages[1] = "ACTOR_NAME feeds you FIRST_OBJECT_SHORTDESC.";
-// 	messages[2] = "ACTOR_NAME feeds FIRST_OBJECT_SHORTDESC to TARGET_NAME.";
-	
-// 	if(!target.isNpc()) {
-// 		target.caloriesConsumed[0] = target.caloriesConsumed[0] + object.calories;
-// 	}	
-	
-// 	this.inventory.splice(this.inventory.indexOf(object), 1);
-// 	target.inventory.push(object);
-	
-// 	return messages;
-// };
-
-// characterSchema.methods.feedItem = function(keyword, targetName) {
-// 	var output = new Output(this);
-	
-// 	var result = this.inventory.findByKeyword(keyword);
-
-// 	if(result.items.length === 0) {	
-// 		output.toActor.push( { text: "Feed what?" } );
-// 		return output;
-// 	}
-	
-// 	var target = this.room.getCharacter(targetName);
-	
-// 	if(target === null) {
-// 		output.toActor.push( { text: "No-one by that name here." } );
-// 		return output;
-// 	}
-	
-// 	if(target === this) {
-// 		output.toActor.push( { text: "Feed something to yourself?!?  Just eat it..." } );
-// 		return output;
-// 	}
-	
-// 	output.target = target;
-// 	var before = (target.caloriesConsumed[0] / target.maximumFullness);
-
-// 	for(var i = 0; i < result.items.length; i++) {
-		
-// 		if((result.items[i] instanceof Food) === false) {
-// 			output.toActor.push( { text: result.items[i].shortDescription + " -- That's not edible!" } );
-// 		}
-// 		else {		
-// 			var messages = this.feedObject(result.items[i], target);
-			
-// 			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
-// 			output.toTarget.push( { text: messages[1], items: [ result.items[i] ] } );
-// 			output.toRoom.push( { roomId: this.room.id, text: messages[2], items: [ result.items[i] ] } );
-// 		}
-// 	}
-
-// 	var after = (target.caloriesConsumed[0] / target.maximumFullness);
-// 	var messages = target.getOvereatingMessages(before, after);
-	
-// 	if(messages.length > 0) {
-// 		output.toActor.push( { text: messages[1] } );
-// 		output.toTarget.push( { text: messages[0] } );
-// 		output.toRoom.push( { roomId: this.room.id, text: messages[1] } );
-// 	}	
-	
-// 	target.stretchStomach();
-	
-// 	return output;
-// };
-
 
 
 
