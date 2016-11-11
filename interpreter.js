@@ -178,7 +178,7 @@ var COMMAND_LIST = [
           { command: "sit"      , minimumPosition: global.POS_RESTING , functionPointer: do_sit        , minimumLevel: 0, subCommand: 0 },
           { command: "slap"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SLAP },
 //           { command: "slay"     , minimumPosition: global.POS_RESTING , functionPointer: do_slay       , minimumLevel: 0, subCommand: 0 },
-        //   { command: "sleep"    , minimumPosition: global.POS_SLEEPING, functionPointer: do_sleep      , minimumLevel: 0, subCommand: 0 },
+          { command: "sleep"    , minimumPosition: global.POS_SLEEPING, functionPointer: do_sleep      , minimumLevel: 0, subCommand: 0 },
           { command: "smile"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SMILE },
           { command: "smirk"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SMIRK },
           { command: "snap"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SNAP },
@@ -215,7 +215,7 @@ var COMMAND_LIST = [
 
 //           { command: "value"    , minimumPosition: global.POS_RESTING , functionPointer: do_value,     minimumLevel: 0, subCommand: 0 },
 
-        //   { command: "wake"    , minimumPosition: global.POS_SLEEPING , functionPointer: do_wake         , minimumLevel: 0, subCommand: 0 },
+          { command: "wake"    , minimumPosition: global.POS_SLEEPING , functionPointer: do_wake         , minimumLevel: 0, subCommand: 0 },
           { command: "wave"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WAVE },
 //           //{ command: "weather"  , minimumPosition: global.POS_RESTING , functionPointer: do_weather    , minimumLevel: 0, subCommand: 0 },
           { command: "wear"     , minimumPosition: global.POS_RESTING , functionPointer: do_wear       , minimumLevel: 0, subCommand: 0 },
@@ -438,14 +438,14 @@ function do_sleep(character) {
     character.sleep().emit();
 }
 
-// function do_wake(character, command) {
-//     if(command.tokens.length === 0) {
-//         character.wake();
-//     }
-//     else {
-//         character.wakeCharacter(command.tokens[0]);
-//     }
-// }
+function do_wake(character, command) {
+    // if(command.tokens.length === 0) {
+        character.wake().emit();
+    // }
+    // else {
+    //     character.wakeCharacter(command.tokens[0]);
+    // }
+}
 
 function do_say(character, command) {
     character.say(command.subInput.trim()).emit();
