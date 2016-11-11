@@ -697,18 +697,11 @@ function do_feed(character, command) {
     if(command.tokens.length < 2) {
         character.emitMessage('Feed what to who?');
     }
+    else if(command.tokens.length > 2) {
+        character.feedItems(command.tokens[0], command.tokens[1], command.tokens[2]).emit();
+    }
     else {
-        if(command.tokens[1].toLowerCase() !== 'to') {
-            character.feedItem(command.tokens[0], command.tokens[1]).emit();
-        }
-        else {
-            if(command.tokens.length < 3) {
-                character.emitMessage('Feed what to who?');
-            }
-            else {
-                character.feedItem(command.tokens[0], command.tokens[2]).emit();
-            }
-        }
+        character.feedItem(command.tokens[0], command.tokens[1]).emit();
     }
 }
 

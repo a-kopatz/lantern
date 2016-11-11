@@ -372,7 +372,7 @@ function wearMessage(location) {
 
 
 
-function buildItemMap(character, itemArray, itemType, quantity, breakCondition, verb) {
+function buildItemMap(character, itemArray, itemType, quantity, breakCondition, verb, notRightTypeMessage) {
 	var itemMap = new Map();
     var brokenLoop = false;
 	var wrongTypeMessages = [];
@@ -384,7 +384,7 @@ function buildItemMap(character, itemArray, itemType, quantity, breakCondition, 
 	    }
 	    
 		if((itemArray.items[i] instanceof itemType) === false) { 
-			wrongTypeMessages.push(itemArray.items[i].shortDescription + " -- You can't " + verb + " THAT!");
+			wrongTypeMessages.push(itemArray.items[i].shortDescription + " -- " + notRightTypeMessage);
     	}
     	else {
     		if(breakCondition(character, mapItems) === true) {

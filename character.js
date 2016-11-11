@@ -743,7 +743,7 @@ characterSchema.methods._handleJunkDropDonate = function(quantity, keywordToken,
         return output;
     }
 
-	var itemMapResult = utility.buildItemMap(this, itemArray, Item, quantity, function() { return false; }, mode);
+	var itemMapResult = utility.buildItemMap(this, itemArray, Item, quantity, function() { return false; }, mode, "You can't " + mode + " that!");
 
 	var toActor = 'You ' + mode + ' ' + itemMapResult.output;
 	var toRoom =  this.name + ' ' + mode + 's ' + itemMapResult.output;
@@ -876,7 +876,7 @@ characterSchema.methods._handleEat = function(quantity, keywordToken, itemArray)
     // Sort of shitty -- only players have this concept (at the moment)
     var beforeFullnessIndex = this.caloriesConsumed[0] / this.maximumFullness;
     
-	var itemMapResult = utility.buildItemMap(this, itemArray, Food, quantity, mustStopEating, "eat");
+	var itemMapResult = utility.buildItemMap(this, itemArray, Food, quantity, mustStopEating, "eat", "You can't eat that!");
 
     for(var i = 0; i < itemMapResult.mapItems.length; i++) {
 		if(!this.isNpc()) {
@@ -898,7 +898,6 @@ characterSchema.methods._handleEat = function(quantity, keywordToken, itemArray)
     this.stretchStomach();
 
 	var afterFullnessIndex = (this.caloriesConsumed[0] / this.maximumFullness);
-
 	var messages = this.getOvereatingMessages(beforeFullnessIndex, afterFullnessIndex);
 	
 	if(messages.length > 0) {
@@ -908,6 +907,109 @@ characterSchema.methods._handleEat = function(quantity, keywordToken, itemArray)
 	
 	return output;	
 };
+
+
+
+
+
+
+
+characterSchema.methods.feedItem = function(keyword, targetName) {
+	var result = this.inventory.findByKeyword(keyword);
+	var target = this.room.getCharacter(targetName);
+	return this._handleFeed(result.items.length, keyword, result, target);
+};
+
+characterSchema.methods.feedItems = function(quantityToken, keywordToken, targetName) {
+	var quantity = parseInt(quantityToken, 10);
+	
+	if(isNaN(quantity)) {
+		var output = new Output(this);
+		output.toActor.push( { text: "Feed how many of what to who?!?" } );
+		return output;
+	}
+
+	var result = this.inventory.findByKeyword('all.' + keywordToken);
+	var target = this.room.getCharacter(targetName);
+	return this._handleFeed(quantity, keywordToken, result, target);
+};
+
+characterSchema.methods._handleFeed = function(quantity, keywordToken, itemArray, target) {
+	console.log(quantity + " " + keywordToken + " " + itemArray + " " + target);
+	
+	var output = new Output(this);
+	output.target = target;
+	
+	if(itemArray.items.length === 0) {
+		output.toActor.push( { text: "Feed what?!?" } );
+		return output;
+	}
+
+    if(itemArray.items.length < quantity) {
+        output.toActor.push( { text: "You don't have " + quantity + " of '" + keywordToken + "'."  } );
+        return output;
+    }
+
+	if(target === null) {
+		output.toActor.push( { text: "No-one by that name here." } );
+		return output;
+	}
+	
+	if(target === this) {
+		output.toActor.push( { text: "Feed something to yourself?!?  Just eat it..." } );
+		return output;
+	}    
+    
+    // Sort of shitty -- only players have this concept (at the moment)
+    if(!target.isNpc()) {
+    	var beforeFullnessIndex = target.caloriesConsumed[0] / target.maximumFullness;
+    }
+    
+	var itemMapResult = utility.buildItemMap(this, itemArray, Food, quantity, function() { return false; }, "feed", "That's not food!");
+
+    for(var i = 0; i < itemMapResult.mapItems.length; i++) {
+		if(!target.isNpc()) {
+            target.caloriesConsumed[0] = target.caloriesConsumed[0] + itemArray.items[i].calories;
+        }
+        
+        this.inventory.splice(this.inventory.indexOf(itemMapResult.mapItems[i]), 1);
+        this.world.removeItem(itemMapResult.mapItems[i]);
+    }
+    
+	output.toActor.push( { text: "You feed " + itemMapResult.output + " to " + target.name + "." });
+	output.toTarget.push( { text: this.name + " feeds you " + itemMapResult.output + "." } );
+	output.toRoom.push( { roomId: this.room.id, text: this.name + " feeds " + itemMapResult.output + " to " + target.name + "." } );
+
+    target.stretchStomach();
+
+	if(!target.isNpc()) {
+		var afterFullnessIndex = (target.caloriesConsumed[0] / target.maximumFullness);
+		var messages = target.getOvereatingMessages(beforeFullnessIndex, afterFullnessIndex);
+		
+		if(messages.length > 0) {
+			output.toTarget.push( { text: messages[0] } );
+			output.toActor.push( { text: messages[1] } );
+			output.toRoom.push( { roomId: target.room.id, text: messages[1] } );
+		}    
+	}
+	
+	return output;	
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1128,75 +1230,75 @@ characterSchema.methods.giveItem = function(keyword, targetName) {
 	return output;
 };
 
-characterSchema.methods.feedObject = function(object, target) {
-	var messages = [];
+// characterSchema.methods.feedObject = function(object, target) {
+// 	var messages = [];
 	
-	messages[0] = "You feed FIRST_OBJECT_SHORTDESC to TARGET_NAME.";
-	messages[1] = "ACTOR_NAME feeds you FIRST_OBJECT_SHORTDESC.";
-	messages[2] = "ACTOR_NAME feeds FIRST_OBJECT_SHORTDESC to TARGET_NAME.";
+// 	messages[0] = "You feed FIRST_OBJECT_SHORTDESC to TARGET_NAME.";
+// 	messages[1] = "ACTOR_NAME feeds you FIRST_OBJECT_SHORTDESC.";
+// 	messages[2] = "ACTOR_NAME feeds FIRST_OBJECT_SHORTDESC to TARGET_NAME.";
 	
-	if(!target.isNpc()) {
-		target.caloriesConsumed[0] = target.caloriesConsumed[0] + object.calories;
-	}	
+// 	if(!target.isNpc()) {
+// 		target.caloriesConsumed[0] = target.caloriesConsumed[0] + object.calories;
+// 	}	
 	
-	this.inventory.splice(this.inventory.indexOf(object), 1);
-	target.inventory.push(object);
+// 	this.inventory.splice(this.inventory.indexOf(object), 1);
+// 	target.inventory.push(object);
 	
-	return messages;
-};
+// 	return messages;
+// };
 
-characterSchema.methods.feedItem = function(keyword, targetName) {
-	var output = new Output(this);
+// characterSchema.methods.feedItem = function(keyword, targetName) {
+// 	var output = new Output(this);
 	
-	var result = this.inventory.findByKeyword(keyword);
+// 	var result = this.inventory.findByKeyword(keyword);
 
-	if(result.items.length === 0) {	
-		output.toActor.push( { text: "Feed what?" } );
-		return output;
-	}
+// 	if(result.items.length === 0) {	
+// 		output.toActor.push( { text: "Feed what?" } );
+// 		return output;
+// 	}
 	
-	var target = this.room.getCharacter(targetName);
+// 	var target = this.room.getCharacter(targetName);
 	
-	if(target === null) {
-		output.toActor.push( { text: "No-one by that name here." } );
-		return output;
-	}
+// 	if(target === null) {
+// 		output.toActor.push( { text: "No-one by that name here." } );
+// 		return output;
+// 	}
 	
-	if(target === this) {
-		output.toActor.push( { text: "Feed something to yourself?!?  Just eat it..." } );
-		return output;
-	}
+// 	if(target === this) {
+// 		output.toActor.push( { text: "Feed something to yourself?!?  Just eat it..." } );
+// 		return output;
+// 	}
 	
-	output.target = target;
-	var before = (target.caloriesConsumed[0] / target.maximumFullness);
+// 	output.target = target;
+// 	var before = (target.caloriesConsumed[0] / target.maximumFullness);
 
-	for(var i = 0; i < result.items.length; i++) {
+// 	for(var i = 0; i < result.items.length; i++) {
 		
-		if((result.items[i] instanceof Food) === false) {
-			output.toActor.push( { text: result.items[i].shortDescription + " -- That's not edible!" } );
-		}
-		else {		
-			var messages = this.feedObject(result.items[i], target);
+// 		if((result.items[i] instanceof Food) === false) {
+// 			output.toActor.push( { text: result.items[i].shortDescription + " -- That's not edible!" } );
+// 		}
+// 		else {		
+// 			var messages = this.feedObject(result.items[i], target);
 			
-			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
-			output.toTarget.push( { text: messages[1], items: [ result.items[i] ] } );
-			output.toRoom.push( { roomId: this.room.id, text: messages[2], items: [ result.items[i] ] } );
-		}
-	}
+// 			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+// 			output.toTarget.push( { text: messages[1], items: [ result.items[i] ] } );
+// 			output.toRoom.push( { roomId: this.room.id, text: messages[2], items: [ result.items[i] ] } );
+// 		}
+// 	}
 
-	var after = (target.caloriesConsumed[0] / target.maximumFullness);
-	var messages = target.getOvereatingMessages(before, after);
+// 	var after = (target.caloriesConsumed[0] / target.maximumFullness);
+// 	var messages = target.getOvereatingMessages(before, after);
 	
-	if(messages.length > 0) {
-		output.toActor.push( { text: messages[1] } );
-		output.toTarget.push( { text: messages[0] } );
-		output.toRoom.push( { roomId: this.room.id, text: messages[1] } );
-	}	
+// 	if(messages.length > 0) {
+// 		output.toActor.push( { text: messages[1] } );
+// 		output.toTarget.push( { text: messages[0] } );
+// 		output.toRoom.push( { roomId: this.room.id, text: messages[1] } );
+// 	}	
 	
-	target.stretchStomach();
+// 	target.stretchStomach();
 	
-	return output;
-};
+// 	return output;
+// };
 
 
 
