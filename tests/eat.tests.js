@@ -178,7 +178,7 @@ exports.character_eatStopsWhenPlayerIsFull = function(test) {
     var myWorld = new World();
     myWorld.addCharacter(actor);
     
-    for(var i = 0; i < 3; i++) {
+    for(var i = 0; i < 10; i++) {
         var donut = new Food();
         donut.id = 1;
         donut.keywords.push("donut");
@@ -189,9 +189,9 @@ exports.character_eatStopsWhenPlayerIsFull = function(test) {
         myWorld.addItem(donut);
     }
     
-    var actual = actor.eatItems('2', 'donut');
+    var actual = actor.eatItems('9', 'donut');
+    
     test.equal(actual.toActor[1].text, "Your stomach can't hold any more!!!");
-    test.equal(actor.inventory.length, 2);
+    test.equal(actor.inventory.length, 8);
     test.done();
 };
-

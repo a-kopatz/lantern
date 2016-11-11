@@ -742,81 +742,41 @@ characterSchema.methods._handleJunkDropDonate = function(quantity, keywordToken,
         output.toActor.push( { text: "You don't have " + quantity + " of '" + keywordToken + "'."  } );
         return output;
     }
-    
-	var itemMap = new Map();
 
-	for(var i = 0; i < itemArray.items.length; i++) {
-		if(i >= quantity) {
-			break;
-		}
+	var itemMapResult = utility.buildItemMap(this, itemArray, Item, quantity, function() { return false; }, mode);
 
-        if(itemMap.has(itemArray.items[i].id)) {
-            itemMap.set(itemArray.items[i].id, 
-            	{ 
-            		quantity: itemMap.get(itemArray.items[i].id).quantity + 1, 
-            		singular: itemArray.items[i].getShortDescription(),
-            		plural: itemArray.items[i].getPluralDescription()
-            	} );
-        }
-        else {
-            itemMap.set(itemArray.items[i].id, 
-            	{ 
-            		quantity: 1, 
-            		singular: itemArray.items[i].getShortDescription(),
-            		plural: itemArray.items[i].getPluralDescription() 
-            	} );
-        }
+	var toActor = 'You ' + mode + ' ' + itemMapResult.output;
+	var toRoom =  this.name + ' ' + mode + 's ' + itemMapResult.output;
+	var toDonation = 'Suddenly ' + itemMapResult.output;
 
-        this.inventory.splice(this.inventory.indexOf(itemArray.items[i]), 1);
-        
-        if(mode === 'drop') {
-        	this.room.addItem(itemArray.items[i]);
-        }
-        else if(mode === 'junk') {
-        	this.world.removeItem(itemArray.items[i]);
-        }
-        else if(mode === 'donate') {
-			if(donationRoom !== null) {
-				donationRoom.addItem(itemArray.items[i]);
-	        }
-	        else {
-	        	this.world.removeItem(itemArray.items[i]);
-	        }
-        }
-	}
-	
-	var toActor = 'You ' + mode + ' ';
-	var toRoom =  this.name + ' ' + mode + 's ';
-	var toDonation = 'Suddenly ';
-
-	var first = true;
-
-    for (var value of itemMap.values()) {
-    	if(first === false) {
-    		toActor = toActor + " and ";
-    		toRoom = toRoom + " and ";
-    		toDonation = toDonation + " and ";
-    	}
-    	
-    	first = false;
-    	
-    	if(value.quantity > 1) {
-    		toActor = toActor + value.quantity + ' ' + value.plural;
-    		toRoom = toRoom + value.quantity + ' ' + value.plural;
-    		toDonation = toDonation + value.quantity + ' ' + value.plural;
-    	}
-    	else {
-    		toActor = toActor + value.singular;
-    		toRoom = toRoom + value.singular;
-    		toDonation = toDonation + value.singular;
-    	}
-    }
-    
     output.toActor.push( { text: toActor + "." });
 	output.toRoom.push( { roomId: this.room.id, text: toRoom + "." } );
     
-    if(mode === 'donate') {
-    	if(itemArray.items.length > 1) {
+    if(mode === 'junk') {
+    	for(var i = 0; i < itemMapResult.mapItems.length; i++) {
+    		this.inventory.splice(this.inventory.indexOf(itemMapResult.mapItems[i]), 1);
+    		this.world.removeItem(itemMapResult.mapItems[i]);
+    	}
+    }
+    else if(mode === 'drop') {
+    	for(var i = 0; i < itemMapResult.mapItems.length; i++) {
+    		this.inventory.splice(this.inventory.indexOf(itemMapResult.mapItems[i]), 1);
+    		this.room.addItem(itemMapResult.mapItems[i]);
+    	}
+    }
+    else if(mode === 'donate') {
+    	for(var i = 0; i < itemMapResult.mapItems.length; i++) {
+    		this.inventory.splice(this.inventory.indexOf(itemMapResult.mapItems[i]), 1);
+    		
+			if(donationRoom !== null) {
+				donationRoom.addItem(itemMapResult.mapItems[i]);
+	        }
+	        else {
+	        	this.world.removeItem(itemMapResult.mapItems[i]);
+	        }    		
+    	}
+    	
+    	if(itemMapResult.mapItems.length > 1) {
     		toDonation = toDonation + " appear in a puff of smoke!";
     		output.toActor.push( {  text: "   They vanish in a puff of smoke!" } );
     		output.toRoom.push( { roomId: this.room.id, text: "   They vanish in a puff of smoke!" } );
@@ -833,70 +793,6 @@ characterSchema.methods._handleJunkDropDonate = function(quantity, keywordToken,
     }
     
 	return output;	
-};
-
-
-
-// characterSchema.methods.junkItem = function(keyword) {
-// 	var output = new Output(this);
-// 	var result = this.inventory.findByKeyword(keyword);
-
-// 	if(result.items.length === 0) {
-// 		output.toActor.push( {  text: "Junk what?!?" } );
-// 		return output;
-// 	}
-	
-// 	for(var i = 0; i < result.items.length; i++) {
-// 		var messages = this.junkObject(result.items[i]);
-		
-// 		output.toActorMessage(messages[0], result.items[i]);
-// 		output.toRoomMessage(this.room.id, messages[1], result.items[i]);		
-// 		// output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
-// 		// output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
-// 	}
-	
-// 	return output;
-// };
-
-// characterSchema.methods.donateItem = function(keyword) {
-// 	var output = new Output(this);
-// 	var result = this.inventory.findByKeyword(keyword);
-
-// 	if(result.items.length === 0) {
-// 		output.toActor.push( { text: "Donate what?!?" } );
-// 		return output;
-// 	}
-
-// 	for(var i = 0; i < result.items.length; i++) {
-// 		if(result.items[i].canBeDonated === true) {
-// 			var messages = this.donateObject(result.items[i]);
-// 			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
-// 			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
-// 			output.toRoom.push( { roomId: global.DONATION_ROOM, textArray: [ { text: messages[2], items: [ result.items[i] ] } ] } );
-// 		}
-// 		else {
-// 			output.toActor.push( { text: result.items[i].shortDescription + " can't be donated!" } );
-// 		}
-// 	}
-	
-// 	return output;
-// };
-
-
-characterSchema.methods.eatObject = function(object) {
-	var messages = [];
-
-	messages[0] = "You eat FIRST_OBJECT_SHORTDESC.";
-	messages[1] = "ACTOR_NAME eats FIRST_OBJECT_SHORTDESC.";
-
-	if(!this.isNpc()) {
-		this.caloriesConsumed[0] = this.caloriesConsumed[0] + object.calories;
-	}
-
-	this.inventory.splice(this.inventory.indexOf(object), 1);
-	this.world.removeItem(object);
-	
-	return messages;
 };
 
 
@@ -950,6 +846,20 @@ characterSchema.methods.eatItems = function(quantityToken, keywordToken) {
 	return this._handleEat(quantity, keywordToken, result);
 };
 
+function mustStopEating(character, items) {
+	var total = 0;
+	
+	for(var i = 0; i < items.length; i++) {
+		total = total + items[i].calories;
+	}
+		
+	if(character.caloriesConsumed[0] + total > 4 * character.maximumFullness) {
+		return true;
+	}
+	
+	return false;	
+}
+
 characterSchema.methods._handleEat = function(quantity, keywordToken, itemArray) {
 	var output = new Output(this);
 	
@@ -966,77 +876,22 @@ characterSchema.methods._handleEat = function(quantity, keywordToken, itemArray)
     // Sort of shitty -- only players have this concept (at the moment)
     var beforeFullnessIndex = this.caloriesConsumed[0] / this.maximumFullness;
     
-	var itemMap = new Map();
-    var brokenLoop = false;
-	
-	for(var i = 0; i < itemArray.items.length; i++) {
-		if(i >= quantity) {
-			break;
-		}
-		
-		if((itemArray.items[i] instanceof Food) === false) { 
-			output.toActor.push( { text: itemArray.items[i].shortDescription + " -- You can't eat THAT!" } );
-		}
-		else {
-			if((this.caloriesConsumed[0] + itemArray.items[i].calories) > 4 * this.maximumFullness) {
-			    brokenLoop = true;
-                break;
-			}
-            else {
-                if(itemMap.has(itemArray.items[i].id)) {
-                    itemMap.set(itemArray.items[i].id, 
-                    	{ 
-                    		quantity: itemMap.get(itemArray.items[i].id).quantity + 1, 
-                    		singular: itemArray.items[i].getShortDescription(),
-                    		plural: itemArray.items[i].getPluralDescription()
-                    	} );
-                }
-                else {
-                    itemMap.set(itemArray.items[i].id, 
-                    	{ 
-                    		quantity: 1, 
-                    		singular: itemArray.items[i].getShortDescription(),
-                    		plural: itemArray.items[i].getPluralDescription() 
-                    	} );
-                }
+	var itemMapResult = utility.buildItemMap(this, itemArray, Food, quantity, mustStopEating, "eat");
 
-				if(!this.isNpc()) {
-					this.caloriesConsumed[0] = this.caloriesConsumed[0] + itemArray.items[i].calories;
-				}
-
-                this.inventory.splice(this.inventory.indexOf(itemArray.items[i]), 1);
-                this.world.removeItem(itemArray.items[i]);
-            }
-		}
-	}
-
-	var randomizedSynonym = utility.getRandomSynonym('eat');
-	var toActor = 'You ' + randomizedSynonym[0] + ' ';
-	var toRoom =  this.name + ' ' + randomizedSynonym[1] + ' ';
-	var first = true;
-
-    for (var value of itemMap.values()) {
-    	if(first === false) {
-    		toActor = toActor + " and ";
-    		toRoom = toRoom + " and ";
-    	}
-    	
-    	first = false;
-    	
-    	if(value.quantity > 1) {
-    		toActor = toActor + value.quantity + " " + value.plural;
-    		toRoom = toRoom + value.quantity + " " + value.plural;
-    	}
-    	else {
-    		toActor = toActor + value.singular;
-    		toRoom = toRoom + value.singular;
-    	}
+    for(var i = 0; i < itemMapResult.mapItems.length; i++) {
+		if(!this.isNpc()) {
+            this.caloriesConsumed[0] = this.caloriesConsumed[0] + itemArray.items[i].calories;
+        }
+        
+        this.inventory.splice(this.inventory.indexOf(itemMapResult.mapItems[i]), 1);
+        this.world.removeItem(itemMapResult.mapItems[i]);
     }
     
-    output.toActor.push( { text: toActor + "." });
-	output.toRoom.push( { roomId: this.room.id, text: toRoom + "." } );
+	var randomizedSynonym = utility.getRandomSynonym('eat');
+	output.toActor.push( { text: "You " + randomizedSynonym[0] + " " + itemMapResult.output + "." });
+	output.toRoom.push( { roomId: this.room.id, text: this.name + " " + randomizedSynonym[1] + " " + itemMapResult.output + "." } );
 	
-    if(brokenLoop === true) {
+    if(itemMapResult.brokenLoop === true) {
         output.toActor.push( { text: "Your stomach can't hold any more!!!" } );
     }
 

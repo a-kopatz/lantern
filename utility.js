@@ -370,6 +370,82 @@ function wearMessage(location) {
 	return messages;
 }
 
+
+
+function buildItemMap(character, itemArray, itemType, quantity, breakCondition, verb) {
+	var itemMap = new Map();
+    var brokenLoop = false;
+	var wrongTypeMessages = [];
+	var mapItems = [];
+
+	for(var i = 0; i < itemArray.items.length; i++) {
+	    if(i >= quantity) {
+	        break;
+	    }
+	    
+		if((itemArray.items[i] instanceof itemType) === false) { 
+			wrongTypeMessages.push(itemArray.items[i].shortDescription + " -- You can't " + verb + " THAT!");
+    	}
+    	else {
+    		if(breakCondition(character, mapItems) === true) {
+    			brokenLoop = true;
+    			break;
+    		}
+    		else {
+	            if(itemMap.has(itemArray.items[i].id)) {
+	                itemMap.set(itemArray.items[i].id, 
+	                    { 
+	                        quantity: itemMap.get(itemArray.items[i].id).quantity + 1, 
+	                        singular: itemArray.items[i].getShortDescription(),
+	                        plural: itemArray.items[i].getPluralDescription()
+	                    } );
+	            }
+	            else {
+	                itemMap.set(itemArray.items[i].id, 
+	                    { 
+	                        quantity: 1, 
+	                        singular: itemArray.items[i].getShortDescription(),
+	                        plural: itemArray.items[i].getPluralDescription() 
+	                    } );
+	            }
+	            
+	            mapItems.push(itemArray.items[i]);
+    		}
+    	}
+	}
+
+	var output = '';
+	
+	var first = true;
+
+    for (var value of itemMap.values()) {
+    	if(first === false) {
+    		output = output + " and ";
+    	}
+    	
+    	first = false;
+    	
+    	if(value.quantity > 1) {
+    		output = output + value.quantity + " " + value.plural;
+    	}
+    	else {
+    		output = output + value.singular;
+    	}
+    }
+
+	return {
+		map: itemMap,
+		brokenLoop: brokenLoop,
+		wrongTypeMessages: wrongTypeMessages,
+		mapItems: mapItems,
+		output: output
+	};
+}
+
+function constructActionOutput(itemMap) {
+	
+}
+
 exports.randomNumber = randomNumber;
 exports.oppositeDirection = oppositeDirection;
 exports.getBmiDescription = getBmiDescription;
@@ -384,3 +460,5 @@ exports.getPositionDescription = getPositionDescription;
 exports.getPaddedWord = getPaddedWord;
 exports.alreadyWearing = alreadyWearing;
 exports.wearMessage = wearMessage;
+exports.buildItemMap = buildItemMap;
+exports.constructActionOutput = constructActionOutput;
