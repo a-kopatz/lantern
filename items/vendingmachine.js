@@ -17,6 +17,7 @@ var vendingmachineSchema = itemSchema.extend({
 vendingmachineSchema.methods.getDetailedDescription = function() {
     var result = [];
 	result.push('VENDING CATALOG to see what is available for purchase. VENDING BUY <item> to purchase an item.');  
+	result.push('To buy multiple of the same item, use VENDING BUY <quantity> <item>.');
     return result;
 };
 
@@ -66,11 +67,15 @@ vendingmachineSchema.methods.buyItem = function(character, command) {
 			}
 		}
 		else {
-			// FIXME
-			//output.toActor.push( { text: "You buy FIRST_OBJECT_SHORTDESC from " + command.item.getShortDescription() + ".", targetItem } );
-			output.toActor.push( { text: "You buy " + quantity + " of " + targetItem.getShortDescription() + " from " + command.item.getShortDescription() + ".", targetItem } );
-			output.toRoom.push( { roomId: character.room.id, textArray: [ { text: "ACTOR_NAME buys " + quantity + " of FIRST_OBJECT_SHORTDESC from " + command.item.getShortDescription() + ".", items: [ targetItem ] } ] } );
-
+			if(quantity === 1) {
+				output.toActor.push( { text: "You buy " + targetItem.shortDescription+ " from " + command.item.shortDescription + "."} );
+				output.toRoom.push( { roomId: character.room.id, text: character.name + " buys " + targetItem.shortDescription + " from " + command.item.shortDescription + "." } );
+			}
+			else {
+				output.toActor.push( { text: "You buy " + quantity + " " + targetItem.pluralDescription + " from " + command.item.shortDescription + "." } );
+				output.toRoom.push( { roomId: character.room.id, text: character.name + " buys " + quantity + " " + targetItem.pluralDescription + " from " + command.item.shortDescription + "." } );
+			}
+			
 			character.money = character.money - (targetItem.cost * quantity);
 
 			if(targetItem instanceof Food === true) {

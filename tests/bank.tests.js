@@ -2,9 +2,7 @@ var Character = require("../character").character;
 var Room = require("../room").room;
 var Bank = require("../items/bank").bank;
 
-
-
-/////////////////////////////////////////////////
+////////////////////////////////////////////////////
 
 exports.checkBalanceReturnsWhenBalanceIsZero = function(test) {
     var myCharacter = new Character();

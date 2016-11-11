@@ -1506,7 +1506,7 @@ characterSchema.methods.lookTarget = function(command) {
 			
 			output.toActor.push ( { text: "You look at " + target.items[0].getShortDescription() + "." } );
 			
-			console.log(target.items[0]);
+			// console.log(target.items[0]);
 			
 			// CRASH BUG..... rented items?
 			// It's because a "key" isn't a proper object derived from the schema.  Fix when player un-rents.
