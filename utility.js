@@ -370,8 +370,6 @@ function wearMessage(location) {
 	return messages;
 }
 
-
-
 function buildItemMap(character, itemArray, itemType, quantity, breakCondition, verb, notRightTypeMessage) {
 	var itemMap = new Map();
     var brokenLoop = false;
@@ -442,10 +440,6 @@ function buildItemMap(character, itemArray, itemType, quantity, breakCondition, 
 	};
 }
 
-function constructActionOutput(itemMap) {
-	
-}
-
 exports.randomNumber = randomNumber;
 exports.oppositeDirection = oppositeDirection;
 exports.getBmiDescription = getBmiDescription;
@@ -461,4 +455,3 @@ exports.getPaddedWord = getPaddedWord;
 exports.alreadyWearing = alreadyWearing;
 exports.wearMessage = wearMessage;
 exports.buildItemMap = buildItemMap;
-exports.constructActionOutput = constructActionOutput;
