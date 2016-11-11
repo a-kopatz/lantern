@@ -24,7 +24,7 @@ bankSchema.methods.checkBalance = function(character, command) {
 	if(character.bank === 0) {
 		output.toActor.push( { text: "You have no money deposited." } );
 	}
-	else if(this.bank === 1) {
+	else if(character.bank === 1) {
 		output.toActor.push( { text: "You have exactly 1 pathetic dollar deposited." } );
 	}
 	else {
@@ -51,13 +51,15 @@ bankSchema.methods.depositMoney = function(character, command) {
     	if(character.money < amount) {
     		output.toActor.push( { text: "You don't have that much money!" } );
     	}
+    	else if(amount < 0) {
+    		output.toActor.push( { text: "Deposit a negative amount?!??!  Just make a withdrawal instead." } );
+    	}
     	else {
-    	
         	character.money = character.money - amount;
         	character.bank = character.bank + amount;
         	
         	output.toActor.push( { text: "You deposit " + amount + " dollars." } );
-        	output.toRoom.push( { roomId: character.room.id, textArray: [ { text: "ACTOR_NAME makes a bank transaction." } ] } );
+        	output.toRoom.push( { roomId: character.room.id, text: "ACTOR_NAME makes a bank transaction." } );
     	}
     }
     
@@ -81,12 +83,15 @@ bankSchema.methods.withdrawMoney = function(character, command) {
     	if(character.bank < amount) {
     		output.toActor.push( { text: "You don't have that much money in the bank!" } );
     	}
+    	else if(amount < 0) {
+    		output.toActor.push( { text: "Withdraw a negative amount?!??!  Just make a deposit instead." } );
+    	}
     	else {
         	character.money = character.money + amount;
         	character.bank = character.bank - amount;
         	
         	output.toActor.push( { text: "You withdraw " + amount + " dollars." } );
-        	output.toRoom.push( { roomId: character.room.id, textArray: [ { text: "ACTOR_NAME makes a bank transaction." } ] } );
+        	output.toRoom.push( { roomId: character.room.id, text: "ACTOR_NAME makes a bank transaction." } );
     	}
 	}
 	
