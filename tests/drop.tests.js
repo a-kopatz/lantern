@@ -9,6 +9,8 @@ var World = require('../world');
 
 exports.character_dropItemReturnsErrorWhenNoKeyword = function(test) {
     var actor = new Character();
+    var world = new World();
+    world.addCharacter(actor);
     
     var actual = actor.dropItem('');
     test.equal(actual.toActor[0].text, "drop what?!?");
@@ -17,6 +19,8 @@ exports.character_dropItemReturnsErrorWhenNoKeyword = function(test) {
 
 exports.character_dropItemReturnsErrorWhenItemNotFound = function(test) {
     var actor = new Character();
+    var world = new World();
+    world.addCharacter(actor);
     
     var actual = actor.dropItem('computer');
     test.equal(actual.toActor[0].text, "drop what?!?");
@@ -26,6 +30,9 @@ exports.character_dropItemReturnsErrorWhenItemNotFound = function(test) {
 exports.character_dropItemAddsToRoomInventory = function(test) {
     var actor = new Character();
     actor.name = "Joe";
+
+    var world = new World();
+    world.addCharacter(actor);
     
     var room = new Room();
     room.id = 3001;
@@ -39,7 +46,7 @@ exports.character_dropItemAddsToRoomInventory = function(test) {
     
     var actual = actor.dropItem('gloves');
     test.equal(actual.toActor[0].text, "You drop a pair of gloves.");
-    test.equal(actual.toRoom[0].textArray[0].text, "Joe drops a pair of gloves.");
+    test.equal(actual.toRoom[0].text, "Joe drops a pair of gloves.");
     test.equal(actor.inventory.length, 0);
     test.equal(room.contents.length, 1);
     test.equal(room.contents[0], gloves);
@@ -49,6 +56,9 @@ exports.character_dropItemAddsToRoomInventory = function(test) {
 exports.character_dropAllDotItemAddsToRoomContents = function(test) {
     var actor = new Character();
     actor.name = "Joe";
+
+    var world = new World();
+    world.addCharacter(actor);
 
     var room = new Room();
     room.id = 3001;
@@ -76,7 +86,7 @@ exports.character_dropAllDotItemAddsToRoomContents = function(test) {
     var actual = actor.dropItem('all.gloves');
     
     test.equal(actual.toActor[0].text, "You drop a pair of blue gloves and a pair of black gloves.");
-    test.equal(actual.toRoom[0].textArray[0].text, "Joe drops a pair of blue gloves and a pair of black gloves.");
+    test.equal(actual.toRoom[0].text, "Joe drops a pair of blue gloves and a pair of black gloves.");
     test.equal(actor.inventory.length, 1);
     test.equal(actor.inventory[0], pizza);
     test.equal(room.contents.length, 2);
@@ -88,6 +98,9 @@ exports.character_dropAllDotItemAddsToRoomContents = function(test) {
 exports.character_dropAllDropsEverythingToRoom = function(test) {
     var actor = new Character();
     actor.name = "Joe";
+
+    var world = new World();
+    world.addCharacter(actor);
     
     var room = new Room();
     room.id = 3001;
@@ -125,7 +138,7 @@ exports.character_dropAllDropsEverythingToRoom = function(test) {
     var actual = actor.dropItem('all');
     
     test.equal(actual.toActor[0].text, "You drop a pair of blue gloves and a pair of black gloves and 2 cheese pizzas.");
-    test.equal(actual.toRoom[0].textArray[0].text, "Joe drops a pair of blue gloves and a pair of black gloves and 2 cheese pizzas.");
+    test.equal(actual.toRoom[0].text, "Joe drops a pair of blue gloves and a pair of black gloves and 2 cheese pizzas.");
     test.equal(actor.inventory.length, 0);
     test.equal(room.contents.length, 4);
     test.equal(room.contents[0], gloves1);

@@ -10,6 +10,9 @@ var World = require('../world');
 exports.character_junkItemReturnsErrorWhenNoKeyword = function(test) {
     var actor = new Character();
     
+    var world = new World();
+    world.addCharacter(actor);
+    
     var actual = actor.junkItem('');
     test.equal(actual.toActor[0].text, "junk what?!?");
     test.done();
@@ -17,6 +20,9 @@ exports.character_junkItemReturnsErrorWhenNoKeyword = function(test) {
 
 exports.character_junkItemReturnsErrorWhenItemNotFound = function(test) {
     var actor = new Character();
+    
+    var world = new World();
+    world.addCharacter(actor);
     
     var actual = actor.junkItem('computer');
     test.equal(actual.toActor[0].text, "junk what?!?");
@@ -44,7 +50,7 @@ exports.character_junkItemDoesNotAddToRoomInventory = function(test) {
     
     var actual = actor.junkItem('gloves');
     test.equal(actual.toActor[0].text, "You junk a pair of gloves.");
-    test.equal(actual.toRoom[0].textArray[0].text, "Joe junks a pair of gloves.");
+    test.equal(actual.toRoom[0].text, "Joe junks a pair of gloves.");
     test.equal(actor.inventory.length, 0);
     test.equal(room.contents.length, 0);
     test.equal(world.items.length, 0);
@@ -88,7 +94,7 @@ exports.character_junkAllDotItemDoesNotAddToRoomContents = function(test) {
     var actual = actor.junkItem('all.gloves');
     
     test.equal(actual.toActor[0].text, "You junk a pair of blue gloves and a pair of black gloves.");
-    test.equal(actual.toRoom[0].textArray[0].text, "Joe junks a pair of blue gloves and a pair of black gloves.");
+    test.equal(actual.toRoom[0].text, "Joe junks a pair of blue gloves and a pair of black gloves.");
     test.equal(actor.inventory.length, 1);
     test.equal(actor.inventory[0], pizza);
     test.equal(room.contents.length, 0);
@@ -143,7 +149,7 @@ exports.character_junkAllDoesEverything = function(test) {
     var actual = actor.junkItem('all');
     
     test.equal(actual.toActor[0].text, "You junk a pair of blue gloves and a pair of black gloves and 2 cheese pizzas.");
-    test.equal(actual.toRoom[0].textArray[0].text, "Joe junks a pair of blue gloves and a pair of black gloves and 2 cheese pizzas.");
+    test.equal(actual.toRoom[0].text, "Joe junks a pair of blue gloves and a pair of black gloves and 2 cheese pizzas.");
     test.equal(actor.inventory.length, 0);
     test.equal(room.contents.length, 0);
     test.equal(world.items.length, 0);

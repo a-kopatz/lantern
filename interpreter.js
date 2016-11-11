@@ -578,26 +578,31 @@ function do_take(character, command) {
 }
 
 function do_donate(character, command) {
-    if(command.tokens.length === 0) {
-        character.emitMessage("Donate what?");
-    }
-    else if(command.tokens.length === 2 && !isNaN(command.tokens[0])) {
-        // character.donateMoney(command.tokens[0]);
-    }    
-    else {
-        character.donateItem(command.tokens[0]).emit();
-    }
+    // if(command.tokens.length === 0) {
+    //     character.emitMessage("Donate what?");
+    // }
+    // else if(command.tokens.length === 2 && !isNaN(command.tokens[0])) {
+    //     // character.donateMoney(command.tokens[0]);
+    // }    
+    // else {
+    //     character.donateItem(command.tokens[0]).emit();
+    // }
+    
+    character.emitMessage('Removed pending function re-write');
 }
 
 function do_drop(character, command) {
     if(command.tokens.length === 0) {
         character.emitMessage("Drop what?");
     }
-    else if(command.tokens.length === 2 && !isNaN(command.tokens[0])) {
-        // character.dropMoney(command.tokens[0]);
-    }
-    else {
+    else if(command.tokens.length === 1) {
         character.dropItem(command.tokens[0]).emit();
+    }
+    else if(command.tokens.length === 2) {
+        character.dropItem(command.tokens[0], command.tokens[1]).emit();
+    }    
+    else {
+        character.emitMessage('Drop what?');
     }
 }
 
@@ -605,11 +610,14 @@ function do_junk(character, command) {
     if(command.tokens.length === 0) {
         character.emitMessage("Junk what?");
     }
-    else if(command.tokens.length === 2 && !isNaN(command.tokens[0])) {
-        // character.junkMoney(command.tokens[0]);
+    else if(command.tokens.length === 1) {
+        character.junkItem(command.tokens[0]).emit();
+    }
+    else if(command.tokens.length === 2) {
+        character.junkItem(command.tokens[0], command.tokens[1]).emit();
     }    
     else {
-        character.junkItem(command.tokens[0]).emit();
+        character.emitMessage('Junk what?');
     }
 }
 
