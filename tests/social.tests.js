@@ -56,7 +56,7 @@ exports.social_accuseWorksAsExpectedWhenTarget = function(test) {
     test.equal(output.toActor[0].text, "You look accusingly at TARGET_PRONOUN_OBJECT.");
     test.equal(output.toTarget[0].text, "ACTOR_NAME looks accusingly at you.");
     test.equal(output.toRoom[0].roomId, 3001);
-    test.equal(output.toRoom[0].textArray[0].text, "ACTOR_NAME looks accusingly at TARGET_NAME.");
+    test.equal(output.toRoom[0].text, "ACTOR_NAME looks accusingly at TARGET_NAME.");
     test.equal(output.toWorld.length, 0);
     test.done();
 };
@@ -95,7 +95,7 @@ exports.social_accuseWorksAsExpectedWhenTargetIsSelf = function(test) {
     test.equal(output.toActor[0].text, "You accuse yourself.");
     test.equal(output.toTarget.length, 0);
     test.equal(output.toRoom[0].roomId, 3001);
-    test.equal(output.toRoom[0].textArray[0].text, "ACTOR_NAME seems to have a bad conscience.");
+    test.equal(output.toRoom[0].text, "ACTOR_NAME seems to have a bad conscience.");
     test.equal(output.toWorld.length, 0);
     test.done();
 };

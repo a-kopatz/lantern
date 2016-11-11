@@ -189,23 +189,13 @@ characterSchema.methods.move = function(direction) {
 		}
 
 		output = newRoom.showRoomToCharacter(this);
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME leaves " + global.getDirection(direction) + "." } ] } );
+		output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME leaves " + global.getDirection(direction) + "." } );
 	
-		// var oldRoom = this.room;
-		
 		this.room.removeCharacter(this);
 		newRoom.addCharacter(this);
 	
-		output.toRoom.push( { roomId: newRoom.id, textArray: [ { text: "ACTOR_NAME has arrived. " } ] } );
-
-		// 	for(var i = 0; i < this.followers.length; i++) {
-		// 		if(this.followers[i].room === oldRoom) {
-		// 			this.followers[i].emitMessage("You follow " + this.name + ".");
-		// 			this.followers[i].move(direction);
-		// 		}
-		// 	}
-		 	
-		}
+		output.toRoom.push( { roomId: newRoom.id, text: "ACTOR_NAME has arrived. " } );
+	}
 	else {
 		output.toActor.push( { text: "Room not found -- this is a bug." } );
 		output.toActor.push( { text: global.MESSAGE_BUG } );
@@ -217,7 +207,7 @@ characterSchema.methods.move = function(direction) {
 characterSchema.methods.emote = function(parameter) {
 	var output = new Output(this);
 	output.toActor.push( { text: this.name + " " + parameter } );
-	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: this.name + " " + parameter } ] } );
+	output.toRoom.push( { roomId: this.room.id, text: this.name + " " + parameter } );
 	return output;
 };
 
@@ -230,12 +220,12 @@ characterSchema.methods.stand = function() {
 			break;
 		case global.POS_SITTING:
 			output.toActor.push( { text: "You stand up." } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME clambers to ACTOR_PRONOUN_POSSESSIVE feet." } ] } );
+			output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME clambers to ACTOR_PRONOUN_POSSESSIVE feet." } );
 			this.position = global.POS_STANDING;
 			break;
         case global.POS_RESTING:
             output.toActor.push( { text: "You stop resting, and stand up." } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME stops resting, and clambers on ACTOR_PRONOUN_POSSESSIVE feet." } ] } );
+			output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME stops resting, and clambers on ACTOR_PRONOUN_POSSESSIVE feet." } );
             this.position = global.POS_STANDING;
             break;
         case global.POS_SLEEPING:
@@ -243,7 +233,7 @@ characterSchema.methods.stand = function() {
             break;
         default:
             output.toActor.push( { text: "You stop floating around, and put your feet on the ground." } );
-            output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME stops floating around and puts ACTOR_PRONOUN_POSSESSIVE feet on the ground." } ] } );
+            output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME stops floating around and puts ACTOR_PRONOUN_POSSESSIVE feet on the ground." } );
             this.position = global.POS_STANDING;
             break;
 	}
@@ -257,7 +247,7 @@ characterSchema.methods.sit = function() {
 	switch(this.position) {
 		case global.POS_STANDING:
 			output.toActor.push( { text: "You sit down." } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME sits down." } ] } );
+			output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME sits down." } );
 			this.position = global.POS_SITTING;
 			break;
 		case global.POS_SITTING:
@@ -265,7 +255,7 @@ characterSchema.methods.sit = function() {
 			break;
         case global.POS_RESTING:
             output.toActor.push( { text: "You stop resting, and sit up." } );
-            output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME stops resting." } ] } );
+            output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME stops resting." } );
             this.position = global.POS_SITTING;
             break;
         case global.POS_SLEEPING:
@@ -273,7 +263,7 @@ characterSchema.methods.sit = function() {
             break;
         default:
             output.toActor.push( { text: "You stop floating around, and sit down." } );
-            output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME stops floating around, and sit down." } ] } );
+            output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME stops floating around, and sit down." } );
             this.position = global.POS_SITTING;
             break;
 	}
@@ -287,12 +277,12 @@ characterSchema.methods.rest = function() {
 	switch(this.position) {
 		case global.POS_STANDING:
 			output.toActor.push( { text: "You sit down and rest your tired bones." } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME sits down and rests." } ] } );
+			output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME sits down and rests." } );
 			this.position = global.POS_RESTING;
 			break;
 		case global.POS_SITTING:
 			output.toActor.push( { text: "You rest your tired bones." } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME rests." } ] } );
+			output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME rests." } );
 			this.position = global.POS_RESTING;
 			break;
         case global.POS_RESTING:
@@ -303,7 +293,7 @@ characterSchema.methods.rest = function() {
             break;
         default:
             output.toActor.push( { text: "You stop floating around, and stop to rest your tired bones." } );
-            output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME stops floating around, and rests." } ] } );
+            output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME stops floating around, and rests." } );
             this.position = global.POS_RESTING;
             break;
 	}
@@ -319,7 +309,7 @@ characterSchema.methods.sleep = function() {
 	    case global.POS_SITTING:
 	    case global.POS_RESTING:
 	        output.toActor.push( { text: "You go to sleep." } );
-	        output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME lies down and falls asleep." } ] } );
+	        output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME lies down and falls asleep." } );
 	        this.position = global.POS_SLEEPING;
 	        break;
         case global.POS_SLEEPING:
@@ -327,7 +317,7 @@ characterSchema.methods.sleep = function() {
             break;
         default:
             output.toActor.push( { text: "You stop floating around, and lie down to sleep." } );
-            output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME stops floating around, and lie down to sleep." } ] } );
+            output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME stops floating around, and lie down to sleep." } );
             this.position = global.POS_SLEEPING;
             break;
     }
@@ -346,7 +336,7 @@ characterSchema.methods.wake = function() {
 	}
 	else {
 		output.toActor.push( { text: "You awaken, and sit up." } );
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME awakens and sits up." } ] } );
+		output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME awakens and sits up." } );
 		this.position = global.POS_SITTING;
 	}
 	
@@ -360,7 +350,7 @@ characterSchema.methods.say = function(message) {
 		output.toActor.push( { text: "Yes, but WHAT do you want to say?" } );
 	} else {
 		output.toActor.push( { text: "You say, '" + message + "'" } );
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME says, '" + message + "'" } ] } );
+		output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME says, '" + message + "'" } );
 	}
 
 	return output;
@@ -595,7 +585,7 @@ characterSchema.methods.takeItem = function(keyword) {
 					var messages = this.takeObject(result.items[i]);
 					
 					output.toActor.push( { text: messages[0], items: [result.items[i] ] } );
-					output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [result.items[i] ] } ] } );
+					output.toRoom.push( { roomId: this.room.id, text: messages[1], items: [result.items[i] ] } );
 					
 				
 				// }
@@ -684,25 +674,6 @@ characterSchema.methods.takeItem = function(keyword) {
 
 
 // TODO: What if the item isn't visible by an observer?  Invisible ring?
-
-characterSchema.methods.donateObject = function(object) {
-	var messages = [];
-	
-	this.inventory.splice(this.inventory.indexOf(object), 1);
-	messages[0] = "You donate FIRST_OBJECT_SHORTDESC.\n\rIt vanishes in a puff of smoke!";
-	messages[1] = "ACTOR_NAME donates FIRST_OBJECT_SHORTDESC.\n\rIt vanishes in a puff of smoke!";
-
-	var donationRoom = this.world.getRoom(global.DONATION_ROOM);
-	
-	if(donationRoom !== null) {
-		donationRoom.addItem(object);
-		
-		messages[2] = "FIRST_OBJECT_SHORTDESC appears in a puff of smoke!";
-	}
-	
-	return messages;
-};
-
 
 characterSchema.methods.dropItem = function(keyword) {
 	var result = this.inventory.findByKeyword(keyword);
@@ -1063,7 +1034,7 @@ characterSchema.methods._handleEat = function(quantity, keywordToken, itemArray)
     }
     
     output.toActor.push( { text: toActor + "." });
-	output.toRoom.push( { roomId: this.room.id, textArray: [ { text: toRoom + "." } ] } );
+	output.toRoom.push( { roomId: this.room.id, text: toRoom + "." } );
 	
     if(brokenLoop === true) {
         output.toActor.push( { text: "Your stomach can't hold any more!!!" } );
@@ -1077,7 +1048,7 @@ characterSchema.methods._handleEat = function(quantity, keywordToken, itemArray)
 	
 	if(messages.length > 0) {
 		output.toActor.push( { text: messages[0] } );
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+		output.toRoom.push( { roomId: this.room.id, text: messages[1] } );
 	}    
 	
 	return output;	
@@ -1114,7 +1085,7 @@ characterSchema.methods.tasteItem = function(keyword) {
 		else {
 			var messages = this.tasteObject(result.items[i]);
 			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
+			output.toRoom.push( { roomId: this.room.id, text: messages[1], items: [ result.items[i] ] } );
 		}
 	}
 
@@ -1200,7 +1171,7 @@ characterSchema.methods.drinkItem = function(keyword) {
 			
 			var messages = this.drinkFromObject(target.items[i]);
 			output.toActor.push( { text: messages[0], items: [ target.items[i] ] } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ target.items[i] ] } ] } );
+			output.toRoom.push( { roomId: this.room.id, text: messages[1], items: [ target.items[i] ] } );
 		}
 	}
 	
@@ -1247,7 +1218,7 @@ characterSchema.methods.sipItem = function(keyword) {
 			
 			var messages = this.sipFromObject(target.items[i]);
 			output.toActor.push( { text: messages[0], items: [ target.items[i] ] } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ target.items[i] ] } ] } );
+			output.toRoom.push( { roomId: this.room.id, text: messages[1], items: [ target.items[i] ] } );
 		}
 	}
 	
@@ -1296,7 +1267,7 @@ characterSchema.methods.giveItem = function(keyword, targetName) {
 		
 		output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
 		output.toTarget.push( { text: messages[1], items: [ result.items[i] ] } );
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[2], items: [ result.items[i] ] } ] } );
+		output.toRoom.push( { roomId: this.room.id, text: messages[2], items: [ result.items[i] ] } );
 	}
 	
 	return output;
@@ -1354,7 +1325,7 @@ characterSchema.methods.feedItem = function(keyword, targetName) {
 			
 			output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
 			output.toTarget.push( { text: messages[1], items: [ result.items[i] ] } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[2], items: [ result.items[i] ] } ] } );
+			output.toRoom.push( { roomId: this.room.id, text: messages[2], items: [ result.items[i] ] } );
 		}
 	}
 
@@ -1364,7 +1335,7 @@ characterSchema.methods.feedItem = function(keyword, targetName) {
 	if(messages.length > 0) {
 		output.toActor.push( { text: messages[1] } );
 		output.toTarget.push( { text: messages[0] } );
-		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
+		output.toRoom.push( { roomId: this.room.id, text: messages[1] } );
 	}	
 	
 	target.stretchStomach();
@@ -1429,8 +1400,8 @@ characterSchema.methods.openCloseDoor = function(keyword, subcommand) {
 			var messages = this.openCloseExit(exits.items[i], verb, isClosed);
 			
 			output.toActor.push( { text: messages[0] } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
-			output.toRoom.push( { roomId: exits.items[i].toRoomId, textArray: [ { text: messages[2] } ] } );
+			output.toRoom.push( { roomId: this.room.id, text: messages[1] } );
+			output.toRoom.push( { roomId: exits.items[i].toRoomId, text: messages[2] } );
 		}
 	}
 	
@@ -1495,8 +1466,8 @@ characterSchema.methods.lockUnlockDoor = function(keyword, subcommand) {
 			var messages = this.lockUnlockExit(exits.items[i], verb, isLocked);
 			
 			output.toActor.push( { text: messages[0] } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1] } ] } );
-			output.toRoom.push( { roomId: exits.items[i].toRoomId, textArray: [ { text: messages[2] } ] } );
+			output.toRoom.push( { roomId: this.room.id, text: messages[1] } );
+			output.toRoom.push( { roomId: exits.items[i].toRoomId, text: messages[2] } );
 		}
 	}
 	
@@ -1546,14 +1517,14 @@ characterSchema.methods.wearItem = function(keyword) {
 		}
 		else {
 			if(this.getBMI() > result.items[i].maximumBmi) {
-				output.toActorMessage( { text: "You can't wear " + result.items[i].getShortDescription() + ".  You're too fat for that!" } );
-				output.toRoom.push( { roomId: this.room.id, textArray: [ { text: this.name + " tries to wear " + result.items[i].getShortDescription() + " but is too fat to wear it." } ] } );
+				output.toActor.push( { text: "You can't wear " + result.items[i].getShortDescription() + ".  You're too fat for that!" } );
+				output.toRoom.push( { roomId: this.room.id, text: this.name + " tries to wear " + result.items[i].getShortDescription() + " but is too fat to wear it." } );
 				return output;
 			}
 			
 			var messages = this.wearObject(result.items[i], result.items[i].wearSlots[0]);
 			output.toActorMessage(messages[0], result.items[i]);
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
+			output.toRoom.push( { roomId: this.room.id, text: messages[1], items: [ result.items[i] ] } );
 		}
 	}
 	
@@ -1565,21 +1536,23 @@ characterSchema.methods.wearItemAtLocation = function(keyword, location) {
 	
 	var result = this.inventory.findByKeyword(keyword);
 
-	if(result.items.length === 0) {
-		output.toActor.push( { text: "Wear what?!?" } );
-		return output;
-	}
+	// if(result.items.length === 0) {
+	// 	output.toActor.push( { text: "Wear what?!?" } );
+	// 	return output;
+	// }
 
-	for(var i = 0; i < result.items.length; i++) {
-		if(result.items[i].wearSlots.indexOf(location) > -1) {
-			var messages = this.wearObject(result.items[i], location);
-			output.toActorMessage(messages[0], result.items[i]);
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
-		}
-		else {
-			output.toActor.push( { text: "You can't wear " + result.items[i].shortDescription + " there." } );
-		}
-	}
+	// for(var i = 0; i < result.items.length; i++) {
+	// 	if(result.items[i].wearSlots.indexOf(location) > -1) {
+	// 		var messages = this.wearObject(result.items[i], location);
+	// 		output.toActor.push(messages[0], result.items[i]);
+	// 		output.toRoom.push( { roomId: this.room.id, textArray: [ { text: messages[1], items: [ result.items[i] ] } ] } );
+	// 	}
+	// 	else {
+	// 		output.toActor.push( { text: "You can't wear " + result.items[i].shortDescription + " there." } );
+	// 	}
+	// }
+	
+	result.toActor.push( { text: "Not implemented "} );
 	
 	return output;
 };
@@ -1680,35 +1653,37 @@ characterSchema.methods.lookTarget = function(command) {
 characterSchema.methods.lookInTarget = function(keyword) {
 	var output = new Output(this);
 	
-    var targetList = this.inventory.concat(this.wearing).concat(this.room.contents);
-	var target = targetList.findByKeyword(keyword);
+ //   var targetList = this.inventory.concat(this.wearing).concat(this.room.contents);
+	// var target = targetList.findByKeyword(keyword);
 	
-	if(target.items.length > 0) {
-		var targetItem = target.items[0];
+	// if(target.items.length > 0) {
+	// 	var targetItem = target.items[0];
 		
-		if(this.inventory.indexOf(targetItem) > -1) {
-			output.toActorMessage("FIRST_OBJECT_SHORTDESC (carried): ", target.items[i]);
-		}
-		else if(this.wearing.indexOf(targetItem) > -1) {
-			output.toActorMessage("FIRST_OBJECT_SHORTDESC (worn): ", target.items[i]);
-		}
-		else if(this.room.contents.indexOf(targetItem) > -1){
-			output.toActorMessage("FIRST_OBJECT_SHORTDESC (here): ", target.items[i]);
-		}
+	// 	if(this.inventory.indexOf(targetItem) > -1) {
+	// 		output.toActorMessage("FIRST_OBJECT_SHORTDESC (carried): ", target.items[i]);
+	// 	}
+	// 	else if(this.wearing.indexOf(targetItem) > -1) {
+	// 		output.toActorMessage("FIRST_OBJECT_SHORTDESC (worn): ", target.items[i]);
+	// 	}
+	// 	else if(this.room.contents.indexOf(targetItem) > -1){
+	// 		output.toActorMessage("FIRST_OBJECT_SHORTDESC (here): ", target.items[i]);
+	// 	}
 		
-		var contentsList = targetItem.listContents();
+	// 	var contentsList = targetItem.listContents();
 		
-		for(var i = 0; i < contentsList.length; i++) {
-			output.toActor.push( { text: contentsList[i] });
-		}
+	// 	for(var i = 0; i < contentsList.length; i++) {
+	// 		output.toActor.push( { text: contentsList[i] });
+	// 	}
 		
-		// output.toRoom.push( { roomId: this.room.id, textArray: [ { text: , items: [ target.items[i] ] } ] } );
-		output.toRoomMessage(this.room.id, "ACTOR_NAME looks in FIRST_OBJECT_SHORTDESC.", target.items[i]);
+	// 	// output.toRoom.push( { roomId: this.room.id, textArray: [ { text: , items: [ target.items[i] ] } ] } );
+	// 	output.toRoomMessage(this.room.id, "ACTOR_NAME looks in FIRST_OBJECT_SHORTDESC.", target.items[i]);
 
-	}
-	else {
-		return output.toActor.push( { text: "You do not see that here." } );
-	}
+	// }
+	// else {
+	// 	return output.toActor.push( { text: "You do not see that here." } );
+	// }
+	
+	output.toActor( { text: "Removed until rewrite complete" } );
 	
 	return output;
 };
@@ -1768,11 +1743,11 @@ characterSchema.methods.readItem = function(keyword) {
 	return output;
 };
 
-/* Shopping and buying/selling-related methods */
+// /* Shopping and buying/selling-related methods */
 
-characterSchema.methods.getShop = function() {
-	return this.world.getShop(this.room.id);
-};
+// characterSchema.methods.getShop = function() {
+// 	return this.world.getShop(this.room.id);
+// };
 
 
 

@@ -822,7 +822,7 @@ exports.character_wearItemWearsItem = function(test) {
 
     var output = actor.wearItem("hat");
     test.equal(output.toActor[0].text, "You wear FIRST_OBJECT_SHORTDESC on your head.");
-    test.equal(output.toRoom[0].textArray[0].text, "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE head.");
+    test.equal(output.toRoom[0].text, "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE head.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_HEAD], hat);
     test.done();
@@ -883,11 +883,11 @@ exports.character_wearItemWearsAllItems = function(test) {
 
     var output = actor.wearItem("all");
     test.equal(output.toActor[0].text, "You wear FIRST_OBJECT_SHORTDESC on your head.");
-    test.equal(output.toRoom[0].textArray[0].text, "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE head.");
+    test.equal(output.toRoom[0].text, "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE head.");
     test.equal(output.toActor[1].text, "You wear FIRST_OBJECT_SHORTDESC on your feet.");
-    test.equal(output.toRoom[1].textArray[0].text, "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE feet.");
+    test.equal(output.toRoom[1].text, "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE feet.");
     test.equal(output.toActor[2].text, "You wear FIRST_OBJECT_SHORTDESC on your body.");
-    test.equal(output.toRoom[2].textArray[0].text, "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE body.");
+    test.equal(output.toRoom[2].text, "ACTOR_NAME wears FIRST_OBJECT_SHORTDESC on ACTOR_PRONOUN_POSSESSIVE body.");
     test.equal(actor.inventory.length, 0);
     test.equal(actor.wearing[global.WEAR_HEAD], hat);
     test.equal(actor.wearing[global.WEAR_FEET], shoes);

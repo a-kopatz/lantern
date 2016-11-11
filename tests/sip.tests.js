@@ -74,8 +74,8 @@ exports.character_sipItemDoesNotRemoveItemFromInventory = function(test) {
 
     test.equal(actual.toActor[0].text, "You sip the wine.");
     test.equal(actual.toActor[0].items[0], wineGlass);
-    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME sips wine from FIRST_OBJECT_SHORTDESC.");
-    test.equal(actual.toRoom[0].textArray[0].items[0], wineGlass);
+    test.equal(actual.toRoom[0].text, "ACTOR_NAME sips wine from FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toRoom[0].items[0], wineGlass);
     test.equal(actor.inventory.length, 1);
     test.done();
 };

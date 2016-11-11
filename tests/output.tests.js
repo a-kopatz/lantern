@@ -143,10 +143,10 @@ exports.output_formatReplacesFirstAndSecondObjectShortDescriptions = function(te
 exports.output_emitSendsMessageToActor = function(test) {
     var actor = new Character();
     var output = new Output(actor);
-    output.toActor = [ { text: 'Accuse who??' } ];
-    
+    output.toActor.push( { text: 'Accuse who??' } );
+
     var result = output.emit();
-    
+
     test.equal(result[0], 'Accuse who??');
     test.done();
 };
@@ -176,14 +176,20 @@ exports.output_generatesCompleteExpectedOutput = function(test) {
     var output = new Output(actor);
     output.actor = actor;
     output.target = target;
-    output.toActor = [ { text: 'You look accusingly at him.' } ];
-    output.toTarget = [ { text: 'Actur looks accusingly at you.' } ];
-    output.toRoom = [ { roomId: 3001, textArray: [ { text: 'ACTOR_NAME looks accusingly at TARGET_NAME.' } ] } ];
-    
+    output.toActor = [ { text: 'You look accusingly at him.' }, { text: 'You think he is not trustworthy.' } ];
+    output.toTarget = [ { text: 'ACTOR_NAME looks accusingly at you.' }, { text: 'He thinks you are not trustworthy.' } ];
+    output.toRoom = [ { roomId: 3001, text: 'ACTOR_NAME looks accusingly at TARGET_NAME.' }, { roomId: 3001, text: 'Must be time for his nap.' } ];
+
     var result = output.emit();
-    test.equal(result[0], 'You look accusingly at him.');
-    test.equal(result[1], 'Actur looks accusingly at you.');
+
+    test.equal(result[0].length, 2);
+    test.equal(result[0][0], 'You look accusingly at him.');
+    test.equal(result[0][1], 'You think he is not trustworthy.');
+    test.equal(result[1].length, 2);
+    test.equal(result[1][0], 'Actur looks accusingly at you.');
+    test.equal(result[1][1], 'He thinks you are not trustworthy.');
     test.equal(result[2], 'Actur looks accusingly at Targut.');
+    test.equal(result[3], 'Must be time for his nap.');
     test.done();
 };
 

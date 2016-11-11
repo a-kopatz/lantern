@@ -37,21 +37,14 @@ Output.prototype.format = function(text, textTarget, itemArray) {
     
     if(itemArray !== undefined && itemArray !== null && itemArray.length > 0) {
         if(itemArray[0] !== undefined && itemArray[0] !== null) {
-            // returnMessage = returnMessage.replace(/FIRST_OBJECT_SHORTDESC/g, itemArray[0].getShortDescription());
             returnMessage = returnMessage.replace(/FIRST_OBJECT_SHORTDESC/g, itemArray[0].shortDescription);
-            
-            // CRASH BUG BELOW
-            returnMessage = returnMessage.replace(/FIRST_OBJECT_DESC/g, itemArray[0].getDescription());
-            
+            returnMessage = returnMessage.replace(/FIRST_OBJECT_DESC/g, itemArray[0].longDescription);
         }
         
         if(itemArray.length > 1) {
             if(itemArray[1] !== undefined && itemArray[1] !== null) {
-                //returnMessage = returnMessage.replace(/SECOND_OBJECT_SHORTDESC/g, itemArray[1].getShortDescription());
                 returnMessage = returnMessage.replace(/SECOND_OBJECT_SHORTDESC/g, itemArray[1].shortDescription);  
-
-            // CRASH BUG BELOW
-                returnMessage = returnMessage.replace(/SECOND_OBJECT_DESC/g, itemArray[1].getDescription());
+                returnMessage = returnMessage.replace(/SECOND_OBJECT_DESC/g, itemArray[1].longDescription);
             }
         }
     }
@@ -64,17 +57,17 @@ Output.prototype.toActorMessage = function(message, item) {
 };
 
 Output.prototype.toRoomMessage = function(roomId, message) {
-    this.toRoom.push( { roomId: roomId, textArray: [ { text: message } ] } );
+    this.toRoom.push( { roomId: roomId, text: message } );
 };
 
 Output.prototype.toRoomMessage = function(roomId, message, item) {
-    this.toRoom.push( { roomId: roomId, textArray: [ { text: message, items: [ item ] } ] } );
+    this.toRoom.push( { roomId: roomId, text: message, items: [ item ] } );
 };
 
 
 Output.prototype.emit = function() {
     var result = [];
-    
+
     result.push(this.emitToActor());
     
     if(this.target !== null && this.toTarget.length > 0) {
@@ -92,22 +85,36 @@ Output.prototype.emit = function() {
     return result;
 };
 
-Output.prototype.__emit = function(target, textArray) {
+Output.prototype.__emit = function(target, data) {
     var result = [];
-    
-    for(var i = 0; i < textArray.length; i++) {
-        if(textArray[i].color !== undefined) {
-            result.push(target.emitMessage(this.format(textArray[i].text, target, textArray[i].items), textArray[i].color));
-        } else {
-            result.push(target.emitMessage(this.format(textArray[i].text, target, textArray[i].items)));
-        }
+
+    for(var i = 0; i < data.length; i++) {
+    //     if(data.color !== undefined) {
+    //         //result.push(target.emitMessage(this.format(data[i].text, target, data[i].items), data[i].color));
+    //         result.push(this.__simpleEmit(data[i]));
+    //     } else {
+    //         //result.push(target.emitMessage(this.format(data[i].text, target, data[i].items)));
+    //         result.push(this.__simpleEmit(data[i]));
+    //     }
+        result.push(this.__simpleEmit(target, data[i]));
     }
     
     return result;
 };
 
+Output.prototype.__simpleEmit = function(target, data) {
+    if(data.color !== undefined) {
+        return target.emitMessage(this.format(data.text, target, data.items), data.color);
+    }
+    else {
+        return target.emitMessage(this.format(data.text, target, data.items));
+    }
+};
+
+
 Output.prototype.emitToActor = function() {
-    return this.__emit(this.actor, this.toActor);
+    var emitted = this.__emit(this.actor, this.toActor);
+    return emitted;
 };
 
 Output.prototype.emitToTarget = function() {
@@ -118,6 +125,7 @@ Output.prototype.emitToRoom = function() {
     var result = [];
     
     for(var i = 0; i < this.toRoom.length; i++) {
+
          var room = this.actor.world.getRoom(this.toRoom[i].roomId);
          
          if(room !== null) {
@@ -126,8 +134,8 @@ Output.prototype.emitToRoom = function() {
             for (var j = 0; j < players.length; j++) {
                 var textTarget = players[j];
             
-                 if (textTarget !== this.actor && textTarget !== this.target) {
-                    result.push(this.__emit(textTarget, this.toRoom[i].textArray));
+                if (textTarget !== this.actor && textTarget !== this.target) {
+                    result.push(this.__simpleEmit(textTarget, this.toRoom[i]));
                 }
             }
          }

@@ -42,8 +42,8 @@ Social.prototype.getOutputWithoutTarget = function() {
     output.toActor.push( { text: this.social.noTargetMessages.toActor } );
 
     if(this.social.noTargetMessages.toRoom !== "#") {
-        // output.toRoom.push( { roomId: this.actor.room.id, text: this.social.noTargetMessages.toRoom } );
-        output.toRoom.push( { roomId: this.actor.room.id, textArray: [ { text: this.social.noTargetMessages.toRoom } ] } );
+        output.toRoom.push( { roomId: this.actor.room.id, text: this.social.noTargetMessages.toRoom } );
+        // output.toRoom.push( { roomId: this.actor.room.id, textArray: [ { text: this.social.noTargetMessages.toRoom } ] } );
     }
 
     return output;
@@ -53,8 +53,8 @@ Social.prototype.getOutputWhenSelfIsTarget = function() {
     var output = new Output(this.actor);
 
     output.toActor.push( { text: this.social.targetSelfMessages.toActor } );
-    // output.toRoom.push( { roomId: this.actor.room.id, text: this.social.targetSelfMessages.toRoom } );
-    output.toRoom.push( { roomId: this.actor.room.id, textArray: [ { text: this.social.targetSelfMessages.toRoom } ] } );
+    output.toRoom.push( { roomId: this.actor.room.id, text: this.social.targetSelfMessages.toRoom } );
+    // output.toRoom.push( { roomId: this.actor.room.id, textArray: [ { text: this.social.targetSelfMessages.toRoom } ] } );
     
     return output;
 };
@@ -66,8 +66,8 @@ Social.prototype.getOutputToActorTargetRoom = function() {
 
     output.toActor.push( { text: this.social.targetFoundMessages.toActor } );
     output.toTarget.push( { text: this.social.targetFoundMessages.toTarget } );
-    // output.toRoom.push( { roomId: this.actor.room.id, text: this.social.targetFoundMessages.toRoom } );
-    output.toRoom.push( { roomId: this.actor.room.id, textArray: [ { text: this.social.targetFoundMessages.toRoom } ] } );
+    output.toRoom.push( { roomId: this.actor.room.id, text: this.social.targetFoundMessages.toRoom } );
+    // output.toRoom.push( { roomId: this.actor.room.id, textArray: [ { text: this.social.targetFoundMessages.toRoom } ] } );
     
     return output;
 };

@@ -368,8 +368,8 @@ playerSchema.methods.goto = function(keyword) {
 	 	newRoom.addCharacter(this);
 		output = newRoom.showRoomToCharacter(this);
 
-		output.toRoom.push( { roomId: oldRoomId, textArray: [ { text: "ACTOR_NAME shimmers and vanishes." } ] } );
-		output.toRoom.push( { roomId: newRoom.id, textArray: [ { text: "ACTOR_NAME shimmers and appears." } ] } );
+		output.toRoom.push( { roomId: oldRoomId, text: "ACTOR_NAME shimmers and vanishes." } );
+		output.toRoom.push( { roomId: newRoom.id, text: "ACTOR_NAME shimmers and appears." } );
 	}
 	
 	return output;
@@ -471,7 +471,7 @@ playerSchema.methods.handleWriting = function(input) {
 			this.writingTo = "";
 			
 			output.toActor.push( { text: "Your letter has been sent!" } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME drops a letter through the mail slot." } ] } );
+			output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME drops a letter through the mail slot." } );
 		}
 		else if(this.isWritingNote === true) {
 			this.paper.written =  this.writingQueue.join("");
@@ -479,7 +479,7 @@ playerSchema.methods.handleWriting = function(input) {
 			this.isWritingNote = false;
 			
 			output.toActor.push( { text: "Ok, got it!" } );
-			output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME stops writing a note." } ] } );
+			output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME stops writing a note." } );
 		}
 		else if(this.isPosting === true) {
 			if(this.board !== undefined && this.board !== null) {
@@ -491,7 +491,7 @@ playerSchema.methods.handleWriting = function(input) {
 				this.board = null;
 				
 				output.toActor.push( { text: "Ok, posted!" } );
-				output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME stops writing a post." } ] } );
+				output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME stops writing a post." } );
 			}
 			else {
 				// WTF?  Posting on a board that doesn't exist?

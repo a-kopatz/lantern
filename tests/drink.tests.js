@@ -74,8 +74,8 @@ exports.character_drinkItemDoesNotRemoveItemFromInventory = function(test) {
 
     test.equal(actual.toActor[0].text, "You drink the wine.");
     test.equal(actual.toActor[0].items[0], wineGlass);
-    test.equal(actual.toRoom[0].textArray[0].text, "ACTOR_NAME drinks wine from FIRST_OBJECT_SHORTDESC.");
-    test.equal(actual.toRoom[0].textArray[0].items[0], wineGlass);
+    test.equal(actual.toRoom[0].text, "ACTOR_NAME drinks wine from FIRST_OBJECT_SHORTDESC.");
+    test.equal(actual.toRoom[0].items[0], wineGlass);
     test.equal(actor.inventory.length, 1);
     test.done();
 };
