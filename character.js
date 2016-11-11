@@ -1198,6 +1198,9 @@ characterSchema.methods.feedItem = function(keyword, targetName) {
 	return output;
 };
 
+
+
+
 characterSchema.methods.openCloseExit = function(exit, verb, mode) {
 	var messages = [];
 
