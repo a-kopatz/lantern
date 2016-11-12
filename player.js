@@ -285,15 +285,10 @@ playerSchema.methods.listInventory = function() {
 		output.toActor.push( { text : "  Absolutely nothing!!!" } );
 	}
 	else {
-		var itemMapResult = utility.buildItemMap(this, this.inventory, null, Number.POSITIVE_INFINITY, function() { return false; }, "", "");
-
-		for (var value of itemMapResult.map.values()) {
-			if(value.quantity === 1) {
-				output.toActor.push( { text: "  " + value.singular } );
-			}
-			else {
-		 		output.toActor.push( { text: "  " + value.quantity + " " + value.plural } );
-			}
+		var prettyArray = utility.prettifyItemArray(this.inventory);
+		
+		for(var i = 0; i < prettyArray.length; i++) {
+			output.toActor.push( { text: "  " + prettyArray[i] } );
 		}
 	}
 

@@ -395,7 +395,8 @@ function buildItemMap(character, itemArray, itemType, quantity, breakCondition, 
 	                    { 
 	                        quantity: itemMap.get(itemArray[i].id).quantity + 1, 
 	                        singular: itemArray[i].getShortDescription(),
-	                        plural: itemArray[i].getPluralDescription()
+	                        plural: itemArray[i].getPluralDescription(),
+	                        long: itemArray[i].longDescription
 	                    } );
 	            }
 	            else {
@@ -403,7 +404,8 @@ function buildItemMap(character, itemArray, itemType, quantity, breakCondition, 
 	                    { 
 	                        quantity: 1, 
 	                        singular: itemArray[i].getShortDescription(),
-	                        plural: itemArray[i].getPluralDescription() 
+	                        plural: itemArray[i].getPluralDescription(),
+	                        long: itemArray[i].longDescription
 	                    } );
 	            }
 	            
@@ -440,6 +442,23 @@ function buildItemMap(character, itemArray, itemType, quantity, breakCondition, 
 	};
 }
 
+function prettifyItemArray(itemArray) {
+	var result = [];
+	
+	var itemMapResult = buildItemMap(this, itemArray, null, Number.POSITIVE_INFINITY, function() { return false; }, "", "");
+
+	for (var value of itemMapResult.map.values()) {
+		if(value.quantity === 1) {
+			result.push(value.singular);
+		}
+		else {
+	 		result.push(value.quantity + " " + value.plural);
+		}
+	}
+	
+	return result;
+}
+
 exports.randomNumber = randomNumber;
 exports.oppositeDirection = oppositeDirection;
 exports.getBmiDescription = getBmiDescription;
@@ -455,3 +474,4 @@ exports.getPaddedWord = getPaddedWord;
 exports.alreadyWearing = alreadyWearing;
 exports.wearMessage = wearMessage;
 exports.buildItemMap = buildItemMap;
+exports.prettifyItemArray = prettifyItemArray;

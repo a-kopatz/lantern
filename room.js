@@ -260,10 +260,17 @@ roomSchema.methods.showRoomToCharacter = function(character) {
  		output.toActor.push( { text: this.npcs[j].getDescription(), color: "Orange" } );
  	}
 
- 	for (var i = 0; i < this.contents.length; i++) {
- 		output.toActor.push( { text: "FIRST_OBJECT_DESC", items: [ this.contents[i] ], color: 'Green' } );
- 	}
+	var itemMapResult = utility.buildItemMap(this, this.contents, null, Number.POSITIVE_INFINITY, function() { return false; }, "", "");
 
+	for (var value of itemMapResult.map.values()) {
+		if(value.quantity === 1) {
+			output.toActor.push( { text: value.long + " are on the floor here.", color: "Green" } );
+		}
+		else {
+	 		output.toActor.push( { text: value.quantity + " " + value.plural, color: "Green" } );
+		}
+	}
+		
 	return output;
 };
 
