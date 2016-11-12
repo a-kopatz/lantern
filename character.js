@@ -677,6 +677,11 @@ characterSchema.methods.takeItem = function(keyword) {
 
 characterSchema.methods.dropItem = function(keyword) {
 	var result = this.inventory.findByKeyword(keyword);
+	
+	console.log(result.items.length);
+	console.log(keyword);
+	console.log(result);
+	
 	return this._handleJunkDropDonate(result.items.length, keyword, result, 'drop');
 };
 
@@ -743,7 +748,7 @@ characterSchema.methods._handleJunkDropDonate = function(quantity, keywordToken,
         return output;
     }
 
-	var itemMapResult = utility.buildItemMap(this, itemArray.items, Item, quantity, function() { return false; }, mode, "You can't " + mode + " that!");
+	var itemMapResult = utility.buildItemMap(this, itemArray.items, null, quantity, function() { return false; }, mode, "You can't " + mode + " that!");
 
 	var toActor = 'You ' + mode + ' ' + itemMapResult.output;
 	var toRoom =  this.name + ' ' + mode + 's ' + itemMapResult.output;

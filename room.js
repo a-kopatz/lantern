@@ -264,10 +264,10 @@ roomSchema.methods.showRoomToCharacter = function(character) {
 
 	for (var value of itemMapResult.map.values()) {
 		if(value.quantity === 1) {
-			output.toActor.push( { text: value.long + " are on the floor here.", color: "Green" } );
+			output.toActor.push( { text: value.long, color: "Green" } );
 		}
 		else {
-	 		output.toActor.push( { text: value.quantity + " " + value.plural, color: "Green" } );
+	 		output.toActor.push( { text: value.quantity + " " + value.plural + " are on the floor here.", color: "Green" } );
 		}
 	}
 		
