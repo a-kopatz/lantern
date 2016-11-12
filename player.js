@@ -7,6 +7,7 @@ var characterSchema = require("./character").schema;
 var _Mail = require("./mail");
 var Mail = require("./mail").mail;
 // var Note = require('./note');
+var item = require('./item').item;
 var note = require("./items/note").note;
 var clothes = require("./items/clothes").clothes;
 var shirt = require("./items/shirt").shirt;
@@ -284,11 +285,18 @@ playerSchema.methods.listInventory = function() {
 		output.toActor.push( { text : "  Absolutely nothing!!!" } );
 	}
 	else {
-		for(var i = 0; i < this.inventory.length; i++) {
-			output.toActor.push( { text: "  " + this.inventory[i].shortDescription, color: "Green" } );
+		var itemMapResult = utility.buildItemMap(this, this.inventory, null, Number.POSITIVE_INFINITY, function() { return false; }, "", "");
+
+		for (var value of itemMapResult.map.values()) {
+			if(value.quantity === 1) {
+				output.toActor.push( { text: "  " + value.singular } );
+			}
+			else {
+		 		output.toActor.push( { text: "  " + value.quantity + " " + value.plural } );
+			}
 		}
 	}
-	
+
 	return output;
 };
 

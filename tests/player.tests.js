@@ -1,4 +1,5 @@
 var Player = require("../player").player;
+var Food = require("../items/food").food;
 
 /////////////////////////////////////////////////
 
@@ -62,3 +63,41 @@ exports.character_toggleAuction_togglesOffAndReturns_1 = function(test) {
 };
 
 // TODO: Test the rest of the toggles
+
+
+
+exports.player_listInventoryShowsNothingCarried = function(test) {
+    var player = new Player();
+    
+    var actual = player.listInventory();
+    test.equal(actual.toActor[0].text, "You are carrying:");
+    test.equal(actual.toActor[1].text, "  Absolutely nothing!!!");
+    test.done();
+};
+
+exports.player_listInventoryShowSingularAndPlural = function(test) {
+    var player = new Player();
+
+    var donut1 = new Food();
+    donut1.id = 1;
+    donut1.keywords.push("donut");
+    donut1.shortDescription = "a vanilla donut";
+    donut1.pluralDescription = "vanilla donuts";
+    player.inventory.push(donut1);
+
+    for(var i = 0; i < 3; i++) {
+        var donut2 = new Food();
+        donut2.id = 2;
+        donut2.keywords.push("donut");
+        donut2.shortDescription = "a chocolate donut";
+        donut2.pluralDescription = "chocolate donuts";
+        player.inventory.push(donut2);
+    }
+
+    var actual = player.listInventory();
+    test.equal(actual.toActor[0].text, "You are carrying:");
+    test.equal(actual.toActor[1].text, "  a vanilla donut");
+    test.equal(actual.toActor[2].text, "  3 chocolate donuts");
+    test.done();
+};
+

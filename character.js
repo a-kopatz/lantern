@@ -743,7 +743,7 @@ characterSchema.methods._handleJunkDropDonate = function(quantity, keywordToken,
         return output;
     }
 
-	var itemMapResult = utility.buildItemMap(this, itemArray, Item, quantity, function() { return false; }, mode, "You can't " + mode + " that!");
+	var itemMapResult = utility.buildItemMap(this, itemArray.items, Item, quantity, function() { return false; }, mode, "You can't " + mode + " that!");
 
 	var toActor = 'You ' + mode + ' ' + itemMapResult.output;
 	var toRoom =  this.name + ' ' + mode + 's ' + itemMapResult.output;
@@ -876,7 +876,7 @@ characterSchema.methods._handleEat = function(quantity, keywordToken, itemArray)
     // Sort of shitty -- only players have this concept (at the moment)
     var beforeFullnessIndex = this.caloriesConsumed[0] / this.maximumFullness;
     
-	var itemMapResult = utility.buildItemMap(this, itemArray, Food, quantity, mustStopEating, "eat", "You can't eat that!");
+	var itemMapResult = utility.buildItemMap(this, itemArray.items, Food, quantity, mustStopEating, "eat", "You can't eat that!");
 
     for(var i = 0; i < itemMapResult.mapItems.length; i++) {
 		if(!this.isNpc()) {
@@ -963,11 +963,11 @@ characterSchema.methods._handleFeed = function(quantity, keywordToken, itemArray
     	var beforeFullnessIndex = target.caloriesConsumed[0] / target.maximumFullness;
     }
     
-	var itemMapResult = utility.buildItemMap(this, itemArray, Food, quantity, function() { return false; }, "feed", "That's not food!");
+	var itemMapResult = utility.buildItemMap(this, itemArray.items, Food, quantity, function() { return false; }, "feed", "That's not food!");
 
     for(var i = 0; i < itemMapResult.mapItems.length; i++) {
 		if(!target.isNpc()) {
-            target.caloriesConsumed[0] = target.caloriesConsumed[0] + itemArray.items[i].calories;
+            target.caloriesConsumed[0] = target.caloriesConsumed[0] + itemMapResult.mapItems[i].calories;
         }
         
         this.inventory.splice(this.inventory.indexOf(itemMapResult.mapItems[i]), 1);

@@ -376,13 +376,13 @@ function buildItemMap(character, itemArray, itemType, quantity, breakCondition, 
 	var wrongTypeMessages = [];
 	var mapItems = [];
 
-	for(var i = 0; i < itemArray.items.length; i++) {
+	for(var i = 0; i < itemArray.length; i++) {
 	    if(i >= quantity) {
 	        break;
 	    }
 	    
-		if((itemArray.items[i] instanceof itemType) === false) { 
-			wrongTypeMessages.push(itemArray.items[i].shortDescription + " -- " + notRightTypeMessage);
+		if((itemType !== null) && (itemArray[i] instanceof itemType) === false) { 
+			wrongTypeMessages.push(itemArray[i].shortDescription + " -- " + notRightTypeMessage);
     	}
     	else {
     		if(breakCondition(character, mapItems) === true) {
@@ -390,24 +390,24 @@ function buildItemMap(character, itemArray, itemType, quantity, breakCondition, 
     			break;
     		}
     		else {
-	            if(itemMap.has(itemArray.items[i].id)) {
-	                itemMap.set(itemArray.items[i].id, 
+	            if(itemMap.has(itemArray[i].id)) {
+	                itemMap.set(itemArray[i].id, 
 	                    { 
-	                        quantity: itemMap.get(itemArray.items[i].id).quantity + 1, 
-	                        singular: itemArray.items[i].getShortDescription(),
-	                        plural: itemArray.items[i].getPluralDescription()
+	                        quantity: itemMap.get(itemArray[i].id).quantity + 1, 
+	                        singular: itemArray[i].getShortDescription(),
+	                        plural: itemArray[i].getPluralDescription()
 	                    } );
 	            }
 	            else {
-	                itemMap.set(itemArray.items[i].id, 
+	                itemMap.set(itemArray[i].id, 
 	                    { 
 	                        quantity: 1, 
-	                        singular: itemArray.items[i].getShortDescription(),
-	                        plural: itemArray.items[i].getPluralDescription() 
+	                        singular: itemArray[i].getShortDescription(),
+	                        plural: itemArray[i].getPluralDescription() 
 	                    } );
 	            }
 	            
-	            mapItems.push(itemArray.items[i]);
+	            mapItems.push(itemArray[i]);
     		}
     	}
 	}
