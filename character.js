@@ -677,11 +677,6 @@ characterSchema.methods.takeItem = function(keyword) {
 
 characterSchema.methods.dropItem = function(keyword) {
 	var result = this.inventory.findByKeyword(keyword);
-	
-	console.log(result.items.length);
-	console.log(keyword);
-	console.log(result);
-	
 	return this._handleJunkDropDonate(result.items.length, keyword, result, 'drop');
 };
 

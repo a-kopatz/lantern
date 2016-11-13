@@ -110,3 +110,9 @@ exports.character_takeItemTakesItemFromRoom = function(test) {
     test.equal(room.contents[0], atm);
     test.done();
 };
+
+
+
+
+
+
