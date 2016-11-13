@@ -188,65 +188,6 @@ exports.character_tellWorksWhenCharacterFound = function(test) {
 
 
 
-exports.character_takeItemTakesAllFromRoom = function(test) {
-    var actor = new Character();
-    
-    var room = new Room();
-    room.id = 3001;
-    room.addCharacter(actor);
-    
-    var gloves = new Item();
-    gloves.keywords.push("gloves");
-    gloves.shortDescription = "a pair of gloves";
-    gloves.canBeTaken = true;
-    room.addItem(gloves);
-    
-    var scarf = new Item();
-    scarf.keywords.push("scarf");
-    scarf.shortDescription = "a plaid scarf";
-    scarf.canBeTaken = true;
-    room.addItem(scarf);
-    
-    var atm = new Item();
-    atm.keywords.push("atm");
-    atm.shortDescription = "an ATM machine";
-    atm.canBeTaken = false;
-    room.addItem(atm);
-    
-    var shirt = new Item();
-    shirt.keywords.push("shirt");
-    shirt.shortDescription = "an ugly shirt";
-    shirt.canBeTaken = true;
-    room.addItem(shirt);
-    
-    var actual = actor.takeItem('all');
-    
-    test.equal(actual.toActor[0].text, "You take FIRST_OBJECT_SHORTDESC.");
-    test.equal(actual.toActor[0].items[0], gloves);
-    test.equal(actual.toActor[1].text, "You take FIRST_OBJECT_SHORTDESC.");
-    test.equal(actual.toActor[1].items[0], scarf);
-    test.equal(actual.toActor[2].text, "an ATM machine: You can't take THAT!");
-    test.equal(actual.toActor[3].text, "You take FIRST_OBJECT_SHORTDESC.");
-    test.equal(actual.toActor[3].items[0], shirt);
-    test.equal(actual.toRoom[0].text, "ACTOR_NAME takes FIRST_OBJECT_SHORTDESC.");
-    test.equal(actual.toRoom[0].roomId, 3001);
-    test.equal(actual.toRoom[0].items[0], gloves);
-    test.equal(actual.toRoom[1].text, "ACTOR_NAME takes FIRST_OBJECT_SHORTDESC.");
-    test.equal(actual.toRoom[1].roomId, 3001);    
-    test.equal(actual.toRoom[1].items[0], scarf);
-    test.equal(actual.toRoom[2].text, "ACTOR_NAME takes FIRST_OBJECT_SHORTDESC.");
-    test.equal(actual.toRoom[2].roomId, 3001);    
-    test.equal(actual.toRoom[2].items[0], shirt);
-    test.equal(actor.inventory.length, 3);
-    test.equal(actor.inventory[0], gloves);
-    test.equal(actor.inventory[1], scarf);
-    test.equal(actor.inventory[2], shirt);
-    test.equal(room.contents.length, 1);
-    test.equal(room.contents[0], atm);
-    test.done();
-};
-
-
 ///////////////////////////////////////////////////////////
 
 exports.character_eatItemReturnsErrorWhenNoKeyword = function(test) {

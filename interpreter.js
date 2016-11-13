@@ -554,26 +554,19 @@ function do_quit(character) {
 }
 
 function do_take(character, command) {
+    // Note: 'take' previously removed items from containers.  Changed to 'remove' command
+
     if(command.tokens.length === 0) {
         character.emitMessage("Take what?");
     }
+    else if(command.tokens.length === 1) {
+        character.takeItem(command.tokens[0]).emit();
+    }
+    else if(command.tokens.length === 2) {
+        character.takeItems(command.tokens[0], command.tokens[1]).emit();
+    }    
     else {
-        if(command.tokens.length === 1) {
-            character.takeItem(command.tokens[0]).emit();
-        }
-        else {
-            if(command.tokens.length === 2) {
-                // TODO: Implement
-                // character.takeItemFromContainer(command.tokens[0], command.tokens[1]).emit();
-            }
-            else if(command.tokens.length === 3 && command.tokens[1].toLowerCase() === 'from') {
-                // TODO: Implement
-                // character.takeItemFromContainer(command.tokens[0], command.tokens[2]).emit();
-            }
-            else {
-                character.emitMessage("I have no idea what you're trying to do.");
-            }
-        }
+        character.emitMessage('Take what?');
     }
 }
 

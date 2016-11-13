@@ -370,10 +370,10 @@ function wearMessage(location) {
 	return messages;
 }
 
-function buildItemMap(character, itemArray, itemType, quantity, breakCondition, verb, notRightTypeMessage) {
+function buildItemMap(character, itemArray, itemType, quantity, breakCondition, verb, notRightTypeMessage, isVerbAllowed, verbNotAllowedMessage) {
 	var itemMap = new Map();
     var brokenLoop = false;
-	var wrongTypeMessages = [];
+	var errorMessages = [];
 	var mapItems = [];
 
 	for(var i = 0; i < itemArray.length; i++) {
@@ -382,7 +382,10 @@ function buildItemMap(character, itemArray, itemType, quantity, breakCondition, 
 	    }
 	    
 		if((itemType !== null) && (itemArray[i] instanceof itemType) === false) { 
-			wrongTypeMessages.push(itemArray[i].shortDescription + " -- " + notRightTypeMessage);
+			errorMessages.push(itemArray[i].shortDescription + " -- " + notRightTypeMessage);
+    	}
+    	else if(isVerbAllowed !== undefined && isVerbAllowed(itemArray[i]) === false) {
+    		errorMessages.push(itemArray[i].shortDescription + " -- " + verbNotAllowedMessage);
     	}
     	else {
     		if(breakCondition(character, mapItems) === true) {
@@ -436,7 +439,7 @@ function buildItemMap(character, itemArray, itemType, quantity, breakCondition, 
 	return {
 		map: itemMap,
 		brokenLoop: brokenLoop,
-		wrongTypeMessages: wrongTypeMessages,
+		errorMessages: errorMessages,
 		mapItems: mapItems,
 		output: output
 	};

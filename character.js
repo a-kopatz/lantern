@@ -508,96 +508,6 @@ characterSchema.methods.reply = function(message) {
 // };
 
 
-characterSchema.methods.takeObject = function(object) {
-	var messages = [];
-
-	this.room.removeItem(object);
-	this.inventory.push(object);
-	
-	// messages[0] = "You take " + object.shortDescription + ".";
-	// messages[1] = "ACTOR_NAME takes " + object.shortDescription + ".";
-	
-	messages[0] = "You take FIRST_OBJECT_SHORTDESC.";
-	messages[1] = "ACTOR_NAME takes FIRST_OBJECT_SHORTDESC.";
-	
-	return messages;
-};
-
-// characterSchema.methods.takeObjects = function(objectArray) {
-// 	var messages = [];
-	
-// 	for(var i = 0; i < objectArray.length; i++) {
-// 		messages.push(this.takeObject(objectArray[i]));
-// 	}
-	
-// 	return messages;
-// };
-
-// characterSchema.methods.takeMoney = function(object) {
-// 	var messages = [];
-	
-// 	// this.room.removeItem(object);
-// 	// this.world.removeItem(object);
-// 	// messages[0] = this.emitMessage("You take " + object.shortDescription + ".");
-// 	// messages[1] = this.emitRoomMessage(this.name + " takes " + object.shortDescription + ".");
-// 	// messages[2] = this.emitMessage("There were " + object.value + " dollars.");
-// 	// this.money = this.money + object.value;
-	
-// 	return messages;
-// };
-
-characterSchema.methods.takeItem = function(keyword) {
-	var output = new Output(this);
-	
-	if(keyword === null || keyword.length === 0) {
- 		output.toActor.push( { text: "But what do you want to take?" } );
- 		return output;
-	}
-	
- 	var result = this.room.contents.findByKeyword(keyword);
-
-	if(result.mode === 'all.item' && result.items.length === 0) {
-		output.toActor.push( { text: "You can't seem to find any '" + result.token + "' things here." } );
-		return output;
-	}
-
-	if(result.items.length === 0) {
-		output.toActor.push( { text: "You can't seem to find any '" + keyword + "' here." } );
-		return output;
-	}
-
-	for(var i = 0; i < result.items.length; i++) {
-		if(result.items[i].canBeTaken === true) {
-			// if(this.inventory.length + 1 > this.getMaxCarried()) {
-			// 	messages.push(this.emitMessage(result.items[i].shortDescription + ": You carry that many items."));
-			// }
-			// else if(this.getCarriedWeight() + result.items[i].weight > this.getMaxCarriedWeight()) {
-			// 		messages.push(this.emitMessage(result.items[i].shortDescription + ": You carry that much weight."));
-			// }
-			// else {
-				// if(result.items[i].type === global.ITEM_MONEY) {
-				// 	messages.push(this.takeMoney(result.items[i]));
-				// }
-				// else {
-					// messages.push(this.takeObject(result.items[i]));
-				
-				
-					var messages = this.takeObject(result.items[i]);
-					
-					output.toActor.push( { text: messages[0], items: [result.items[i] ] } );
-					output.toRoom.push( { roomId: this.room.id, text: messages[1], items: [result.items[i] ] } );
-					
-				
-				// }
-			// }
-		}
-		else {
-			output.toActor.push( { text: result.items[i].shortDescription + ": You can't take THAT!" } );
-		}
-	}
-	
-	return output;
-};
 
 // characterSchema.methods.takeObjectFromContainer = function(object, container) {
 // 	var messages = [];
@@ -795,6 +705,63 @@ characterSchema.methods._handleJunkDropDonate = function(quantity, keywordToken,
 	return output;	
 };
 
+characterSchema.methods.takeItem = function(keyword) {
+	var result = this.room.contents.findByKeyword(keyword);
+	return this._handleTake(result.items.length, keyword, result);
+};
+
+characterSchema.methods.takeItems = function(quantityToken, keywordToken) {
+	var quantity = parseInt(quantityToken, 10);
+	
+	if(isNaN(quantity)) {
+		var output = new Output(this);
+		output.toActor.push( { text: "Take how many of what?!?" } );
+		return output;
+	}
+
+	var result = this.room.contents.findByKeyword('all.' + keywordToken);
+	return this._handleTake(quantity, keywordToken, result, 'take');
+};
+
+characterSchema.methods._handleTake = function(quantity, keywordToken, itemArray) {
+	var output = new Output(this);
+
+	if(itemArray.items.length === 0) {
+		output.toActor.push( { text: "Take what?" } );
+		return output;
+	}
+
+    if(itemArray.items.length < quantity) {
+        output.toActor.push( { text: "You don't have " + quantity + " of '" + keywordToken + "'."  } );
+        return output;
+    }
+
+	var itemMapResult = utility.buildItemMap(this, itemArray.items, null, quantity, 
+		function() { return false; }, 'take', "You can't take that!", 
+		function(item) { if(item.canBeTaken == false) { console.log('false'); return false; } return true; },
+		"You can't take THAT!");
+
+	if(itemMapResult.mapItems.length > 0) {
+		var toActor = 'You take ' + itemMapResult.output;
+		var toRoom =  this.name + ' takes ' + itemMapResult.output;
+	
+	    output.toActor.push( { text: toActor + "." });
+		output.toRoom.push( { roomId: this.room.id, text: toRoom + "." } );
+	}
+    
+    if(itemMapResult.errorMessages !== undefined) {
+    	for(var i = 0; i < itemMapResult.errorMessages.length; i++) {
+    		output.toActor.push ( { text: itemMapResult.errorMessages[i] } );
+    	}
+    }
+    
+	for(var i = 0; i < itemMapResult.mapItems.length; i++) {
+		this.inventory.push(itemMapResult.mapItems[i]);
+		this.room.removeItem(itemMapResult.mapItems[i]);
+	}
+
+	return output;	
+};
 
 characterSchema.methods.stretchStomach = function() {
 	if(this.caloriesConsumed[0] > this.maximumFullness) {
