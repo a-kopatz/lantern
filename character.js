@@ -854,24 +854,32 @@ characterSchema.methods._handleEat = function(quantity, keywordToken, itemArray)
         this.world.removeItem(itemMapResult.mapItems[i]);
     }
     
-	var randomizedSynonym = utility.getRandomSynonym('eat');
-	output.toActor.push( { text: "You " + randomizedSynonym[0] + " " + itemMapResult.output + "." });
-	output.toRoom.push( { roomId: this.room.id, text: this.name + " " + randomizedSynonym[1] + " " + itemMapResult.output + "." } );
+    if(itemMapResult.mapItems.length > 0) {
+		var randomizedSynonym = utility.getRandomSynonym('eat');
+		output.toActor.push( { text: "You " + randomizedSynonym[0] + " " + itemMapResult.output + "." });
+		output.toRoom.push( { roomId: this.room.id, text: this.name + " " + randomizedSynonym[1] + " " + itemMapResult.output + "." } );
+		
+	    if(itemMapResult.brokenLoop === true) {
+	        output.toActor.push( { text: "Your stomach can't hold any more!!!" } );
+	    }
 	
-    if(itemMapResult.brokenLoop === true) {
-        output.toActor.push( { text: "Your stomach can't hold any more!!!" } );
+	    this.stretchStomach();
+	
+		var afterFullnessIndex = (this.caloriesConsumed[0] / this.maximumFullness);
+		var messages = this.getOvereatingMessages(beforeFullnessIndex, afterFullnessIndex);
+		
+		if(messages.length > 0) {
+			output.toActor.push( { text: messages[0] } );
+			output.toRoom.push( { roomId: this.room.id, text: messages[1] } );
+		} 
     }
-
-    this.stretchStomach();
-
-	var afterFullnessIndex = (this.caloriesConsumed[0] / this.maximumFullness);
-	var messages = this.getOvereatingMessages(beforeFullnessIndex, afterFullnessIndex);
 	
-	if(messages.length > 0) {
-		output.toActor.push( { text: messages[0] } );
-		output.toRoom.push( { roomId: this.room.id, text: messages[1] } );
-	}    
-	
+   if(itemMapResult.errorMessages !== undefined) {
+    	for(var i = 0; i < itemMapResult.errorMessages.length; i++) {
+    		output.toActor.push ( { text: itemMapResult.errorMessages[i] } );
+    	}
+    }
+    
 	return output;	
 };
 
