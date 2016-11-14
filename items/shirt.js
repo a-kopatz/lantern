@@ -35,7 +35,7 @@ shirtSchema.methods.getWornDescription = function(bmi) {
     else if(bmi === this.maximumBmi - 1) {
         description = description + " (stretched to limit)";
     }
-    else if(bmi === this.maximumBmi) {
+    else if(bmi >= this.maximumBmi) {
         description = description + " (belly hanging out)";
     }
     
@@ -48,7 +48,7 @@ shirtSchema.methods.weightUpdate = function(characterName, bmi) {
     if(bmi > this.maximumBmi - 2) {
         if(this.condition === 0) {
             result[0] = "A button pops off your shirt.";
-            result[1] = "A button pop's off " + characterName + "'s shirt.";
+            result[1] = "A button pops off " + characterName + "'s shirt.";
         }
         else if(this.condition === 1) {
             result[0] = "A second button pops off your shirt.";
