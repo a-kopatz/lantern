@@ -35,6 +35,7 @@ var note = require('./items/note');
 var pen = require('./items/pen');
 var key = require('./items/key');
 var vendingmachine = require('./items/vendingmachine');
+var scale = require('./items/scale');
 
 var npc = require('./npc');
 var postmaster = require('./npcs/postmaster');

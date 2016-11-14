@@ -9,6 +9,7 @@ var Output = require("./output");
 // var clothes = require("./items/clothes").clothes;
 var Food = require('./items/food').food;
 var Item = require('./item').item;
+var Furniture = require('./items/furniture').furniture;
 
 var characterSchema = new schema({
 	name: String,
@@ -238,6 +239,11 @@ characterSchema.methods.stand = function() {
             break;
 	}
 	
+	if(this.using !== undefined && this.using !== null) {
+		this.using.using = null;
+		this.using = null;
+	}
+	
 	return output;
 };
 
@@ -266,6 +272,48 @@ characterSchema.methods.sit = function() {
             output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME stops floating around, and sit down." } );
             this.position = global.POS_SITTING;
             break;
+	}
+	
+	return output;
+};
+
+characterSchema.methods.sitRestSleepOnFurniture = function(keyword, verb, endingPosition) {
+	var output = new Output(this);
+	
+	var result = this.room.contents.findByKeyword(keyword);
+	
+	if(result.items.length === 0) {
+		output.toActor.push( { text: verb + " on what?!?" } );
+		return output;
+	}
+	
+	if(result.items[0].using !== undefined && result.items[0].using !== null) {
+		output.toActor.push ( { text: result.items[0].using.name + " is already on that!" } );
+		return output;
+	}
+	
+	if((result.items[0] instanceof Furniture) === false) {
+		output.toActor.push ( { text: result.items[0] + " -- you can't " + verb + " on that!" } );
+		return output;
+	}
+
+	if(result.items[0].condition === 1) {
+		output.toActor.push ( { text: result.items[0] + " -- it's broken!" } );
+		return output;
+	}
+
+	output.toActor.push( { text: "You " + verb + " on " + result.items[0].shortDescription + "." } );
+	output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME " + verb + "s on " + result.items[0].shortDescription + "." } );
+	this.position = endingPosition;
+	
+	if(this.getBMI() > result.items[0].maximumBmi) {
+		output.toActor.push( { text: result.items[0].shortDescription + " shudders under your weight is and immediately crushed." } );
+		output.toRoom.push( { roomId: this.room.id, text: result.items[0].shortDescription + " shudders under ACTOR_NAME and is immediately crushed." } );
+		result.items[0].condition = 1;
+	}
+	else {
+		this.using = result.items[0];
+		result.items[0].using = this;
 	}
 	
 	return output;

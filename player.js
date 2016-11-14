@@ -459,6 +459,15 @@ playerSchema.methods.hourlyUpdate = function() {
 				}
 			}
 		}
+		
+		if(this.using !== undefined && this.using !== null) {
+			var result = this.using.weightUpdate(this.name, newBmi);
+			
+			if(result !== undefined && result.length > 0) {
+				this.emitMessage(result[0]);
+				this.emitRoomMessage(result[1]);
+			}
+		}
 	}
 
 	

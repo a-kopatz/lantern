@@ -23,8 +23,8 @@ scaleSchema.methods.weighCharacter = function(character, command) {
 	output.toActor.push( { text: "You climb onto the scale." } );
 	output.toRoom.push( { roomId: character.room.id, text: "ACTOR_NAME climbs onto the scale." } );
 	
-	output.toActor.push( { text: this.shortDescription + " announces, 'You weigh " + character.weight + " pounds.'" } );
-	output.toRoom.push( { roomId: character.room.id, text: this.shortDescription + " announces, 'ACTOR_NAME weighs " + character.weight + " pounds.'" } );
+	output.toActor.push( { text: command.item.shortDescription + " announces, 'You weigh " + character.weight + " pounds.'" } );
+	output.toRoom.push( { roomId: character.room.id, text: command.item.shortDescription + " announces, 'ACTOR_NAME weighs " + character.weight + " pounds.'" } );
 	
 	return output;
 };

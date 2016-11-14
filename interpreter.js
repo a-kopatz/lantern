@@ -426,12 +426,21 @@ function do_stand(character) {
     character.stand().emit();
 }
 
-function do_sit(character) {
-    character.sit().emit();
+function do_sit(character, command) {
+    if(command.tokens.length === 0) {
+        character.sit().emit();
+    }
+    else {
+        character.sitRestSleepOnFurniture(command.tokens[0], 'sit', global.POS_SITTING).emit();
+    }
 }
 
-function do_rest(character) {
-    character.rest().emit();
+function do_rest(character, command) {
+    if(command.tokens.length === 0)
+        character.rest().emit();
+    else {
+        character.restOnFurniture(command.tokens[0], 'rest', global.POS_RESTING).emit();
+    }
 }
 
 function do_sleep(character) {
