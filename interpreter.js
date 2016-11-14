@@ -843,9 +843,9 @@ function do_wear(character, command) {
     if(command.tokens.length === 0) {
         character.emitMessage("Wear what?");
     }
-    // else if(command.tokens.length === 1) {
-    //     character.wearItem(command.tokens[0]).emit();
-    // }
+    else if(command.tokens.length === 1) {
+        character.wearItem(command.tokens[0]).emit();
+    }
     // else {
     //     var locationToken = command.tokens[1].toLowerCase();
         
@@ -858,8 +858,6 @@ function do_wear(character, command) {
         
     //     character.emitMessage("Wear what where?");
     // }
-    
-    character.emitMessage("Temporarily removed... crash bugs.");
 }
 
 function do_remove(character, command) {

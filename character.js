@@ -1379,8 +1379,8 @@ characterSchema.methods.wearItem = function(keyword) {
 		}
 		else {
 			if(this.getBMI() > result.items[i].maximumBmi) {
-				output.toActor.push( { text: "You can't wear " + result.items[i].getShortDescription() + ".  You're too fat for that!" } );
-				output.toRoom.push( { roomId: this.room.id, text: this.name + " tries to wear " + result.items[i].getShortDescription() + " but is too fat to wear it." } );
+				output.toActor.push( { text: "You can't wear " + result.items[i].shortDescription + ".  You're too fat for that!" } );
+				output.toRoom.push( { roomId: this.room.id, text: this.name + " tries to wear " + result.items[i].shortDescription + " but is too fat to wear it." } );
 				return output;
 			}
 			

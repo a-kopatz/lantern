@@ -895,9 +895,120 @@ exports.character_wearItemWearsAllItems = function(test) {
     test.done();
 };
 
+exports.character_returnsErrorWhenCharacterTooFat = function(test) {
+    var myRoom = new Room();
+
+    var actor = new Character();
+    actor.name = 'Kevin';
+    actor.height = 70;
+    actor.weight = 500;
+    myRoom.addCharacter(actor);
+
+    var shirt = new Clothes();
+    shirt.keywords.push("shirt");
+    shirt.shortDescription = "a shirt";
+    shirt.wearSlots.push(global.WEAR_BODY);
+    shirt.maximumBmi = 20;
+    actor.inventory.push(shirt);
+
+    var output = actor.wearItem("shirt");
+    test.equal(output.toActor[0].text, "You can't wear a shirt.  You're too fat for that!");
+    test.equal(output.toRoom[0].text, "Kevin tries to wear a shirt but is too fat to wear it.");
+    test.equal(actor.inventory.length, 1);
+    test.equal(actor.wearing[global.WEAR_BODY], null);
+    
+    console.log(actor.getBMI());
+    test.done();
+};
+
 ///////////////////////////////////////////////////////////
 
-// TODO: Test 'remove'
+exports.character_removeObjectWorks = function(test) {
+    var myRoom = new Room();
+        
+    var actor = new Character();
+    myRoom.addCharacter(actor);
 
+    var myItem = new Item();
+    myItem.shortDescription = "a torch";
+    
+    actor.wearing[global.WEAR_LIGHT] = myItem;
+    
+    var result = actor.removeObject(myItem);
 
+    test.equal(result[0], "You stop using FIRST_OBJECT_SHORTDESC.");
+    test.equal(result[1], "ACTOR_NAME stops using FIRST_OBJECT_SHORTDESC.");
+    test.equal(actor.inventory.length, 1);
+    test.equal(actor.wearing[global.WEAR_LIGHT], null);
+    test.equal(actor.inventory[0], myItem);
+    test.done();
+};
 
+exports.character_removeItemUnwears = function(test) {
+    var myRoom = new Room();
+        
+    var actor = new Character();
+    myRoom.addCharacter(actor);
+
+    var hat = new Clothes();
+    hat.keywords.push("hat");
+    hat.shortDescription = "a hat";
+    hat.wearSlots.push(global.WEAR_HEAD);
+    actor.wearing[global.WEAR_HEAD] = hat;
+
+    var output = actor.removeItem("hat");
+    test.equal(output.toActor[0].text, "You stop using FIRST_OBJECT_SHORTDESC.");
+    test.equal(output.toRoom[0].text, "ACTOR_NAME stops using FIRST_OBJECT_SHORTDESC.");
+    test.equal(actor.inventory.length, 1);
+    test.equal(actor.inventory[0], hat);
+    test.equal(actor.wearing[global.WEAR_HEAD], null);
+    test.done();
+};
+
+exports.character_removeItemReturnsErrorWhenItemNotFound = function(test) {
+    var myWorld = new World();
+    var myRoom = new Room();
+        
+    var actor = new Character();
+    myRoom.addCharacter(actor);
+    myWorld.addCharacter(actor);
+    
+    var output = actor.removeItem("hat");
+    test.equal(output.toActor[0].text, "Remove what?");
+    test.done();
+};
+
+exports.character_removeItemUnwearsAllItems = function(test) {
+    var myRoom = new Room();
+        
+    var actor = new Character();
+    myRoom.addCharacter(actor);
+
+    var hat = new Clothes();
+    hat.keywords.push("hat");
+    hat.shortDescription = "a hat";
+    actor.wearing[global.WEAR_HEAD] = hat;
+
+    var shoes = new Clothes();
+    shoes.keywords.push("shoes");
+    shoes.shortDescription = "shoes";
+    actor.wearing[global.WEAR_FEET] = shoes;
+
+    var shirt = new Clothes();
+    shirt.keywords.push("shirt");
+    shirt.shortDescription = "a shirt";
+    actor.wearing[global.WEAR_BODY] = shirt;
+
+    var output = actor.removeItem("all");
+    test.equal(output.toActor[0].text, "You stop using FIRST_OBJECT_SHORTDESC.");
+    test.equal(output.toRoom[0].text, "ACTOR_NAME stops using FIRST_OBJECT_SHORTDESC.");
+    test.equal(output.toActor[1].text, "You stop using FIRST_OBJECT_SHORTDESC.");
+    test.equal(output.toRoom[1].text, "ACTOR_NAME stops using FIRST_OBJECT_SHORTDESC.");
+    test.equal(output.toActor[2].text, "You stop using FIRST_OBJECT_SHORTDESC.");
+    test.equal(output.toRoom[2].text, "ACTOR_NAME stops using FIRST_OBJECT_SHORTDESC.");
+    test.equal(actor.inventory.length, 3);
+    test.equal(actor.wearing[global.WEAR_HEAD], null);
+    test.equal(actor.wearing[global.WEAR_FEET], null);
+    test.equal(actor.wearing[global.WEAR_BODY], null);
+    test.done();
+};

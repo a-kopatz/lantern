@@ -1,1 +1,7 @@
 { "topic":"help", "value":"You are currently reading the help... duh." }
+{ "topic":"north", "value":"A movement command that will move your character one room north.  Of course, this command will only move you there if there's someplace to go.", "seeAlso" : [ "east", "south", "west", "up", "down" ] }
+{ "topic":"south", "value":"A movement command that will move your character one room south.  Of course, this command will only move you there if there's someplace to go.", "seeAlso" : [ "north", "east", "west", "up", "down" ] }
+{ "topic":"east", "value":"A movement command that will move your character one room east.  Of course, this command will only move you there if there's someplace to go.", "seeAlso" : [ "north", "south", "west", "up", "down" ] }
+{ "topic":"west", "value":"A movement command that will move your character one room west.  Of course, this command will only move you there if there's someplace to go.", "seeAlso" : [ "north", "east", "south", "up", "down" ] }
+{ "topic":"up", "value":"A movement command that will move your character one room up.  Of course, this command will only move you there if there's someplace to go.", "seeAlso" : [ "north", "east", "south", "west", "down" ] }
+{ "topic":"down", "value":"A movement command that will move your character one room down.  Of course, this command will only move you there if there's someplace to go.", "seeAlso" : [ "north", "east", "south", "west", "up" ] }
