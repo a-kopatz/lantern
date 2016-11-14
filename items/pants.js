@@ -35,7 +35,7 @@ pantsSchema.methods.getWornDescription = function(bmi) {
     else if(bmi === this.maximumBmi - 1) {
         description = description + " (muffintop)";
     }
-    else if(bmi === this.maximumBmi) {
+    else if(bmi >= this.maximumBmi) {
         description = description + " (bellyfat hanging over)";
     }
     
@@ -48,14 +48,14 @@ pantsSchema.methods.weightUpdate = function(characterName, bmi) {
     if(bmi > this.maximumBmi - 2) {
         if(this.condition === 0) {
             result[0] = "A button pops off your pants.";
-            result[1] = "A button pop's off " + characterName + "'s pants.";
+            result[1] = "A button pops off " + characterName + "'s pants.";
         }
         else if(this.condition === 1) {
             result[0] = "The zipper explodes on your pants.";
             result[1] = "The zipper explodes on " + characterName + "'s pants.";
         }
         else if(this.condition === 2) {
-            result[0] = "A seam rips in your pants.";
+            result[0] = "The seam rips in your pants.";
             result[1] = "The seam rips in " + characterName + "'s pants.";
         }
         else if(this.condition === 3) {

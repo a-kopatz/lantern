@@ -916,8 +916,6 @@ exports.character_returnsErrorWhenCharacterTooFat = function(test) {
     test.equal(output.toRoom[0].text, "Kevin tries to wear a shirt but is too fat to wear it.");
     test.equal(actor.inventory.length, 1);
     test.equal(actor.wearing[global.WEAR_BODY], null);
-    
-    console.log(actor.getBMI());
     test.done();
 };
 
