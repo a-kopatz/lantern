@@ -971,7 +971,63 @@ characterSchema.methods._handleFeed = function(quantity, keywordToken, itemArray
 
 
 
+characterSchema.methods.giveItem = function(keyword, targetName) {
+	var result = this.inventory.findByKeyword(keyword);
+	var target = this.room.getCharacter(targetName);
+	return this._handleGive(result.items.length, keyword, result, target);
+};
 
+characterSchema.methods.giveItems = function(quantityToken, keywordToken, targetName) {
+	var quantity = parseInt(quantityToken, 10);
+	
+	if(isNaN(quantity)) {
+		var output = new Output(this);
+		output.toActor.push( { text: "Give how many of what to who?!?" } );
+		return output;
+	}
+
+	var result = this.inventory.findByKeyword('all.' + keywordToken);
+	var target = this.room.getCharacter(targetName);
+	return this._handleGive(quantity, keywordToken, result, target);
+};
+
+characterSchema.methods._handleGive = function(quantity, keywordToken, itemArray, target) {
+	var output = new Output(this);
+	output.target = target;
+	
+	if(itemArray.items.length === 0) {
+		output.toActor.push( { text: "Give what to who?!?" } );
+		return output;
+	}
+
+    if(itemArray.items.length < quantity) {
+        output.toActor.push( { text: "You don't have " + quantity + " of '" + keywordToken + "'."  } );
+        return output;
+    }
+
+	if(target === null) {
+		output.toActor.push( { text: "No-one by that name here." } );
+		return output;
+	}
+	
+	if(target === this) {
+		output.toActor.push( { text: "Give something to yourself?  That's silly." } );
+		return output;
+	}
+
+	var itemMapResult = utility.buildItemMap(this, itemArray.items, null, quantity, function() { return false; }, "give");
+
+    for(var i = 0; i < itemMapResult.mapItems.length; i++) {
+        this.inventory.splice(this.inventory.indexOf(itemMapResult.mapItems[i]), 1);
+        target.inventory.push(itemMapResult.mapItems[i]);
+    }
+
+	output.toActor.push( { text: "You give " + itemMapResult.output + " to " + target.name + "." });
+	output.toTarget.push( { text: this.name + " gives you " + itemMapResult.output + "." } );
+	output.toRoom.push( { roomId: this.room.id, text: this.name + " gives " + itemMapResult.output + " to " + target.name + "." } );
+
+	return output;	
+};
 
 
 
@@ -1155,53 +1211,53 @@ characterSchema.methods.sipItem = function(keyword) {
 	return output;
 };
 
-characterSchema.methods.giveObject = function(object, target) {
-	var messages = [];
+// characterSchema.methods.giveObject = function(object, target) {
+// 	var messages = [];
 	
-	messages[0] = "You give FIRST_OBJECT_SHORTDESC to TARGET_NAME.";
-	messages[1] = "ACTOR_NAME gives you FIRST_OBJECT_SHORTDESC.";
-	messages[2] = "ACTOR_NAME gives FIRST_OBJECT_SHORTDESC to TARGET_NAME.";
+// 	messages[0] = "You give FIRST_OBJECT_SHORTDESC to TARGET_NAME.";
+// 	messages[1] = "ACTOR_NAME gives you FIRST_OBJECT_SHORTDESC.";
+// 	messages[2] = "ACTOR_NAME gives FIRST_OBJECT_SHORTDESC to TARGET_NAME.";
 	
-	this.inventory.splice(this.inventory.indexOf(object), 1);
-	target.inventory.push(object);
+// 	this.inventory.splice(this.inventory.indexOf(object), 1);
+// 	target.inventory.push(object);
 	
-	return messages;
-};
+// 	return messages;
+// };
 
-characterSchema.methods.giveItem = function(keyword, targetName) {
-	var output = new Output(this);
+// characterSchema.methods.giveItem = function(keyword, targetName) {
+// 	var output = new Output(this);
 	
-	var result = this.inventory.findByKeyword(keyword);
+// 	var result = this.inventory.findByKeyword(keyword);
 
-	if(result.items.length === 0) {	
-		output.toActor.push( { text: "Give what?" } );
-		return output;
-	}
+// 	if(result.items.length === 0) {	
+// 		output.toActor.push( { text: "Give what?" } );
+// 		return output;
+// 	}
 	
-	var target = this.room.getCharacter(targetName);
+// 	var target = this.room.getCharacter(targetName);
 	
-	if(target === null) {
-		output.toActor.push( { text: "No-one by that name here." } );
-		return output;
-	}
+// 	if(target === null) {
+// 		output.toActor.push( { text: "No-one by that name here." } );
+// 		return output;
+// 	}
 	
-	if(target === this) {
-		output.toActor.push( { text: "Give something to yourself?!?" } );
-		return output;
-	}
+// 	if(target === this) {
+// 		output.toActor.push( { text: "Give something to yourself?!?" } );
+// 		return output;
+// 	}
 	
-	output.target = target;
+// 	output.target = target;
 
-	for(var i = 0; i < result.items.length; i++) {
-		var messages = this.giveObject(result.items[i], target);
+// 	for(var i = 0; i < result.items.length; i++) {
+// 		var messages = this.giveObject(result.items[i], target);
 		
-		output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
-		output.toTarget.push( { text: messages[1], items: [ result.items[i] ] } );
-		output.toRoom.push( { roomId: this.room.id, text: messages[2], items: [ result.items[i] ] } );
-	}
+// 		output.toActor.push( { text: messages[0], items: [ result.items[i] ] } );
+// 		output.toTarget.push( { text: messages[1], items: [ result.items[i] ] } );
+// 		output.toRoom.push( { roomId: this.room.id, text: messages[2], items: [ result.items[i] ] } );
+// 	}
 	
-	return output;
-};
+// 	return output;
+// };
 
 
 
