@@ -141,6 +141,7 @@ global.ITEM_BULLETINBOARD = "Board";
 global.ITEM_CLOTHES = "Clothes";
 global.ITEM_SHIRT = "Shirt";
 global.ITEM_SHIRT = "Pants";
+global.ITEM_SCALE = "Scale";
 
 
 global.MESSAGE_BUG = "Please report this using the 'bug' command.";
