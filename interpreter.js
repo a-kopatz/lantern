@@ -626,26 +626,15 @@ function do_sip(character, command) {
 }
 
 function do_give(character, command) {
-    // if(command.tokens.length < 2) {
-    //     character.emitMessage('Give what to who?');
-    // }
-    // // else {
-    // //     if(command.tokens[1].toLowerCase() !== 'to') {
-    // //         character.giveItem(command.tokens[0], command.tokens[1]);
-    // //     }
-    // //     else {
-    // //         if(command.tokens.length < 3) {
-    // //             character.emitMessage('Give what to who?');
-    // //         }
-    // //         else {
-    // //             character.giveItem(command.tokens[0], command.tokens[2]);
-    // //         }
-    // //     }
-    // // }
-    // else if(command.tokens.length > 2) {
-        
-    // }
-    character.emitMessage('This is what I am currently fixing... Sorry');
+    if(command.tokens.length < 2) {
+         character.emitMessage('Give what to who?');
+    }
+    else if(command.tokens.length > 2) {
+        character.giveItems(command.tokens[0], command.tokens[1], command.tokens[2]).emit();
+    }
+    else {
+        character.giveItem(command.tokens[0], command.tokens[1]).emit();
+    }
 }
 
 function do_feed(character, command) {
