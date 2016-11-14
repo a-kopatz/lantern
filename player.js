@@ -432,7 +432,17 @@ playerSchema.methods.hourlyUpdate = function() {
 	
 	
 	if(this.getCaloriesConsumedToday() > global.CALORIES_TO_GAIN_ONE_POUND) {
-		this.weight = this.weight + 1;
+		
+		if(this.position >= global.POS_STANDING) {
+			this.weight = this.weight + 1;
+		}
+		else if(this.position <= global.POS_SLEEPING) {
+			this.weight = this.weight + 3;
+		}
+		else {
+			this.weight = this.weight + 2;
+		}
+		
 		this.emitMessage("You feel fatter.");
 		this.emitRoomMessage(this.name + " looks fatter.");
 		
