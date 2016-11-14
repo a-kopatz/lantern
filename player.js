@@ -79,6 +79,13 @@ playerSchema.methods.enterGame = function(world) {
 			case global.ITEM_CLOTHES:
 				this.inventory[i] = new clothes(this.inventory[i]);
 				break;
+			default:
+				this.inventory.splice(i, 1);
+				i--;
+				// This is sort of a horrible hack for the moment...
+				// Crash bugs caused by items that are not the right type of sub-class
+				// TODO: Log this because it's really a problem
+				break;
 		}
 	}
 
@@ -102,7 +109,11 @@ playerSchema.methods.enterGame = function(world) {
 			case global.ITEM_CLOTHES:
 				this.wearing[i] = new clothes(this.wearing[i]);
 				break;
-		}
+			default:
+				this.wearing[i] = null;
+				// TODO: Log this because it's really a problem
+				break;
+ 		}
 	}
 	
 };
