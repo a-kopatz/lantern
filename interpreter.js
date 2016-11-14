@@ -553,81 +553,39 @@ function do_quit(character) {
      character.world.removeCharacter(character);
 }
 
-function do_take(character, command) {
-    // Note: 'take' previously removed items from containers.  Changed to 'remove' command
-
+function do_oneObjectAction(character, command, oneArgFunction, twoArgFunction, verb) {
     if(command.tokens.length === 0) {
-        character.emitMessage("Take what?");
+        character.emitMessage(verb + " what?");
     }
     else if(command.tokens.length === 1) {
-        character.takeItem(command.tokens[0]).emit();
+        oneArgFunction.call(character, command.tokens[0]).emit();
     }
     else if(command.tokens.length === 2) {
-        character.takeItems(command.tokens[0], command.tokens[1]).emit();
+        twoArgFunction.call(character, command.tokens[0], command.tokens[1]).emit();
     }    
     else {
-        character.emitMessage('Take what?');
+        character.emitMessage(verb + " what?");
     }
+}
+
+function do_take(character, command) {
+   do_oneObjectAction(character, command, character.takeItem, character.takeItems, 'take');
 }
 
 function do_donate(character, command) {
-    if(command.tokens.length === 0) {
-        character.emitMessage("Donate what?");
-    }
-    else if(command.tokens.length === 1) {
-        character.donateItem(command.tokens[0]).emit();
-    }
-    else if(command.tokens.length === 2) {
-        character.donateItems(command.tokens[0], command.tokens[1]).emit();
-    }    
-    else {
-        character.emitMessage('Donate what?');
-    }
+   do_oneObjectAction(character, command, character.donateItem, character.donateItems, 'donate');
 }
 
 function do_drop(character, command) {
-    if(command.tokens.length === 0) {
-        character.emitMessage("Drop what?");
-    }
-    else if(command.tokens.length === 1) {
-        character.dropItem(command.tokens[0]).emit();
-    }
-    else if(command.tokens.length === 2) {
-        character.dropItems(command.tokens[0], command.tokens[1]).emit();
-    }    
-    else {
-        character.emitMessage('Drop what?');
-    }
+   do_oneObjectAction(character, command, character.dropItem, character.dropItems, 'drop');
 }
 
 function do_junk(character, command) {
-    if(command.tokens.length === 0) {
-        character.emitMessage("Junk what?");
-    }
-    else if(command.tokens.length === 1) {
-        character.junkItem(command.tokens[0]).emit();
-    }
-    else if(command.tokens.length === 2) {
-        character.junkItems(command.tokens[0], command.tokens[1]).emit();
-    }    
-    else {
-        character.emitMessage('Junk what?');
-    }
+   do_oneObjectAction(character, command, character.junkItem, character.junkItems, 'junk');
 }
 
 function do_eat(character, command) {
-    if(command.tokens.length === 0) {
-        character.emitMessage('Eat what?');
-    }
-    else if(command.tokens.length === 1) {
-        character.eatItem(command.tokens[0]).emit();
-    }
-    else if(command.tokens.length === 2) {
-        character.eatItems(command.tokens[0], command.tokens[1]).emit();
-    }
-    else {
-        character.emitMessage('Eat what?');
-    }
+   do_oneObjectAction(character, command, character.eatItem, character.eatItems, 'eat');
 }
 
 function do_taste(character, command) {
