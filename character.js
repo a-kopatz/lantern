@@ -738,7 +738,7 @@ characterSchema.methods._handleTake = function(quantity, keywordToken, itemArray
 
 	var itemMapResult = utility.buildItemMap(this, itemArray.items, null, quantity, 
 		function() { return false; }, 'take', "You can't take that!", 
-		function(item) { if(item.canBeTaken == false) { console.log('false'); return false; } return true; },
+		function(item) { if(item.canBeTaken == false) { return false; } return true; },
 		"You can't take THAT!");
 
 	if(itemMapResult.mapItems.length > 0) {
