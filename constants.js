@@ -25,7 +25,7 @@ global.DONATION_ROOM = 3063;
 global.PULSE_NPC      = 10;   // 10 real seconds
 global.PULSE_MUD_HOUR = 60;   // 60 real seconds
 
-global.HOURLY_DOLLAR_BONUS = 100;
+global.HOURLY_DOLLAR_BONUS = 10000;
 
 global.PRICE_OF_STAMP = 1;
 
