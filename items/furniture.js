@@ -24,6 +24,23 @@ furnitureSchema.methods.getDetailedDescription = function() {
 		result.push("It is in good condition.");
 	}
 	
+	if(this.using !== undefined && this.using !== null) {
+		switch(this.using.position) {
+			case global.POS_SITTING:
+				this.using.name + " is currently sitting on it.";
+				break;
+			case global.POS_RESTING:
+				this.using.name + " is currently resting on it.";
+				break;
+			case global.POS_SLEEPING:
+				this.using.name + " is currently sleeping on it.";
+				break;
+			default:
+				this.using.name + " is currently using it.";
+				break;
+		}
+	}
+	
     return result;
 };
 
