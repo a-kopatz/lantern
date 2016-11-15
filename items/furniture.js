@@ -5,26 +5,41 @@ var itemSchema = require("../item").schema;
 
 var furnitureSchema = itemSchema.extend({
     condition: Number,
-	maximumBmi: Number
+	maximumWeight: Number
 }, { collection : 'items' });
 
 furnitureSchema.methods.getType = function() {
 	return global.ITEM_FURNITURE;
 };
 
-furnitureSchema.methods.weightUpdate = function(characterName, bmi) {
+furnitureSchema.methods.getDetailedDescription = function() {
+    var result = [];
+
+	result.push(this.shortDescription + " is a piece of furniture that can be sat or rested on.");  
+	
+	if(this.condition === 1) {
+		result.push("It is broken.  Somebody must have exceeded its weight limit.");
+	}
+	else {
+		result.push("It is in good condition.");
+	}
+	
+    return result;
+};
+
+furnitureSchema.methods.weightUpdate = function(characterName, characterWeight) {
 	var result = [];
 
-	if(bmi >= this.maximumBmi) {
+	if(characterWeight >= this.maximumWeight) {
 		result[0] = this.shortDescription + " explodes under your weight and is ruined.";
 		result[1] = this.shortDescription + " explodes under " + characterName + "'s weight and is ruined.";
 		this.condition = 1;
 	}
-	else if(bmi === this.maximumBmi - 1) {
+	else if(characterWeight >= this.maximumWeight - 10) {
 		result[0] = this.shortDescription + " creaks loudly under your mass.";
 		result[1] = this.shortDescription + " creaks loudly under " + characterName + "'s mass.";
 	}
-	else if(bmi === this.maximumBmi - 2) {
+	else if(characterWeight >= this.maximumWeight - 20) {
 		result[0] = this.shortDescription + " creaks under your weight.";
 		result[1] = this.shortDescription + " creaks under " + characterName + "'s weight.";
 	}

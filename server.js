@@ -143,6 +143,7 @@ setInterval(hourElapsed, global.PULSE_MUD_HOUR * 1000);
 setInterval(npcActivity, global.PULSE_NPC * 1000);
 
 io.sockets.on("connection", function(socket) {
+    socket.disconnectTimer = 0;
     sockets.push(socket);
     console.log("A new user connected! Socket count:" + sockets.length);
     socket.player = null;
@@ -165,6 +166,8 @@ io.sockets.on("connection", function(socket) {
     });
     
     function handleSocketMessage(message) {
+        socket.disconnectTimer = 0;
+
         switch(socket.connectionState) {
             case global.CON_PLAYING:
                 
@@ -270,6 +273,7 @@ io.sockets.on("connection", function(socket) {
                     
                             emitMessage("You take over your own body, already in use!", "Yellow");
                             socket.player = sockets[i].player;
+                            socket.player.disconnectTimer = 0;
                             sockets[i].disconnect();
                             
                             socket.connectionState = global.CON_PLAYING;
@@ -415,6 +419,23 @@ function servicePlayerCommandQueues() {
 
 function hourElapsed() {
     gameWorld.hourElapsed();
+    
+    for(var i = 0; i < gameWorld.players.length; i++) {
+        if(gameWorld.players[i].socket.disconnected === true) {
+            gameWorld.players[i].disconnectTimer = gameWorld.players[i].disconnectTimer + 1;
+
+            if(gameWorld.players[i].socketDisconnectTimer >= 5) {
+                // gameWorld.players[i].emitMessage(gameWorld.players[i] + " has been linkless for too long and extracted from the game!");
+                // gameWorld.players[i].room.removeCharacter(gameWorld.players[i]);
+                // gameWorld.players[i].world.removeCharacter(gameWorld.players[i]);
+                console.log(gameWorld.players[i].name + " would be extracted now because it's been more than 5");
+                console.log("but I suck and there's a horrible bug here somewhere.");
+            }
+        }
+        else {
+            gameWorld.players[i].socketDisconnectTimer = 0;
+        }
+    }
 }
 
 function npcActivity() {

@@ -251,7 +251,36 @@ roomSchema.methods.showRoomToCharacter = function(character) {
  	for (var i = 0; i < this.players.length; i++) {
  		if (this.players[i] !== character) {
  			// TODO: if character.canSee(this.players[i])
- 			output.toActor.push( { text: this.players[i].getDescription() + " is here.", color: "Orange" } );
+ 			
+ 			switch(this.players[i].position) {
+ 				case global.POS_SITTING:
+ 					if(this.players[i].using === undefined || this.players[i].using === null) {
+ 						output.toActor.push( { text: this.players[i].getDescription() + " is sitting on the floor here.", color: "Orange" } );
+ 					}
+ 					else {
+ 						output.toActor.push( { text: this.players[i].getDescription() + " is sitting on " + this.players[i].using.shortDescription + ".", color: "Orange" } );
+ 					}
+ 					break;
+ 				case global.POS_RESTING:
+ 					if(this.players[i].using === undefined || this.players[i].using === null) {
+ 						output.toActor.push( { text: this.players[i].getDescription() + " is resting on the floor here.", color: "Orange" } );
+ 					}
+ 					else {
+ 						output.toActor.push( { text: this.players[i].getDescription() + " is resting on " + this.players[i].using.shortDescription + ".", color: "Orange" } );
+ 					}
+ 					break;
+ 				case global.POS_SLEEPING:
+ 					if(this.players[i].using === undefined || this.players[i].using === null) {
+ 						output.toActor.push( { text: this.players[i].getDescription() + " is sleeping on the floor here.", color: "Orange" } );
+ 					}
+ 					else {
+ 						output.toActor.push( { text: this.players[i].getDescription() + " is sleeping on " + this.players[i].using.shortDescription + ".", color: "Orange" } );
+ 					}
+ 					break;
+ 				default:
+ 					output.toActor.push( { text: this.players[i].getDescription() + " is here.", color: "Orange" } );
+ 					break;
+ 			}
  		}
  	}
  	
