@@ -293,12 +293,12 @@ characterSchema.methods.sitRestSleepOnFurniture = function(keyword, verb, ending
 	}
 	
 	if((result.items[0] instanceof Furniture) === false) {
-		output.toActor.push ( { text: result.items[0] + " -- you can't " + verb + " on that!" } );
+		output.toActor.push ( { text: result.items[0].shortDescription + " -- you can't " + verb + " on that!" } );
 		return output;
 	}
 
 	if(result.items[0].condition === 1) {
-		output.toActor.push ( { text: result.items[0] + " -- it's broken!" } );
+		output.toActor.push ( { text: result.items[0].shortDescription + " -- it's broken!" } );
 		return output;
 	}
 
