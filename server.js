@@ -422,14 +422,31 @@ function hourElapsed() {
     
     for(var i = 0; i < gameWorld.players.length; i++) {
         if(gameWorld.players[i].socket.disconnected === true) {
-            gameWorld.players[i].disconnectTimer = gameWorld.players[i].disconnectTimer + 1;
+            console.log('found linkless player');
+            
+            if(gameWorld.players[i].disconnectTimer === undefined || gameWorld.players[i].disconnectTimer === null) {
+                gameWorld.players[i].disconnectTimer = 1;
+            }
+            else {
+                gameWorld.players[i].disconnectTimer = gameWorld.players[i].disconnectTimer + 1;
+            }
 
-            if(gameWorld.players[i].socketDisconnectTimer >= 5) {
-                // gameWorld.players[i].emitMessage(gameWorld.players[i] + " has been linkless for too long and extracted from the game!");
-                // gameWorld.players[i].room.removeCharacter(gameWorld.players[i]);
-                // gameWorld.players[i].world.removeCharacter(gameWorld.players[i]);
-                console.log(gameWorld.players[i].name + " would be extracted now because it's been more than 5");
-                console.log("but I suck and there's a horrible bug here somewhere.");
+            console.log('found linkless player and disconnectTimer is now: ' + gameWorld.players[i].disconnectTimer);
+
+            if(gameWorld.players[i].disconnectTimer >= 2) {
+
+                if (gameWorld.players[i].using !== undefined && gameWorld.players[i].using !== null) {
+                    // Free up any furniture in use
+                    gameWorld.players[i].using.using = null;
+                }
+                
+                gameWorld.players[i].emitMessage(gameWorld.players[i] + " has been linkless for too long and extracted from the game!");
+                gameWorld.players[i].room.removeCharacter(gameWorld.players[i]);
+                gameWorld.players[i].world.removeCharacter(gameWorld.players[i]);
+
+                
+                // console.log(gameWorld.players[i].name + " would be extracted now because it's been more than 5");
+                // console.log("but I suck and there's a horrible bug here somewhere.");
             }
         }
         else {

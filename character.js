@@ -306,7 +306,7 @@ characterSchema.methods.sitRestSleepOnFurniture = function(keyword, verb, ending
 	output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME " + verb + "s on " + result.items[0].shortDescription + "." } );
 	this.position = endingPosition;
 	
-	if(this.getBMI() > result.items[0].maximumBmi) {
+	if(this.weight > result.items[0].maximumWeight) {
 		output.toActor.push( { text: result.items[0].shortDescription + " shudders under your weight is and immediately crushed." } );
 		output.toRoom.push( { roomId: this.room.id, text: result.items[0].shortDescription + " shudders under ACTOR_NAME and is immediately crushed." } );
 		result.items[0].condition = 1;
