@@ -15,7 +15,10 @@ exports.scale_weighsCharacter = function(test) {
     scale.shortDescription = "a scale";
     room.contents.push(scale);
 
-    var result = scale.weighCharacter(actor);
+    var command = { };
+    command.item = scale;
+
+    var result = scale.weighCharacter(actor, command);
 
     test.equal(result.toActor[0].text, 'You climb onto the scale.');
     test.equal(result.toActor[1].text, "a scale announces, 'You weigh 244 pounds.'");

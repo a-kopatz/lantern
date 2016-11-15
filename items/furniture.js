@@ -15,19 +15,21 @@ furnitureSchema.methods.getType = function() {
 furnitureSchema.methods.weightUpdate = function(characterName, bmi) {
 	var result = [];
 
-	if(bmi > this.maximumBmi) {
+	if(bmi >= this.maximumBmi) {
 		result[0] = this.shortDescription + " explodes under your weight and is ruined.";
 		result[1] = this.shortDescription + " explodes under " + characterName + "'s weight and is ruined.";
 		this.condition = 1;
 	}
-	else if(bmi > this.maximumBmi - 1) {
+	else if(bmi === this.maximumBmi - 1) {
 		result[0] = this.shortDescription + " creaks loudly under your mass.";
 		result[1] = this.shortDescription + " creaks loudly under " + characterName + "'s mass.";
 	}
-	else if(bmi > this.maximumBmi - 2) {
+	else if(bmi === this.maximumBmi - 2) {
 		result[0] = this.shortDescription + " creaks under your weight.";
 		result[1] = this.shortDescription + " creaks under " + characterName + "'s weight.";
 	}
+	
+	return result;
 };
 
 
