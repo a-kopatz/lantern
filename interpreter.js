@@ -906,7 +906,7 @@ function do_help(character, command) {
     if(command.tokens.length < 1) {
         character.emitMessage("The following commands are available: ");
         
-        // TODO: Generalize this, maybe?
+        // TODO: Generalize this, maybe?  Like a 'make into pretty columns' command?
         var output = '';
         for(var i = 1; i <= COMMAND_LIST.length; i++) {
             output = output + utility.getPaddedWord(COMMAND_LIST[i - 1].command, 19);
@@ -927,13 +927,15 @@ function do_help(character, command) {
                 character.emitMessage('No help is available on that topic.');
             }
             else {
-                character.emitMessage(helpdocsFromDb[0].topic.toUpperCase());
+                console.log(helpdocsFromDb);
+                
+                character.emitMessage(helpdocsFromDb[0].topic.toUpperCase(), 'Yellow');
                 character.emitMessage('------------------------------------------------------------------------------');
-                character.emitMessage(helpdocsFromDb[0].value);
+                character.emitMessage(utility.getFormattedLongString(helpdocsFromDb[0].value, false));
                 
                 if(helpdocsFromDb[0].seeAlso !== null && helpdocsFromDb[0].seeAlso !== undefined) {
-                    var seeAlso = 'See Also: ' + helpdocsFromDb[0].seeAlso.join();
-                    character.emitMessage(seeAlso);
+                    var seeAlso = 'See Also: ' + helpdocsFromDb[0].seeAlso.join(', ');
+                    character.emitMessage(seeAlso, 'Yellow');
                 }
             }
         });

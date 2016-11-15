@@ -10,8 +10,8 @@ var helpdocSchema = new schema({
 function display(argument, callback) {
     console.log(argument);
     
-	helpdocModel.find({ }, function(err, docs) {
-	    console.log(docs);
+	helpdocModel.find( { "topic":argument }, function(err, docs) {
+	 //   console.log(docs);
 		console.log(err);
 		callback(docs);
 	});
