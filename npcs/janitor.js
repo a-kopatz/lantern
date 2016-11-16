@@ -3,7 +3,7 @@ var schema = mongoose.Schema;
 var extend = require('mongoose-schema-extend');
 var npcSchema = require("../npc").schema;
 var Output = require("../output");
-var utility = require("./utility");
+var utility = require("../utility");
 
 var janitorSchema = npcSchema.extend({
 }, { collection : 'npcs' });
@@ -29,13 +29,16 @@ janitorSchema.methods.performActivity = function(randomNumber) {
 	        this.move("d");
 	        break;
 	   default:
-	        var randomItem = utility.randomNumber(0, this.room.contents.length - 1);
-	        this.takeItem(randomItem.keywords[0]);
+	        // var randomItem = utility.randomNumber(0, this.room.contents.length - 1);
 	        
-	        for(var i = 0; i < this.inventory.length; i++) {
-	            this.emitRoomMessage(this.name + " shreds " + this.inventory[i].shortDescription + " into a million pieces.");
-	            this.world.removeItem(this.inventory[i]);
-	        }
+	        // if(randomItem !== null) {
+		       // this.takeItem(randomItem.keywords[0]);
+		        
+		       // for(var i = 0; i < this.inventory.length; i++) {
+		       //     this.emitRoomMessage(this.name + " shreds " + this.inventory[i].shortDescription + " into a million pieces.");
+		       //     this.world.removeItem(this.inventory[i]);
+		       // }
+	        // }
 
             this.inventory = [];
 	        break;

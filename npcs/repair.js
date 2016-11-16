@@ -3,7 +3,7 @@ var schema = mongoose.Schema;
 var extend = require('mongoose-schema-extend');
 var npcSchema = require("../npc").schema;
 var Output = require("../output");
-var utility = require("./utility");
+var utility = require("../utility");
 var Furniture = require('../items/furniture').furniture;
 
 var repairSchema = npcSchema.extend({
@@ -35,7 +35,7 @@ repairSchema.methods.performActivity = function(randomNumber) {
 	                // TODO: Change to global constant
 	                if(this.room.contents[i].condition === 1) {
 	                    this.room.contents[i].condition = 0;
-	                    this.emitRoomMessage(this.name + " fixes " + this.room.contents[0] + ".");
+	                    this.emitRoomMessage(this.name + " fixes " + this.room.contents[0].shortDescription + ".");
 	                }
 	            }
 	        }
