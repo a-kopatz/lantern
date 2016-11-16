@@ -895,7 +895,7 @@ characterSchema.methods._handleEat = function(quantity, keywordToken, itemArray)
 
     for(var i = 0; i < itemMapResult.mapItems.length; i++) {
 		if(!this.isNpc()) {
-            this.caloriesConsumed[0] = this.caloriesConsumed[0] + itemArray.items[i].calories;
+            this.caloriesConsumed[0] = this.caloriesConsumed[0] + itemMapResult.mapItems[i].calories;
         }
         
         this.inventory.splice(this.inventory.indexOf(itemMapResult.mapItems[i]), 1);

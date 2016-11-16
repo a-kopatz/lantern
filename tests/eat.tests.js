@@ -2,6 +2,8 @@ var Character = require("../character").character;
 var Room = require("../room").room;
 var Food = require('../items/food').food;
 var World = require('../world');
+var Shirt = require("../items/shirt").shirt;
+var Furniture = require("../items/furniture").furniture;
 
 exports.character_eatItemsReturnsErrorWhenNaN = function(test) {
     var actor = new Character();
@@ -193,5 +195,57 @@ exports.character_eatStopsWhenPlayerIsFull = function(test) {
     
     test.equal(actual.toActor[1].text, "Your stomach can't hold any more!!!");
     test.equal(actor.inventory.length, 8);
+    test.done();
+};
+
+exports.character_eatAllEatsFoodOnly = function(test) {
+    var actor = new Character();
+    actor.caloriesConsumed = [ 0, 0, 0 ];
+    actor.name = "Melanie";
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+
+    var myWorld = new World();
+    myWorld.addCharacter(actor);
+    
+    var shirt = new Shirt();
+    shirt.id = 99;
+    shirt.keywords.push("shirt");
+    shirt.shortDescription = "a shirt";
+    shirt.pluralDescription = "shirts";
+    actor.inventory.push(shirt);
+    myWorld.addItem(shirt);
+        
+    for(var i = 0; i < 3; i++) {
+        var donut = new Food();
+        donut.id = 1;
+        donut.keywords.push("donut");
+        donut.shortDescription = "a vanilla donut";
+        donut.pluralDescription = "vanilla donuts";
+        donut.calories = 10;
+        actor.inventory.push(donut);
+        myWorld.addItem(donut);
+    }
+    
+    var chair = new Furniture();
+    chair.id = 2;
+    chair.keywords.push("chair");
+    chair.shortDescription = "a chair";
+    chair.pluralDescription = "chairs";
+    actor.inventory.push(chair);
+    myWorld.addItem(chair);
+    
+    var actual = actor.eatItem('all');
+
+    test.equal(actual.toActor[0].text.slice(-18), " 3 vanilla donuts.");
+    test.equal(actual.toRoom[0].text.slice(-18), " 3 vanilla donuts.");
+    test.equal(actual.toActor[1].text, "a shirt -- You can't eat that!");
+    test.equal(actual.toActor[2].text, "a chair -- You can't eat that!");
+
+    test.equal(actor.caloriesConsumed[0], 30);
+    test.equal(actor.caloriesConsumed.length, 3);
+    test.equal(actor.inventory.length, 2);
     test.done();
 };
