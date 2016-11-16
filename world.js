@@ -1,5 +1,6 @@
 var constants = require('./constants');
 var arrayExtensions = require('./arrayExtensions');
+var utility = require('./utility');
 
 // Object constructor
 function World() {
@@ -175,7 +176,7 @@ World.prototype.getPlayer = function(name) {
 
 World.prototype.updateNPCs = function() {
 	for(var i = 0; i < this.npcs.length; i++) {
- 		this.npcs[i].performActivity();
+ 		this.npcs[i].performActivity(utility.randomNumber(1, 10));
 	}
 };
 

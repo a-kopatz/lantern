@@ -40,6 +40,7 @@ var scale = require('./items/scale');
 var npc = require('./npc');
 var postmaster = require('./npcs/postmaster');
 var cat = require('./npcs/cat');
+var janitor = require('./npcs/janitor');
 var shopkeeper = require('./npcs/shopkeeper');
 
 // -----
