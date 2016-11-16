@@ -480,9 +480,12 @@ var introMessage = "Welcome to Lantern.\n\rBy what name do you wish to be known?
 var motd = "This is the message of the day.\n\rWe are under construction.  Pardon about the dust.\n\rThe game itself is highly unstable, so apologies in advance!\n\r*** PRESS RETURN: ";
 var menu = "Welcome to Lantern!\n\r0) Exit from Lantern.\n\r1) Enter the game.\n\r2) Get Help!\n\r  Make a choice: ";
 var welcomeMessage = "\r\nWelcome to Lantern!  May your visit here be... Interesting.\r\n\r\n";
-var menuHelp = "Write something smart here.\n\r";
+var menuHelp = "In the late 21st century, humans have created a perfect world where nobody needs to work, nobody gets old, and all health risks from obesity have been eliminated.  " +
+    "People are free to pursue leisure activities, and most people have found gluttony to be their favorite passtime.  " +
+    "Fortunately, you've arrived at a wonderful resort on your 18th birthday to being your life's adventure.\n\r";
 var consentMessage = "\r\nThis is an adult-themed game.  As such, it includes mature subject matter that is inappropriate for children.  " +
     "By typing the word CONSENT at the prompt, you are indicating that you are an adult (18 years or older).  " +
-    "And you are indicating that you understand this statement and shall not hold the administrators or creators of the game liable for any and all things that you see or are exposed to during gameplay.";
+    "And you are indicating that you understand this statement and shall not hold the administrators or creators of the game liable for any and all things that you see or are exposed to during gameplay.\n\r" +
+    "Type CONSENT to indicate that you agree to these terms: ";
 
 exports.setConnectionModeMenu = setConnectionModeMenu;
