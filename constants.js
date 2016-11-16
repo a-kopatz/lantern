@@ -31,6 +31,8 @@ global.PRICE_OF_STAMP = 1;
 
 global.CALORIES_TO_GAIN_ONE_POUND = 5000;
 
+global.MAX_INVENTORY_LENGTH = 30;
+
 global.SCMD_NORTH	= "N";
 global.SCMD_EAST	= "E";
 global.SCMD_SOUTH	= "S";

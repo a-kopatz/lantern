@@ -114,7 +114,6 @@ exports.character_takeItemTakesItemFromRoom = function(test) {
     test.done();
 };
 
-
 exports.character_takeItemTakesAllFromRoom = function(test) {
     var actor = new Character();
     actor.name = 'Jim';
@@ -166,6 +165,35 @@ exports.character_takeItemTakesAllFromRoom = function(test) {
     test.done();
 };
 
+exports.character_takeAllFromRoomStopsWhenArmsAreFull = function(test) {
+    var actor = new Character();
+    actor.name = 'Jim';
+    actor.inventory = [];
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    for(var i = 0; i < 50; i++) {
+        var gloves = new Item();
+        gloves.id = 1;
+        gloves.keywords.push("gloves");
+        gloves.shortDescription = "a pair of gloves";
+        gloves.pluralDescription = "pair of gloves";
+        gloves.canBeTaken = true;
+        room.addItem(gloves);
+    }
+
+    var actual = actor.takeItem('all');
+    
+    test.equal(actual.toActor[0].text, "You take 30 pair of gloves.");
+    test.equal(actual.toActor[1].text, "a pair of gloves -- You can't hold any more items!");
+    test.equal(actual.toRoom[0].text, "Jim takes 30 pair of gloves.");
+    test.equal(actual.toRoom[0].roomId, 3001);
+    test.equal(actor.inventory.length, 30);
+    test.equal(room.contents.length, 20);
+    test.done();
+};
 
 
 

@@ -55,6 +55,7 @@ vendingmachineSchema.methods.buyItem = function(character, command) {
 
 	if(target.items.length > 0) {
 		var targetItem = target.items[0];
+		var inventoryOverflow = false;
 		
 		if((targetItem.cost * quantity) > character.money) {
 			if(quantity === 1) {
@@ -66,14 +67,27 @@ vendingmachineSchema.methods.buyItem = function(character, command) {
 				return output;
 			}
 		}
+		else if(character.inventory.length >= global.MAX_INVENTORY_LENGTH) {
+			output.toActor.push( { text: "You can't carry any more items!" } );
+			return output;
+		}
 		else {
 			if(quantity === 1) {
-				output.toActor.push( { text: "You buy " + targetItem.shortDescription+ " from " + command.item.shortDescription + "."} );
+				output.toActor.push( { text: "You buy " + targetItem.shortDescription + " from " + command.item.shortDescription + "."} );
 				output.toRoom.push( { roomId: character.room.id, text: character.name + " buys " + targetItem.shortDescription + " from " + command.item.shortDescription + "." } );
 			}
 			else {
+				if(quantity > global.MAX_INVENTORY_LENGTH - character.inventory.length) {
+					quantity = global.MAX_INVENTORY_LENGTH - character.inventory.length;
+					inventoryOverflow = true;
+				}
+				
 				output.toActor.push( { text: "You buy " + quantity + " " + targetItem.pluralDescription + " from " + command.item.shortDescription + "." } );
 				output.toRoom.push( { roomId: character.room.id, text: character.name + " buys " + quantity + " " + targetItem.pluralDescription + " from " + command.item.shortDescription + "." } );
+
+				if(inventoryOverflow === true) {
+					output.toActor.push( { text: targetItem.shortDescription + " -- You can't carry any more items!" } );
+				}
 			}
 			
 			character.money = character.money - (targetItem.cost * quantity);

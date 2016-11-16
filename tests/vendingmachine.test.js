@@ -76,6 +76,7 @@ exports.buyFromVendingMachineBuysMultipleItems = function(test) {
     var myCharacter = new Character();
     myCharacter.name = "Jo";
     myCharacter.money = 500;
+    myCharacter.inventory = [];
 
     var room = new Room();
     room.addCharacter(myCharacter);
@@ -171,4 +172,38 @@ exports.buyBlocksPurchseWhenNotEnoughMoneyForMultiple = function(test) {
 	test.done();
 };
 
+exports.buyPreventsInventoryFromGettingTooLarge = function(test) {
+    var myCharacter = new Character();
+    myCharacter.name = "Jo";
+    myCharacter.money = 50000;
+
+    var room = new Room();
+    room.addCharacter(myCharacter);
+
+    var vendingmachine = new VendingMachine();
+    vendingmachine.shortDescription = "a vending machine";
+
+    var donut = new Food();
+    donut.keywords.push("donut");
+    donut.shortDescription = "a donut";
+    donut.pluralDescription = "donuts";
+    donut.cost = 1;
+    vendingmachine.contents.push(donut);
+
+    var command = {};
+    command.tokens = [];
+    command.tokens.push('buy');
+    command.tokens.push('5000');
+    command.tokens.push('donut');
+    command.item = vendingmachine;
+
+    var result = vendingmachine.buyItem(myCharacter, command);
+
+    test.equal(result.toActor[0].text, "You buy 30 donuts from a vending machine.");
+    test.equal(result.toRoom[0].text, "Jo buys 30 donuts from a vending machine.");
+    test.equal(result.toActor[1].text, "a donut -- You can't carry any more items!");
+    test.equal(myCharacter.inventory.length, 30);
+    test.equal(myCharacter.money, 49970);
+	test.done();
+};
 

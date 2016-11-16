@@ -370,7 +370,7 @@ function wearMessage(location) {
 	return messages;
 }
 
-function buildItemMap(character, itemArray, itemType, quantity, breakCondition, verb, notRightTypeMessage, isVerbAllowed, verbNotAllowedMessage) {
+function buildItemMap(character, itemArray, itemType, quantity, breakCondition, verb, notRightTypeMessage, isVerbAllowed, verbNotAllowedMessage, maxNumberOfItems, exceedsMaxNumberMessage) {
 	var itemMap = new Map();
     var brokenLoop = false;
 	var errorMessages = [];
@@ -389,6 +389,11 @@ function buildItemMap(character, itemArray, itemType, quantity, breakCondition, 
     	}
     	else {
     		if(breakCondition(character, mapItems) === true) {
+    			brokenLoop = true;
+    			break;
+    		}
+    		else if(mapItems.length === maxNumberOfItems) {
+    			errorMessages.push(itemArray[i].shortDescription + " -- " + exceedsMaxNumberMessage);
     			brokenLoop = true;
     			break;
     		}
