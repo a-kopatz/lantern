@@ -1131,12 +1131,12 @@ characterSchema.methods.drinkFromObject = function(object) {
 	var messages = [];
 
 	var drink = global.DRINKS[object.containsLiquid];
-	var thirstAffect = drink.thirst;
-	var drunkAffect = drink.drunkness;
+	// var thirstAffect = drink.thirst;
+	// var drunkAffect = drink.drunkness;
 
-	messages.push(this.emitMessage("You drink the " + drink.name + "."));
-	messages.push(this.emitRoomMessage("ACTOR_NAME drinks " + drink.name + " from FIRST_OBJECT_SHORTDESC."));
-	var amount = 8;
+	messages.push("You drink the " + drink.name + ".");
+	messages.push("ACTOR_NAME drinks " + drink.name + " from FIRST_OBJECT_SHORTDESC.");
+	// var amount = 8;
 
 	// else if(mode === global.SCMD_SIP) {
 	// 	messages.push(this.emitMessage("It tastes like " + drink.name + "."));
@@ -1152,7 +1152,7 @@ characterSchema.methods.drinkFromObject = function(object) {
 	// 	}
 	// }
 
-	object.quantity = Math.max(0, (object.quantity - amount));
+	// object.quantity = Math.max(0, (object.quantity - amount));
 
 	// if(!this.isNpc()) {
 	// 	if(this.thirst < 20 && this.thirst + thirstAffect > 20) {
