@@ -151,7 +151,7 @@ var COMMAND_LIST = [
           { command: "punch"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_PUNCH },
           { command: "purr"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_PURR },
 
-          { command: "quit"     , minimumPosition: global.POS_STANDING, functionPointer: do_quit       , minimumLevel: 0, subCommand: 0 },
+          { command: "quit"     , minimumPosition: global.POS_DEAD    , functionPointer: do_quit       , minimumLevel: 0, subCommand: 0 },
 
           { command: "read"     , minimumPosition: global.POS_RESTING , functionPointer: do_read       , minimumLevel: 0, subCommand: 0 },
 //           { command: "rescue"   , minimumPosition: global.POS_STANDING, functionPointer: do_rescue     , minimumLevel: 0, subCommand: 0 },
