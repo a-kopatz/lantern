@@ -16,6 +16,7 @@ var exitSchema = new schema({
 	isLockable: Boolean,
 	isLocked: Boolean,
 	isPickproof: Boolean,
+	bmiLimit: Number,
 	toRoomId: Number
 });
 

@@ -188,6 +188,14 @@ characterSchema.methods.move = function(direction) {
 		if(newRoom.mobsAllowed === false && this.isNpc() === true) {
 			return output;
 		}
+		
+		if(this.isNpc() === false && exit.bmiLimit !== undefined && exit.bmiLimit !== null) {
+			if(this.getBMI() > exit.bmiLimit) {
+				output.toActor.push( { text: "You're too fat to fit through the door!" } );
+				output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME tries to go " + global.getDirection(direction) + "but is too fat to fit through the door!" } );
+				return output;
+			}
+		}
 
 		output = newRoom.showRoomToCharacter(this);
 		output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME leaves " + global.getDirection(direction) + "." } );
