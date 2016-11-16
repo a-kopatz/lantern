@@ -127,15 +127,16 @@ var COMMAND_LIST = [
           { command: "massage"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_MASSAGE },
           { command: "moan"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_MOAN },
 
-          { command: "nibble"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NIBBLE },
-          { command: "nod"      , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NOD },
-          { command: "nudge"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NUDGE },
-          { command: "nuzzle"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NUZZLE },
-          { command: "noauction", minimumPosition: global.POS_DEAD    , functionPointer: do_tog_auction, minimumLevel: 0, subCommand: 0 },
-          { command: "nogossip" , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_gossip , minimumLevel: 0, subCommand: 0 },
-          { command: "nogratz"  , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_gratz  , minimumLevel: 0, subCommand: 0 },
-          { command: "noholler" , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_holler , minimumLevel: 0, subCommand: 0 },
-          { command: "noshout"  , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_shout  , minimumLevel: 0, subCommand: 0 },
+          { command: "nibble"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NIBBLE },
+          { command: "nod"       , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NOD },
+          { command: "nudge"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NUDGE },
+          { command: "nuzzle"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NUZZLE },
+          { command: "noauction" , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_auction, minimumLevel: 0, subCommand: 0 },
+          { command: "nogossip"  , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_gossip , minimumLevel: 0, subCommand: 0 },
+          { command: "nogratz"   , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_gratz  , minimumLevel: 0, subCommand: 0 },
+          { command: "noholler"  , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_holler , minimumLevel: 0, subCommand: 0 },
+          { command: "noshout"   , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_shout  , minimumLevel: 0, subCommand: 0 },
+          { command: "noimmobile", minimumPosition: global.POS_DEAD    , functionPointer: do_tog_immobility, minimumLevel: 0, subCommand: 0 },
 //           { command: "notell"   , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_tell   , minimumLevel: 0, subCommand: 0 },
 
           { command: "open"     , minimumPosition: global.POS_RESTING , functionPointer: do_open_door  , minimumLevel: 0, subCommand: 0 },
@@ -463,6 +464,23 @@ function do_say(character, command) {
 
 function do_gen_comm(character, command) {
     character.generalCommunication(command.subCommand, command.subInput.trim()).emit();
+}
+
+function do_tog_immobility(character, command) {
+    if(command.tokens.length > 0) {
+        if(command.tokens[0].toLowerCase().trim() === "on") {
+            character.toggleImmobility(true).emit();
+        }
+        else if(command.tokens[0].toLowerCase().trim() === "off") {
+            character.toggleImmobility(false).emit();
+        }
+        else {
+            character.toggleImmobility().emit();
+        }
+    }
+    else {
+        character.toggleImmobility().emit();
+    }
 }
 
 function do_tog_auction(character, command) {

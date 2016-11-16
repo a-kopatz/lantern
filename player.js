@@ -36,6 +36,7 @@ var playerSchema = characterSchema.extend({
 	isNoGratz: Boolean,
 	isNoQuest: Boolean,
 	isNoTell: Boolean,
+	isNoImmobility: Boolean,
 	blocked: [ String ]
 });
 
@@ -135,6 +136,7 @@ playerSchema.methods.start = function() {
 	this.isNoGratz = false;
 	this.isNoQuest = false;
 	this.isNoTell = false;
+	this.isNoImmobility = false;
 	
 	this.maximumFullness = 1200;
 	this.caloriesConsumed = [ 0,0,0,0,0,0,0,0,0,0 ];
@@ -285,6 +287,21 @@ playerSchema.methods.toggleShout = function(mode) {
 	}
 	
 	return output;
+};
+
+playerSchema.methods.toggleImmobility = function(mode) {
+	var output = new Output(this);
+	
+	this.isNoImmobility = this.toggle(mode, this.isNoImmobility);
+	
+	if(this.isNoImmobility === false) {
+		output.toActor.push( { text: "You are now affected by mobility limits." } );
+	}
+	else {
+		output.toActor.push( { text: "You are now immune from weight-affected mobility limits." } );
+	}
+	
+	return output;	
 };
 
 playerSchema.methods.listInventory = function() {

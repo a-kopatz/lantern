@@ -194,9 +194,15 @@ characterSchema.methods.move = function(direction) {
 		if(this.isNpc() === false && exit.bmiLimit !== undefined && exit.bmiLimit !== null) {
 			if(this.getBMI() > exit.bmiLimit) {
 				output.toActor.push( { text: "You're too fat to fit through the door!" } );
-				output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME tries to go " + global.getDirection(direction) + "but is too fat to fit through the door!" } );
+				output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME tries to go " + global.getDirection(direction) + " but is too fat to fit through the door!" } );
 				return output;
 			}
+		}
+		
+		if(this.isNpc() === false && this.isNoImmobility === false && this.weight > global.WEIGHT_IMMOBILITY) {
+			output.toActor.push( { text: "You can't move under the weight of your enormous bulk!" } );
+			output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME tries to go " + global.getDirection(direction) + " but can't move under the weight of " + this.getPossessivePronoun() + " enormous bulk!" } );
+			return output;			
 		}
 
 		output = newRoom.showRoomToCharacter(this);
@@ -224,6 +230,12 @@ characterSchema.methods.emote = function(parameter) {
 
 characterSchema.methods.stand = function() {
 	var output = new Output(this);
+	
+	if(this.isNpc() === false && this.isNoImmobility === false && this.weight > global.WEIGHT_IMMOBILITY) {
+		output.toActor.push( { text: "You try to stand up, but your incredible fatness keeps you down." } );
+		output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME tries to stand up but finds " + this.getPersonalPronoun() + " is too fat!" } );
+		return output;
+	}	
 	
 	switch(this.position) {
 		case global.POS_STANDING:
