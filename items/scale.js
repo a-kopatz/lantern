@@ -5,6 +5,8 @@ var itemSchema = require("../item").schema;
 var Output = require("../output");
 
 var scaleSchema = itemSchema.extend({
+    condition: Number,
+	maximumWeight: Number
 }, { collection : 'items' });
 
 scaleSchema.methods.getType = function() {
@@ -20,11 +22,23 @@ scaleSchema.methods.getDetailedDescription = function() {
 scaleSchema.methods.weighCharacter = function(character, command) {
 	var output = new Output(character);
 	
+	if(command.item.condition === global.CONDITION_BROKEN) {
+		output.toActor.push( { text: "You can't use a scale -- it's broken." } );
+		return output;
+	}
+	
 	output.toActor.push( { text: "You climb onto the scale." } );
 	output.toRoom.push( { roomId: character.room.id, text: "ACTOR_NAME climbs onto the scale." } );
 	
-	output.toActor.push( { text: command.item.shortDescription + " announces, 'You weigh " + character.weight + " pounds.'" } );
-	output.toRoom.push( { roomId: character.room.id, text: command.item.shortDescription + " announces, 'ACTOR_NAME weighs " + character.weight + " pounds.'" } );
+	if(character.weight > command.item.maximumWeight) {
+		output.toActor.push( { text: "Springs fly out of " + command.item.shortDescription + "! You've broken it." } );
+		output.toRoom.push( { roomId: character.room.id, text: "Springs fly out of " + command.item.shortDescription + "! " + character.name + " has broken it." } );
+		command.item.condition = global.CONDITION_BROKEN;
+	}
+	else {
+		output.toActor.push( { text: command.item.shortDescription + " announces, 'You weigh " + character.weight + " pounds.'" } );
+		output.toRoom.push( { roomId: character.room.id, text: command.item.shortDescription + " announces, 'ACTOR_NAME weighs " + character.weight + " pounds.'" } );
+	}
 	
 	return output;
 };

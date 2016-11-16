@@ -10,6 +10,8 @@ var Output = require("./output");
 var Food = require('./items/food').food;
 var Item = require('./item').item;
 var Furniture = require('./items/furniture').furniture;
+var Scale = require('./items/scale').scale;
+
 
 var characterSchema = new schema({
 	name: String,
@@ -1724,6 +1726,36 @@ characterSchema.methods.readItem = function(keyword) {
 // };
 
 
+
+characterSchema.methods.repairItem = function(keyword) {
+	var output = new Output(this);
+
+	var searchable = this.inventory.concat(this.room.contents);
+	var target = searchable.findByKeyword(keyword);
+
+	if(target.items.length === 0) {
+		output.toActor.push( { text: "Repair what?!?" } );
+		return output;
+	}
+	
+ 	for(var i = 0; i < target.items.length; i++) {
+		if((target.items[i] instanceof Furniture) === true) {
+			output.toActor.push( { text: "You quickly repair " + target.items[i].shortDescription + "."} );
+			output.toRoom.push( { roomId: this.room.id, text: this.name + " quickly repair " + target.items[i].shortDescription + "."} );
+			target.items[i].condition = 0;
+		}
+		else if((target.items[i] instanceof Scale) === true) {
+			output.toActor.push( { text: "You quickly repair " + target.items[i].shortDescription + "."} );
+			output.toRoom.push( { roomId: this.room.id, text: this.name + " quickly repair " + target.items[i].shortDescription + "."} );
+			target.items[i].condition = 0;
+		}
+		else {
+			output.toActor.push ( { text: target.items[i].shortDescription + " -- you can't repair that!" } );
+		}
+	}
+	
+	return output;
+};
 
 var characterModel = mongoose.model('character', characterSchema);
 

@@ -34,6 +34,8 @@ global.CALORIES_TO_GAIN_ONE_POUND = 5000;
 
 global.MAX_INVENTORY_LENGTH = 30;
 
+global.CONDITION_BROKEN = 99;
+
 global.SCMD_NORTH	= "N";
 global.SCMD_EAST	= "E";
 global.SCMD_SOUTH	= "S";
@@ -143,9 +145,10 @@ global.ITEM_BANK = "Bank";
 global.ITEM_BULLETINBOARD = "Board";
 global.ITEM_CLOTHES = "Clothes";
 global.ITEM_SHIRT = "Shirt";
-global.ITEM_SHIRT = "Pants";
+global.ITEM_PANTS = "Pants";
 global.ITEM_SCALE = "Scale";
-
+global.ITEM_UNDERPANTS = "Underpants";
+global.ITEM_BRA = "Bra";
 
 global.MESSAGE_BUG = "Please report this using the 'bug' command.";
 global.CANNOT_DO_THAT_HERE = "Sorry, but you can't do that here.";

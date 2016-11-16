@@ -158,6 +158,7 @@ var COMMAND_LIST = [
           { command: "remove"   , minimumPosition: global.POS_RESTING , functionPointer: do_remove     , minimumLevel: 0, subCommand: 0 },
 //           { command: "rent"     , minimumPosition: global.POS_RESTING , functionPointer: do_rent       , minimumLevel: 0, subCommand: 0 },
 //           { command: "report"   , minimumPosition: global.POS_RESTING , functionPointer: do_report     , minimumLevel: 0, subCommand: 0 },
+          { command: "repair"   , minimumPosition: global.POS_RESTING , functionPointer: do_repair       , minimumLevel: 0, subCommand: 0 },
           { command: "reply"    , minimumPosition: global.POS_DEAD    , functionPointer: do_reply      , minimumLevel: 0, subCommand: 0 },
           { command: "rest"     , minimumPosition: global.POS_RESTING , functionPointer: do_rest       , minimumLevel: 0, subCommand: 0 },
           { command: "roll"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_ROLL },
@@ -694,6 +695,15 @@ function do_tell(character, command) {
 
 function do_reply(character, command) {
     character.reply(command.subInput.trim()).emit();
+}
+
+function do_repair(character, command) {
+    if(command.tokens.length === 0) {
+        character.emitMessage("Repair what?");
+    }
+    else {
+        character.repairItem(command.tokens[0]).emit();
+    }
 }
 
 function do_report_bug(character, command) {
