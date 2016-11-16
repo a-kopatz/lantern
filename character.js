@@ -397,8 +397,8 @@ characterSchema.methods.say = function(message) {
 	if(message.length < 1) {
 		output.toActor.push( { text: "Yes, but WHAT do you want to say?" } );
 	} else {
-		output.toActor.push( { text: "You say, '" + message + "'" } );
-		output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME says, '" + message + "'" } );
+		output.toActor.push( { text: "You say, '" + message + "'", color: "Cyan" } );
+		output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME says, '" + message + "'", color: "Cyan" } );
 	}
 
 	return output;
