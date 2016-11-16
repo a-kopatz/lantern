@@ -29,6 +29,9 @@ timeSchema.methods.advanceHour = function() {
 	        this.day = 1;
 	        this.month++;
 	    }
+	    else {
+	    	this.day++;
+	    }
 	}
 	else {
 	    if(this.day > 31) {
