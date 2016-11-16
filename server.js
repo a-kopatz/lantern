@@ -41,6 +41,7 @@ var npc = require('./npc');
 var postmaster = require('./npcs/postmaster');
 var cat = require('./npcs/cat');
 var janitor = require('./npcs/janitor');
+var repair = require('./npcs/repair');
 var shopkeeper = require('./npcs/shopkeeper');
 
 // -----
