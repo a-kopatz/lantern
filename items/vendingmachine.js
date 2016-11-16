@@ -120,7 +120,6 @@ vendingmachineSchema.methods.catalogItemsForSale = function(character, command) 
 		output.toActor.push( { text: "---------- -------------------------------------------------" } );
 		
 		for(var i = 0; i < command.item.contents.length; i++) {
-			output.toActor.push( { } );
 			var price = utility.getPaddedWord(command.item.contents[i].cost.toString(), 11);
 			output.toActor.push( { text: price + command.item.contents[i].shortDescription } );
 		}

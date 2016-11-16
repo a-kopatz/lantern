@@ -70,6 +70,15 @@ function executeZoneResetCommands(commands, instructionNumber, world, lastThingL
                     Item.load(givenItemId, givenItem, commands, world, lastThingLoaded, instructionNumber, afterGivenItemLoaded);
                 }
                 break;
+            case "V":
+                var vendorItem = new item();
+                var vendorItemId = parseInt(command[2], 10);
+                maxExisting = parseInt(command[3], 10);
+                
+                if(world.countItem(vendorItemId) < maxExisting) {
+                    Item.load(vendorItemId, vendorItem, commands, world, lastThingLoaded, instructionNumber, afterVendorItemLoaded);
+                }
+                break;                
             // case "E":
             //     var equippedItem = new item();
             //     var equippedItemId = parseInt(command[2], 10);
@@ -170,6 +179,25 @@ function afterGivenItemLoaded(document, item, commands, world, npc, instructionN
     
 //         mudlog.info("Giving " + item.id + " to mob " + mob.id);
         npc.inventory.push(item);
+        executeZoneResetCommands(commands, (instructionNumber + 1), world, npc);
+    }
+//     else {
+//         mudlog.warn("Undefined item load attempted - " + commands + " - " + instructionNumber);
+//     }
+}
+
+function afterVendorItemLoaded(document, item, commands, world, npc, instructionNumber) {
+    item = document[0];
+    
+    if(item !== undefined) {
+        world.addItem(item);
+    
+//         mudlog.info("Giving " + item.id + " to mob " + mob.id);
+        if(npc.sellsItems === undefined || npc.sellsItems === null) {
+            npc.sellsItems = [];
+        }
+        
+        npc.sellsItems.push(item);
         executeZoneResetCommands(commands, (instructionNumber + 1), world, npc);
     }
 //     else {
