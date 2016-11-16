@@ -6,8 +6,9 @@ global.CON_NEWPASSWD  = 5; // Give me a password for x
 global.CON_CNFPASSWD  = 6; // Please retype password:
 global.CON_QSEX       = 7; // Sex?
 global.CON_QCLASS     = 8; // Class?
-global.CON_RMOTD      = 9;
-global.CON_MENU       = 10;
+global.CON_CONSENT    = 15;
+global.CON_RMOTD      = 50;
+global.CON_MENU       = 60;
 global.CON_BLOCKED    = 999; // Input is ignored; waiting for async server process
 
 global.GENDER_NEUTRAL = 0;

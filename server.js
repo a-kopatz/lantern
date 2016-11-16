@@ -199,6 +199,9 @@ io.sockets.on("connection", function(socket) {
             case global.CON_QSEX:
                 getPlayerSex(message);
                 break;
+            case global.CON_CONSENT:
+                getPlayerConsent(message);
+                break;
             case global.CON_RMOTD:
                 setConnectionModeMenu(socket);
                 break;
@@ -330,16 +333,27 @@ io.sockets.on("connection", function(socket) {
 
         if (sexInput === 'M') {
             socket.player.gender = global.GENDER_MALE;
-            socket.connectionState = global.CON_RMOTD;
-            emitMessage(motd);
+            socket.connectionState = global.CON_CONSENT;
+            emitMessage(consentMessage);
         }
         else if (sexInput === 'F') {
             socket.player.gender = global.GENDER_FEMALE;
-            socket.connectionState = global.CON_RMOTD;
-            emitMessage(motd);
+            socket.connectionState = global.CON_CONSENT;
+            emitMessage(consentMessage);
         }
         else {
             emitMessage('That is not a sex... What IS your sex (M/F)?');
+        }
+    }
+    
+    function getPlayerConsent(message) {
+        if(message['input' !== 'CONSENT']) {
+            emitMessage('Sorry, but you have to type "consent" to agree to the terms!');
+            emitMessage(consentMessage);
+        }
+        else {
+            socket.player.connectionState = global.CON_RMOTD;
+            emitMessage(motd);
         }
     }
     
@@ -467,5 +481,8 @@ var motd = "This is the message of the day.\n\rWe are under construction.  Pardo
 var menu = "Welcome to Lantern!\n\r0) Exit from Lantern.\n\r1) Enter the game.\n\r2) Get Help!\n\r  Make a choice: ";
 var welcomeMessage = "\r\nWelcome to Lantern!  May your visit here be... Interesting.\r\n\r\n";
 var menuHelp = "Write something smart here.\n\r";
+var consentMessage = "\r\nThis is an adult-themed game.  As such, it includes mature subject matter that is inappropriate for children.  " +
+    "By typing the word CONSENT at the prompt, you are indicating that you are an adult (18 years or older).  " +
+    "And you are indicating that you understand this statement and shall not hold the administrators or creators of the game liable for any and all things that you see or are exposed to during gameplay.";
 
 exports.setConnectionModeMenu = setConnectionModeMenu;
