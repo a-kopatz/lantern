@@ -352,7 +352,7 @@ io.sockets.on("connection", function(socket) {
             emitMessage(consentMessage);
         }
         else {
-            socket.player.connectionState = global.CON_RMOTD;
+            socket.connectionState = global.CON_RMOTD;
             emitMessage(motd);
         }
     }
