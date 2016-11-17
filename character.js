@@ -1181,27 +1181,31 @@ characterSchema.methods._handleDrink = function(quantity, keywordToken, itemArra
     	if(itemMapResult.mapItems[i].quantity === 0) {
     		output.toActor.push( { text: itemMapResult.mapItems[i].shortDescription + " -- it's empty!" } );
     	}
-    	
-        var liquidIndex = itemMapResult.mapItems[i].containsLiquid;
-        
-        if(drinkArray[liquidIndex] === undefined || drinkArray[liquidIndex] === null) {
-        	drinkArray[liquidIndex] = 0;
-        }
+    	else {
+	        var liquidIndex = itemMapResult.mapItems[i].containsLiquid;
+	        
+	        if(drinkArray[liquidIndex] === undefined || drinkArray[liquidIndex] === null) {
+	        	drinkArray[liquidIndex] = 0;
+	        }
+	
+			drinkArray[liquidIndex] = drinkArray[liquidIndex] + parseInt(itemMapResult.mapItems[i].quantity, 10);
 
-		drinkArray[liquidIndex] = drinkArray[liquidIndex] + parseInt(itemMapResult.mapItems[i].quantity, 10);
-        itemMapResult.mapItems[i].quantity = 0;
+	        itemMapResult.mapItems[i].quantity = 0;
+    	}
     }
 
 	var prettyOutput = '';
 	
 	for(var i = 0; i < drinkArray.length; i++) {
-		if(drinkArray[i] !== undefined && drinkArray[i] !== null && drinkArray[i] !== 0) {
+		if(drinkArray[i] !== undefined && drinkArray[i] !== null) {
 	
 			if(prettyOutput.length > 0) {
 				prettyOutput = prettyOutput + " and";
 			}
 			
 			var drink = global.DRINKS[i];
+			
+			// TODO: change "some" based on actual quantity
 			prettyOutput = prettyOutput + " some " + drink.name;
 			
 			if(!this.isNpc()) {
@@ -1211,9 +1215,11 @@ characterSchema.methods._handleDrink = function(quantity, keywordToken, itemArra
 		}
 	}
 
+
+
 	if(prettyOutput.length > 0) {
-		output.toActor.push( { text: "You drink" + prettyOutput + "." } );
-		output.toRoom.push( { roomId: this.room.id, text: this.name + " drinks" + prettyOutput + "." } );
+		output.toActor.push( { text: "You drink" + prettyOutput + " from " + itemMapResult.output + "." } );
+		output.toRoom.push( { roomId: this.room.id, text: this.name + " drinks" + prettyOutput + " from " + itemMapResult.output + "." } );
 		
 		this.stretchStomach();
 		

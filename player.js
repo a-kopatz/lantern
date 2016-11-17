@@ -643,10 +643,10 @@ playerSchema.methods.hourlyUpdate = function() {
 			this.weight = this.weight + 1;
 		}
 		else if(this.position <= global.POS_SLEEPING) {
-			this.weight = this.weight + 2;
+			this.weight = this.weight + 3;
 		}
 		else {
-			this.weight = this.weight + 1.5;
+			this.weight = this.weight + 2;
 		}
 		
 		this.emitMessage("You feel fatter.");

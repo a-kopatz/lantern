@@ -445,7 +445,7 @@ function do_rest(character, command) {
     if(command.tokens.length === 0)
         character.rest().emit();
     else {
-        character.restOnFurniture(command.tokens[0], 'rest', global.POS_RESTING).emit();
+        character.sitRestSleepOnFurniture(command.tokens[0], 'rest', global.POS_RESTING).emit();
     }
 }
 
