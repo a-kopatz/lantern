@@ -65,7 +65,7 @@ exports.character_drinkItemDoesNotRemoveItemFromInventory = function(test) {
     var myWorld = new World();
     myWorld.addCharacter(actor);
     
-    var wineGlass = new DrinkContainer();
+    var wineGlass = new Drinkcontainer();
     wineGlass.keywords.push("wine");
     wineGlass.shortDescription = "a wine glass";
     wineGlass.containsLiquid = 2;
@@ -86,8 +86,8 @@ exports.character_drinkItemDoesNotRemoveItemFromInventory = function(test) {
 exports.character_drinkItemDoesNotRemoveItemFromInventory = function(test) {
     var actor = new Character();
     actor.name = "Jack";
-    actor.caloriesConsumed = [ 0 ];
-    actor.volumeConsumed = [ 0 ];
+    actor.caloriesConsumed = [ 0, 0, 0 ];
+    actor.volumeConsumed = [ 0, 0, 0 ];
 
     var room = new Room();
     room.id = 3001;
@@ -124,5 +124,81 @@ exports.character_drinkItemDoesNotRemoveItemFromInventory = function(test) {
     test.equal(actor.inventory[1].quantity, 0);
     test.equal(actor.caloriesConsumed[0], 96);
     test.equal(actor.volumeConsumed[0], 14);
+    test.done();
+};
+
+exports.character_drinkItemTellsActorWhenEmpty = function(test) {
+    var actor = new Character();
+    actor.name = "Jack";
+    actor.caloriesConsumed = [ 0, 0, 0 ];
+    actor.volumeConsumed = [ 0, 0, 0 ];
+
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var myWorld = new World();
+    myWorld.addCharacter(actor);
+    
+    var wineGlass = new Drinkcontainer();
+    wineGlass.id = 1;
+    wineGlass.keywords.push("wine");
+    wineGlass.shortDescription = "a wine glass";
+    wineGlass.containsLiquid = 2;
+    wineGlass.quantity = 0;
+    actor.inventory.push(wineGlass);
+    myWorld.addItem(wineGlass);
+
+    var actual = actor.drinkItem('wine');
+
+    test.equal(actual.toActor[0].text, "a wine glass -- it's empty!");
+    test.equal(actor.inventory.length, 1);
+    test.equal(actor.inventory[0].quantity, 0);
+    test.equal(actor.caloriesConsumed[0], 0);
+    test.equal(actor.volumeConsumed[0], 0);
+    test.done();
+};
+
+exports.character_drinkItemsTellsActorWhenEmpty = function(test) {
+    var actor = new Character();
+    actor.name = "Jack";
+    actor.caloriesConsumed = [ 0, 0, 0 ];
+    actor.volumeConsumed = [ 0, 0, 0 ];
+
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+    
+    var myWorld = new World();
+    myWorld.addCharacter(actor);
+    
+    var wineGlass = new Drinkcontainer();
+    wineGlass.id = 1;
+    wineGlass.keywords.push("wine");
+    wineGlass.shortDescription = "a wine glass";
+    wineGlass.containsLiquid = 2;
+    wineGlass.quantity = 0;
+    actor.inventory.push(wineGlass);
+
+    var waterJug = new Drinkcontainer();
+    waterJug.id = 2;
+    waterJug.keywords.push("water");
+    waterJug.shortDescription = "a water jug";
+    waterJug.containsLiquid = 0;
+    waterJug.quantity = 0;
+    actor.inventory.push(waterJug);
+
+    myWorld.addItem(wineGlass);
+    myWorld.addItem(waterJug);
+
+    var actual = actor.drinkItem('all');
+
+    test.equal(actual.toActor[0].text, "a wine glass -- it's empty!");
+    test.equal(actual.toActor[1].text, "a water jug -- it's empty!");
+    test.equal(actor.inventory.length, 2);
+    test.equal(actor.inventory[0].quantity, 0);
+    test.equal(actor.inventory[1].quantity, 0);
+    test.equal(actor.caloriesConsumed[0], 0);
+    test.equal(actor.volumeConsumed[0], 0);
     test.done();
 };

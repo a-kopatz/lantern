@@ -1177,6 +1177,11 @@ characterSchema.methods._handleDrink = function(quantity, keywordToken, itemArra
 	var drinkArray = [];
 	
     for(var i = 0; i < itemMapResult.mapItems.length; i++) {
+    	
+    	if(itemMapResult.mapItems[i].quantity === 0) {
+    		output.toActor.push( { text: itemMapResult.mapItems[i].shortDescription + " -- it's empty!" } );
+    	}
+    	
         var liquidIndex = itemMapResult.mapItems[i].containsLiquid;
         
         if(drinkArray[liquidIndex] === undefined || drinkArray[liquidIndex] === null) {
