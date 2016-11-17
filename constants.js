@@ -35,7 +35,7 @@ global.PRICE_OF_STAMP = 1;
 global.CALORIES_TO_GAIN_ONE_POUND = 5000;
 global.WEIGHT_IMMOBILITY = 700;
 
-global.MAX_INVENTORY_LENGTH = 30;
+global.MAX_INVENTORY_LENGTH = 50;
 
 global.CONDITION_BROKEN = 99;
 
@@ -312,22 +312,22 @@ global.WEAR_HOLD     = 17;
 // global.SCMD_SIP   = 1;
 
 global.DRINKS = [
-	{ name: "water", color: "clear", drunkness: 0, thirst: 10 },
-	{ name: "beer", color: "brown", drunkness: 3, thirst: 5 },
-	{ name: "wine", color: "clear", drunkness: 5, thirst: 5 },
-	{ name: "ale", color: "brown", drunkness: 2, thirst: 5 },
-	{ name: "dark ale", color: "dark", drunkness: 1, thirst: 5 },
-	{ name: "whisky", color: "golden", drunkness: 6, thirst: 4 },
-	{ name: "lemonade", color: "yellow", drunkness: 0, thirst: 8 },
-	{ name: "firebreather", color: "red", drunkness: 10, thirst: 0 },
-	{ name: "local speciality", color: "clear", drunkness: 3, thirst: 3 },
-	{ name: "slime mold juice", color: "light green", drunkness: 0, thirst: -8 },
-	{ name: "milk", color: "white", drunkness: 0, thirst: 6 },
-	{ name: "tea", color: "brown", drunkness: 0, thirst: 6 },
-	{ name: "coffee", color: "black", drunkness: 0, thirst: 6 },
-	{ name: "blood", color: "red", drunkness: 0, thirst: -1 },
-	{ name: "salt water", color: "clear", drunkness: 0, thirst: -4 },
-	{ name: "clear water", color: "crystal clear", drunkness: 0, thirst: 13 }
+	{ name: "water", color: "clear", drunkness: 0, calories: 0 },
+	{ name: "beer", color: "brown", drunkness: 3, calories: 12 },
+	{ name: "wine", color: "clear", drunkness: 5, calories: 24 }
+	// { name: "ale", color: "brown", drunkness: 2, thirst: 5 },
+	// { name: "dark ale", color: "dark", drunkness: 1, thirst: 5 },
+	// { name: "whisky", color: "golden", drunkness: 6, thirst: 4 },
+	// { name: "lemonade", color: "yellow", drunkness: 0, thirst: 8 },
+	// { name: "firebreather", color: "red", drunkness: 10, thirst: 0 },
+	// { name: "local speciality", color: "clear", drunkness: 3, thirst: 3 },
+	// { name: "slime mold juice", color: "light green", drunkness: 0, thirst: -8 },
+	// { name: "milk", color: "white", drunkness: 0, thirst: 6 },
+	// { name: "tea", color: "brown", drunkness: 0, thirst: 6 },
+	// { name: "coffee", color: "black", drunkness: 0, thirst: 6 },
+	// { name: "blood", color: "red", drunkness: 0, thirst: -1 },
+	// { name: "salt water", color: "clear", drunkness: 0, thirst: -4 },
+	// { name: "clear water", color: "crystal clear", drunkness: 0, thirst: 13 }
 ];
 
 // global.DRINK_NAMES = [

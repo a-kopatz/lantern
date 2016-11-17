@@ -82,7 +82,8 @@ exports.character_feedTwoItemsFeedsBoth = function(test) {
 
     var target = new Character();
     target.name = 'Tobey';
-    target.caloriesConsumed = [ 0 ];
+    target.caloriesConsumed = [ 0, 0, 0 ];
+    target.volumeConsumed = [ 0, 0, 0 ];
     
     var room = new Room();
     room.id = 3001;
@@ -116,7 +117,8 @@ exports.character_feedTwoItemsEatsBoth = function(test) {
 
     var target = new Character();
     target.name = 'Tobey';
-    target.caloriesConsumed = [ 0 ];
+    target.caloriesConsumed = [ 0, 0, 0 ];
+    target.volumeConsumed = [ 0, 0, 0 ];
     
     var room = new Room();
     room.id = 3001;
@@ -157,8 +159,9 @@ exports.character_feedTenItemsEatsAll = function(test) {
 
     var target = new Character();
     target.name = 'Tobey';
-    target.caloriesConsumed = [ 0 ];
-        
+    target.caloriesConsumed = [ 0, 0, 0 ];
+    target.volumeConsumed = [ 0, 0, 0 ];
+    
     var room = new Room();
     room.id = 3001;
     room.addCharacter(actor);
@@ -192,7 +195,8 @@ exports.character_feedFiveItemsEatsTheRightNumber = function(test) {
 
     var target = new Character();
     target.name = 'Tobey';
-    target.caloriesConsumed = [ 0 ];
+    target.caloriesConsumed = [ 0, 0, 0 ];
+    target.volumeConsumed = [ 0, 0, 0 ];
         
     var room = new Room();
     room.id = 3001;

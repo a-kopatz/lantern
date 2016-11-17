@@ -25,6 +25,7 @@ var playerSchema = characterSchema.extend({
 	// drunk: Number,
 	maximumFullness: Number,
 	caloriesConsumed: [ Number ],
+	volumeConsumed: [ Number ],
 	// fullnessLevel: Number,
 
 	title: String,
@@ -57,6 +58,13 @@ playerSchema.methods.enterGame = function(world) {
 	this.groupId = '';
 	this.followers = [];
 	
+	if(this.caloriesConsumed === undefined || this.caloriesConsumed.length === undefined || this.caloriesConsumed.length === null || this.caloriesConsumed.length < 10) {
+		this.caloriesConsumed = [ 0,0,0,0,0,0,0,0,0,0 ];
+	}
+	
+	if(this.volumeConsumed === undefined || this.volumeConsumed.length === undefined || this.volumeConsumed.length === null || this.volumeConsumed.length < 10) {
+		this.volumeConsumed = [ 0,0,0,0,0,0,0,0,0,0 ];
+	}
 	
 	// THIS SHOULDN'T BE NECESSARY
 	// TODO: Combine loops
@@ -140,6 +148,7 @@ playerSchema.methods.start = function() {
 	
 	this.maximumFullness = 1200;
 	this.caloriesConsumed = [ 0,0,0,0,0,0,0,0,0,0 ];
+	this.volumeConsumed = [ 0,0,0,0,0,0,0,0,0,0 ];
 	this.experience = 1;
 	
 	this.money = 10000;
@@ -167,7 +176,12 @@ playerSchema.methods.getDescription = function() {
 };
 
 playerSchema.methods.getFullnessIndex = function() {
-	return this.caloriesConsumed[0] / this.maximumFullness;	
+	var total = 0;
+	
+	total = total + (this.caloriesConsumed[0] * 0.8) + (this.caloriesConsumed[1] * 0.5) + (this.caloriesConsumed * 0.25);
+	total = total + (this.volumeConsumed[0] * 0.8) + (this.volumeConsumed[1] * 0.5) + (this.volumeConsumed * 0.25);
+	
+	return total / this.maximumFullness;
 };
 
 // Like when looked at... "Warrax is an awesome dude who looks, acts, and smells awesome."
@@ -176,8 +190,7 @@ playerSchema.methods.getDetailedDescription = function() {
 
 	var personalPronoun = this.getPersonalPronoun();
 	var formattedPersonalPronoun = personalPronoun.charAt(0).toUpperCase() + personalPronoun.slice(1);
-	//var fullnessIndex = this.caloriesConsumed[0] / this.maximumFullness;
-	
+
 	var description = this.name + " is a " + utility.getHeightAdjective(this.gender, this.height) + " " + utility.getGenderNoun(this.gender) + ".  " + 
 		formattedPersonalPronoun + " is " + utility.getDetailedBmiDescription(this.getBMI()) + ".  " + formattedPersonalPronoun + " appears to be " + 
 		utility.getHungerAdjective(this.getFullnessIndex()) + ".";
@@ -626,10 +639,10 @@ playerSchema.methods.hourlyUpdate = function() {
 			this.weight = this.weight + 1;
 		}
 		else if(this.position <= global.POS_SLEEPING) {
-			this.weight = this.weight + 3;
+			this.weight = this.weight + 2;
 		}
 		else {
-			this.weight = this.weight + 2;
+			this.weight = this.weight + 1.5;
 		}
 		
 		this.emitMessage("You feel fatter.");
@@ -662,6 +675,9 @@ playerSchema.methods.hourlyUpdate = function() {
 	
 	this.caloriesConsumed.pop();
 	this.caloriesConsumed.unshift(0);
+	
+	this.volumeConsumed.pop();
+	this.volumeConsumed.unshift(0);
 };
 
 playerSchema.methods.dailyUpdate = function() {

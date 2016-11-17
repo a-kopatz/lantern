@@ -834,7 +834,7 @@ characterSchema.methods._handleTake = function(quantity, keywordToken, itemArray
 };
 
 characterSchema.methods.stretchStomach = function() {
-	if(this.caloriesConsumed[0] > this.maximumFullness) {
+	if(this.caloriesConsumed[0] + this.volumeConsumed[0] > this.maximumFullness) {
 		// "Stomach stretching" by 1%
 		this.maximumFullness = Math.ceil(this.maximumFullness + (this.maximumFullness * 0.01));
 	}
@@ -890,7 +890,7 @@ function mustStopEating(character, items) {
 		total = total + items[i].calories;
 	}
 		
-	if(character.caloriesConsumed[0] + total > 4 * character.maximumFullness) {
+	if(character.caloriesConsumed[0] +  character.volumeConsumed[0] + total > 4 * character.maximumFullness) {
 		return true;
 	}
 	
@@ -911,7 +911,7 @@ characterSchema.methods._handleEat = function(quantity, keywordToken, itemArray)
     }
     
     // Sort of shitty -- only players have this concept (at the moment)
-    var beforeFullnessIndex = this.caloriesConsumed[0] / this.maximumFullness;
+    var beforeFullnessIndex = (this.caloriesConsumed[0] + this.volumeConsumed[0] ) / this.maximumFullness;
     
 	var itemMapResult = utility.buildItemMap(this, itemArray.items, Food, quantity, mustStopEating, "eat", "You can't eat that!");
 
@@ -935,7 +935,7 @@ characterSchema.methods._handleEat = function(quantity, keywordToken, itemArray)
 	
 	    this.stretchStomach();
 	
-		var afterFullnessIndex = (this.caloriesConsumed[0] / this.maximumFullness);
+		var afterFullnessIndex = (this.caloriesConsumed[0] + this.volumeConsumed[0] ) / this.maximumFullness;
 		var messages = this.getOvereatingMessages(beforeFullnessIndex, afterFullnessIndex);
 		
 		if(messages.length > 0) {
@@ -1101,8 +1101,134 @@ characterSchema.methods._handleGive = function(quantity, keywordToken, itemArray
 
 
 
+characterSchema.methods.getOverdrinkingMessages = function(beforeIndex, afterIndex) {
+	var messages = [];
 
+	if(beforeIndex < 4 && afterIndex >= 4) {
+		messages[0] = "You are bloated and ready to pop!";
+		messages[1] = this.name + " is bloated and ready to pop!";
+	}
+	else if(beforeIndex < 3 && afterIndex >= 3) {
+		messages[0] = "You are completely overfull!";
+		messages[1] =  this.name + " is completely overfull!";
+	}
+	else if(beforeIndex < 2 && afterIndex >= 2) {
+		messages[0] = "You are bloated!";
+		messages[1] = this.name + " is bloated!";
+	}
+	else if(beforeIndex < 1 && afterIndex >= 1) {
+		messages[0] = "You are full.";
+		messages[1] = this.name + " is full.";
+	}
+	
+	return messages;
+};
 
+function mustStopDrinking(character, items) {
+	var total = 0;
+
+	for(var i = 0; i < items.length; i++) {
+		total = total + items[i].quantity;
+	}
+		
+	if(character.caloriesConsumed[0] + character.volumeConsumed[0] + total > 4 * character.maximumFullness) {
+		return true;
+	}
+	
+	return false;	
+}
+
+characterSchema.methods.drinkItem = function(keyword) {
+	var result = this.inventory.findByKeyword(keyword);
+	return this._handleDrink(result.items.length, keyword, result);
+};
+
+characterSchema.methods.drinkItems = function(quantityToken, keywordToken) {
+	var quantity = parseInt(quantityToken, 10);
+	
+	if(isNaN(quantity)) {
+		var output = new Output(this);
+		output.toActor.push( { text: "Drink how many of what?!?" } );
+		return output;
+	}
+
+	var result = this.inventory.findByKeyword('all.' + keywordToken);
+	return this._handleDrink(quantity, keywordToken, result);
+};
+
+characterSchema.methods._handleDrink = function(quantity, keywordToken, itemArray) {
+	var output = new Output(this);
+	
+	if(itemArray.items.length === 0) {
+		output.toActor.push( { text: "Drink what?!?" } );
+		return output;
+	}
+
+    if(itemArray.items.length < quantity) {
+        output.toActor.push( { text: "You don't have " + quantity + " of '" + keywordToken + "'."  } );
+        return output;
+    }
+    
+    // Sort of shitty -- only players have this concept (at the moment)
+    var beforeFullnessIndex = (this.caloriesConsumed[0] + this.volumeConsumed[0]) / this.maximumFullness;
+    
+	var itemMapResult = utility.buildItemMap(this, itemArray.items, DrinkContainer, quantity, mustStopDrinking, "drink", "You can't drink from that!");
+
+	var drinkArray = [];
+	
+    for(var i = 0; i < itemMapResult.mapItems.length; i++) {
+        var liquidIndex = itemMapResult.mapItems[i].containsLiquid;
+        
+        if(drinkArray[liquidIndex] === undefined || drinkArray[liquidIndex] === null) {
+        	drinkArray[liquidIndex] = 0;
+        }
+
+		drinkArray[liquidIndex] = drinkArray[liquidIndex] + parseInt(itemMapResult.mapItems[i].quantity, 10);
+        itemMapResult.mapItems[i].quantity = 0;
+    }
+
+	var prettyOutput = '';
+	
+	for(var i = 0; i < drinkArray.length; i++) {
+		if(drinkArray[i] !== undefined && drinkArray[i] !== null && drinkArray[i] !== 0) {
+	
+			if(prettyOutput.length > 0) {
+				prettyOutput = prettyOutput + " and";
+			}
+			
+			var drink = global.DRINKS[i];
+			prettyOutput = prettyOutput + " some " + drink.name;
+			
+			if(!this.isNpc()) {
+				this.caloriesConsumed[0] = this.caloriesConsumed[0] + (drink.calories * drinkArray[i]);
+				this.volumeConsumed[0] = this.volumeConsumed[0] + drinkArray[i];
+			}
+		}
+	}
+
+	if(prettyOutput.length > 0) {
+		output.toActor.push( { text: "You drink" + prettyOutput + "." } );
+		output.toRoom.push( { roomId: this.room.id, text: this.name + " drinks" + prettyOutput + "." } );
+		
+		this.stretchStomach();
+		
+		var afterFullnessIndex = (this.caloriesConsumed[0] / this.maximumFullness);
+		var messages = this.getOverdrinkingMessages(beforeFullnessIndex, afterFullnessIndex);
+		
+		if(messages.length > 0) {
+			output.toActor.push( { text: messages[0] } );
+			output.toRoom.push( { roomId: this.room.id, text: messages[1] } );
+		} 
+	}
+	
+   if(itemMapResult.errorMessages !== undefined) {
+    	for(var i = 0; i < itemMapResult.errorMessages.length; i++) {
+    		output.toActor.push ( { text: itemMapResult.errorMessages[i] } );
+    	}
+    }
+    
+	return output;	
+};
 
 
 
@@ -1157,90 +1283,6 @@ characterSchema.methods.tasteItem = function(keyword) {
 
 
 
-characterSchema.methods.drinkFromObject = function(object) {
-	var messages = [];
-
-	var drink = global.DRINKS[object.containsLiquid];
-	// var thirstAffect = drink.thirst;
-	// var drunkAffect = drink.drunkness;
-
-	messages.push("You drink the " + drink.name + ".");
-	messages.push("ACTOR_NAME drinks " + drink.name + " from FIRST_OBJECT_SHORTDESC.");
-	// var amount = 8;
-
-	// else if(mode === global.SCMD_SIP) {
-	// 	messages.push(this.emitMessage("It tastes like " + drink.name + "."));
-	// 	messages.push(this.emitRoomMessage(this.name + " sips from " + object.shortDescription + "."));
-	// 	amount = 1;
-		
-	// 	if(thirstAffect > 0) {
-	// 		thirstAffect = 1;
-	// 	}
-
-	// 	if(drunkAffect > 0) {
-	// 		drunkAffect = 1;
-	// 	}
-	// }
-
-	// object.quantity = Math.max(0, (object.quantity - amount));
-
-	// if(!this.isNpc()) {
-	// 	if(this.thirst < 20 && this.thirst + thirstAffect > 20) {
-	// 		messages.push(this.emitMessage("You don't feel thirsty anymore."));
-	// 	}
-		
-	// 	if(this.drunk + drunkAffect > 20) {
-	// 		messages.push(this.emitMessage("You are REALLY drunk!"));
-	// 	}
-	// 	else if(this.drunk < 12 && this.drunk + drunkAffect > 12) {
-	// 		messages.push(this.emitMessage("You are drunk."));
-	// 	}
-		
-	// 	this.thirst = this.thirst + thirstAffect;
-	// 	this.thirst = Math.min(this.thirst, 24);
-		
-	// 	this.drunk = this.drunk + drunkAffect;
-	// 	this.drunk = Math.min(this.drunk, 24);		
-	// }
-	
-	return messages;	
-};
-
-characterSchema.methods.drinkItem = function(keyword) {
-	var output = new Output(this);
-
-	var searchable = this.inventory.concat(this.room.contents);
-	var target = searchable.findByKeyword(keyword);
-
-	if(target.items.length === 0) {
-		output.toActor.push( { text: "Drink what?!?" } );
-		return output;
-	}
-	
- 	for(var i = 0; i < target.items.length; i++) {
-		if(target.items[i].type !== global.ITEM_DRINKCONTAINER && target.items[i].type !== global.ITEM_FOUNTAIN) {
-			output.toActor.push( { text: target.items[i].shortDescription + " -- You can't drink THAT!" } );
-			break;
-		}
-		else {
-			if(target.items[i].type === global.ITEM_DRINKCONTAINER && this.inventory.indexOf(target.items[i]) < 0) {
-				output.toActor.push( { text: "You have to be holding that to drink from it." } );
-				break;
-			}
-			
-			if(target.items[i].quantity < 1) {
-				output.toActor.push( { text: "It's empty!" } );
-				break;
-			}
-			
-			var messages = this.drinkFromObject(target.items[i]);
-			output.toActor.push( { text: messages[0], items: [ target.items[i] ] } );
-			output.toRoom.push( { roomId: this.room.id, text: messages[1], items: [ target.items[i] ] } );
-		}
-	}
-	
-	return output;
-};
 
 
 

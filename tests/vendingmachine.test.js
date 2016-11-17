@@ -199,11 +199,11 @@ exports.buyPreventsInventoryFromGettingTooLarge = function(test) {
 
     var result = vendingmachine.buyItem(myCharacter, command);
 
-    test.equal(result.toActor[0].text, "You buy 30 donuts from a vending machine.");
-    test.equal(result.toRoom[0].text, "Jo buys 30 donuts from a vending machine.");
+    test.equal(result.toActor[0].text, "You buy 50 donuts from a vending machine.");
+    test.equal(result.toRoom[0].text, "Jo buys 50 donuts from a vending machine.");
     test.equal(result.toActor[1].text, "a donut -- You can't carry any more items!");
-    test.equal(myCharacter.inventory.length, 30);
-    test.equal(myCharacter.money, 49970);
+    test.equal(myCharacter.inventory.length, 50);
+    test.equal(myCharacter.money, 49950);
 	test.done();
 };
 

@@ -83,8 +83,9 @@ exports.character_eatTwoItemsEatsBoth = function(test) {
 
 exports.character_eatTwoItemsEatsBoth = function(test) {
     var actor = new Character();
-    actor.caloriesConsumed = [ 0 ];
-    
+    actor.caloriesConsumed = [ 0, 0, 0 ];
+    actor.volumeConsumed = [ 0, 0, 0 ];
+
     var room = new Room();
     room.id = 3001;
     room.addCharacter(actor);
@@ -116,7 +117,8 @@ exports.character_eatTwoItemsEatsBoth = function(test) {
 
 exports.character_eatTenItemsEatsAll = function(test) {
     var actor = new Character();
-    actor.caloriesConsumed = [ 0 ];
+    actor.caloriesConsumed = [ 0, 0, 0 ];
+    actor.volumeConsumed = [ 0, 0, 0 ];
     
     var room = new Room();
     room.id = 3001;
@@ -143,8 +145,9 @@ exports.character_eatTenItemsEatsAll = function(test) {
 
 exports.character_eatFiveItemsEatsTheRightNumber = function(test) {
     var actor = new Character();
-    actor.caloriesConsumed = [ 0 ];
-    
+    actor.caloriesConsumed = [ 0, 0, 0 ];
+    actor.volumeConsumed = [ 0, 0, 0 ];
+
     var room = new Room();
     room.id = 3001;
     room.addCharacter(actor);
@@ -170,7 +173,8 @@ exports.character_eatFiveItemsEatsTheRightNumber = function(test) {
 
 exports.character_eatStopsWhenPlayerIsFull = function(test) {
     var actor = new Character();
-    actor.caloriesConsumed = [ 0 ];
+    actor.caloriesConsumed = [ 0, 0, 0 ];
+    actor.volumeConsumed = [ 0, 0, 0 ];
     actor.maximumFullness = 50;
     
     var room = new Room();
@@ -201,6 +205,7 @@ exports.character_eatStopsWhenPlayerIsFull = function(test) {
 exports.character_eatAllEatsFoodOnly = function(test) {
     var actor = new Character();
     actor.caloriesConsumed = [ 0, 0, 0 ];
+    actor.volumeConsumed = [ 0, 0, 0 ];
     actor.name = "Melanie";
     
     var room = new Room();
@@ -247,5 +252,36 @@ exports.character_eatAllEatsFoodOnly = function(test) {
     test.equal(actor.caloriesConsumed[0], 30);
     test.equal(actor.caloriesConsumed.length, 3);
     test.equal(actor.inventory.length, 2);
+    test.done();
+};
+
+exports.character_eatStopsWhenPlayerIsFullOfLiquid = function(test) {
+    var actor = new Character();
+    actor.caloriesConsumed = [ 0, 0, 0 ];
+    actor.volumeConsumed = [ 50, 0, 0 ];
+    actor.maximumFullness = 50;
+    
+    var room = new Room();
+    room.id = 3001;
+    room.addCharacter(actor);
+
+    var myWorld = new World();
+    myWorld.addCharacter(actor);
+    
+    for(var i = 0; i < 10; i++) {
+        var donut = new Food();
+        donut.id = 1;
+        donut.keywords.push("donut");
+        donut.shortDescription = "a vanilla donut";
+        donut.pluralDescription = "vanilla donuts";
+        donut.calories = 100;
+        actor.inventory.push(donut);
+        myWorld.addItem(donut);
+    }
+    
+    var actual = actor.eatItems('9', 'donut');
+    
+    test.equal(actual.toActor[1].text, "Your stomach can't hold any more!!!");
+    test.equal(actor.inventory.length, 8);
     test.done();
 };
