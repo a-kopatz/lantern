@@ -419,6 +419,12 @@ characterSchema.methods.say = function(message) {
 	if(message.length < 1) {
 		output.toActor.push( { text: "Yes, but WHAT do you want to say?" } );
 	} else {
+		// TODO: Change to constant for drunkness, I guess?
+		if(!this.isNpc() && this.drunkness > 150 && this.isNoDrunk === false) {
+			// TODO: Probably extract this and test it
+			message = message.replace(/ss/g, "sssss").replace(/s/g, "es").replace(/r/g, "rrrr").replace(/t/g, "tt");
+		}
+		
 		output.toActor.push( { text: "You say, '" + message + "'", color: "Cyan" } );
 		output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME says, '" + message + "'", color: "Cyan" } );
 	}
@@ -1100,6 +1106,28 @@ characterSchema.methods._handleGive = function(quantity, keywordToken, itemArray
 };
 
 
+characterSchema.methods.getDrunknessMessages = function(beforeIndex, afterIndex) {
+	var messages = [];
+
+	if(beforeIndex < 400 && afterIndex >= 400) {
+		messages[0] = "You are totally hammered.";
+		messages[1] = this.name + " is totally hammered.";
+	}
+	else if(beforeIndex < 300 && afterIndex >= 300) {
+		messages[0] = "You are completed wasted.";
+		messages[1] =  this.name + " is completely wasted.";
+	}
+	else if(beforeIndex < 200 && afterIndex >= 200) {
+		messages[0] = "You are very drunk.";
+		messages[1] = this.name + " is very drunk.";
+	}
+	else if(beforeIndex < 100 && afterIndex >= 100) {
+		messages[0] = "You are drunk.";
+		messages[1] = this.name + " is drunk.";
+	}
+	
+	return messages;	
+};
 
 characterSchema.methods.getOverdrinkingMessages = function(beforeIndex, afterIndex) {
 	var messages = [];
@@ -1171,10 +1199,12 @@ characterSchema.methods._handleDrink = function(quantity, keywordToken, itemArra
     
     // Sort of shitty -- only players have this concept (at the moment)
     var beforeFullnessIndex = (this.caloriesConsumed[0] + this.volumeConsumed[0]) / this.maximumFullness;
-    
+	var beforeDrunkness = this.drunkness;
+
 	var itemMapResult = utility.buildItemMap(this, itemArray.items, Drinkcontainer, quantity, mustStopDrinking, "drink", "You can't drink from that!");
 
 	var drinkArray = [];
+
 	
     for(var i = 0; i < itemMapResult.mapItems.length; i++) {
     	
@@ -1211,11 +1241,10 @@ characterSchema.methods._handleDrink = function(quantity, keywordToken, itemArra
 			if(!this.isNpc()) {
 				this.caloriesConsumed[0] = this.caloriesConsumed[0] + (drink.calories * drinkArray[i]);
 				this.volumeConsumed[0] = this.volumeConsumed[0] + drinkArray[i];
+				this.drunkness = this.drunkness + (drink.drunkness * drinkArray[i]);
 			}
 		}
 	}
-
-
 
 	if(prettyOutput.length > 0) {
 		output.toActor.push( { text: "You drink" + prettyOutput + " from " + itemMapResult.output + "." } );
@@ -1225,6 +1254,13 @@ characterSchema.methods._handleDrink = function(quantity, keywordToken, itemArra
 		
 		var afterFullnessIndex = (this.caloriesConsumed[0] / this.maximumFullness);
 		var messages = this.getOverdrinkingMessages(beforeFullnessIndex, afterFullnessIndex);
+
+		if(messages.length > 0) {
+			output.toActor.push( { text: messages[0] } );
+			output.toRoom.push( { roomId: this.room.id, text: messages[1] } );
+		} 
+		
+		messages = this.getDrunknessMessages(beforeDrunkness, this.drunkness);
 		
 		if(messages.length > 0) {
 			output.toActor.push( { text: messages[0] } );
@@ -1232,7 +1268,7 @@ characterSchema.methods._handleDrink = function(quantity, keywordToken, itemArra
 		} 
 	}
 	
-   if(itemMapResult.errorMessages !== undefined) {
+	if(itemMapResult.errorMessages !== undefined) {
     	for(var i = 0; i < itemMapResult.errorMessages.length; i++) {
     		output.toActor.push ( { text: itemMapResult.errorMessages[i] } );
     	}

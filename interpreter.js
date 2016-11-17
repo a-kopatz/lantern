@@ -139,6 +139,7 @@ var COMMAND_LIST = [
           { command: "noimmobile", minimumPosition: global.POS_DEAD    , functionPointer: do_tog_immobility, minimumLevel: 0, subCommand: 0 },
           { command: "noshout"   , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_shout  , minimumLevel: 0, subCommand: 0 },
           { command: "nosummon"  , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_summon , minimumLevel: 0, subCommand: 0 },
+          { command: "nodrunk"   , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_drunk  , minimumLevel: 0, subCommand: 0 },
           
 //           { command: "notell"   , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_tell   , minimumLevel: 0, subCommand: 0 },
 
@@ -603,6 +604,24 @@ function do_tog_summon(character, command) {
     }
     else {
         character.toggleSummon().emit();
+    }
+}
+
+
+function do_tog_drunk(character, command) {
+    if(command.tokens.length > 0) {
+        if(command.tokens[0].toLowerCase().trim() === "on") {
+            character.toggleDrunk(true).emit();
+        }
+        else if(command.tokens[0].toLowerCase().trim() === "off") {
+            character.toggleDrunk(false).emit();
+        }
+        else {
+            character.toggleDrunk().emit();
+        }
+    }
+    else {
+        character.toggleDrunk().emit();
     }
 }
 

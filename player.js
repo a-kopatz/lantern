@@ -21,13 +21,11 @@ var Output = require("./output");
 var playerSchema = characterSchema.extend({
 	category: { type: Number, default: global.CATEGORY_PLAYER },
 	password: String,
-	// hunger: Number,
-	// thirst: Number,
-	// drunk: Number,
+	
 	maximumFullness: Number,
 	caloriesConsumed: [ Number ],
 	volumeConsumed: [ Number ],
-	// fullnessLevel: Number,
+	drunkness: Number,
 
 	title: String,
 
@@ -65,6 +63,10 @@ playerSchema.methods.enterGame = function(world) {
 	
 	if(this.volumeConsumed === undefined || this.volumeConsumed.length === undefined || this.volumeConsumed.length === null || this.volumeConsumed.length < 10) {
 		this.volumeConsumed = [ 0,0,0,0,0,0,0,0,0,0 ];
+	}
+	
+	if(this.drunkness === undefined || this.drunkness === null) {
+		this.drunkness = 0;
 	}
 	
 	// THIS SHOULDN'T BE NECESSARY
@@ -153,6 +155,8 @@ playerSchema.methods.start = function() {
 	this.maximumFullness = 1200;
 	this.caloriesConsumed = [ 0,0,0,0,0,0,0,0,0,0 ];
 	this.volumeConsumed = [ 0,0,0,0,0,0,0,0,0,0 ];
+	this.drunkness = 0;
+	
 	this.experience = 1;
 	
 	this.money = 10000;
@@ -351,6 +355,21 @@ playerSchema.methods.toggleSummon = function(mode) {
 	return output;	
 };
 
+playerSchema.methods.toggleDrunk = function(mode) {
+	var output = new Output(this);
+	
+	this.isNoDrunk = this.toggle(mode, this.isNoDrunk);
+	
+	if(this.isNoDrunk === false) {
+		output.toActor.push( { text: "You are no longer immune from the effects of alcohol." } );
+	}
+	else {
+		output.toActor.push( { text: "You are now immune from the effects of alcohol." } );
+	}
+	
+	return output;	
+};
+
 playerSchema.methods.listInventory = function() {
 	var output = new Output(this);
 
@@ -409,6 +428,10 @@ playerSchema.methods.listScore = function() {
 	output.toActor.push( { text: "caloriesConsumedTodayTotal: " + this.getCaloriesConsumedToday() } );
 	output.toActor.push( { text: "maximumFullness: " + this.maximumFullness } );
 
+	if(this.drunkness > 150) {
+		output.toActor.push( { text: "You are drunk." } );
+	}
+
 	var commToggles = "You have the following communication toggles: Gossip:";
 	
 	if(this.isNoGossip === true) {
@@ -459,6 +482,15 @@ playerSchema.methods.listScore = function() {
 	var optionToggles = "You have the following option toggles: Immobility:";
 	
 	if(this.isNoImmobility === false) {
+		optionToggles = optionToggles + "On";
+	}
+	else {
+		optionToggles = optionToggles + "Off";
+	}
+	
+	optionToggles = optionToggles + " Drunkness:";
+	
+	if(this.isNoDrunk === false) {
 		optionToggles = optionToggles + "On";
 	}
 	else {
@@ -628,13 +660,20 @@ playerSchema.methods.hourlyUpdate = function() {
 	// 	this.emitRoomMessage(this.name + " looks parched!");
 	// }
 	
-	// if(this.drunk > 0) {
-	// 	this.drunk = Math.max((this.drunk - 1), 0);
+	
+	if(this.drunkness > 0) {
+		var change = Math.round(this.drunkness / 4);
+		change = Math.max(change, 50);
+
+		this.drunkness = this.drunkness - change;
 		
-	// 	if(this.drunk === 0) {
-	// 		this.emitMessage("You are now sober.");
-	// 	}
-	// }
+		if(this.drunkness < 0) {
+			this.drunkness = 0;
+			this.emitMessage("You are now sober.");
+			this.emitRoomMessage(this.name + " is now sober.");
+		}
+	}
+	
 	
 	
 	if(this.getCaloriesConsumedToday() > global.CALORIES_TO_GAIN_ONE_POUND) {
