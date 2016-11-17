@@ -319,6 +319,20 @@ playerSchema.methods.toggleGoto = function(mode) {
 	return output;	
 };
 
+playerSchema.methods.toggleSummon = function(mode) {
+	var output = new Output(this);
+	
+	this.isNoSummon = this.toggle(mode, this.isNoSummon);
+	
+	if(this.isNoSummon === false) {
+		output.toActor.push( { text: "Other players will no longer be able to 'summon' you." } );
+	}
+	else {
+		output.toActor.push( { text: "Other players will now be able to 'isNoSummon' you." } );
+	}
+	
+	return output;	
+};
 
 playerSchema.methods.listInventory = function() {
 	var output = new Output(this);
@@ -449,6 +463,40 @@ playerSchema.methods.goToChararacter = function(keyword) {
 
 		output.toRoom.push( { roomId: oldRoomId, text: "ACTOR_NAME shimmers and vanishes." } );
 		output.toRoom.push( { roomId: newRoom.id, text: "ACTOR_NAME shimmers and appears." } );
+	}
+
+	return output;
+};
+
+playerSchema.methods.summonChararacter = function(keyword) {
+	var output = new Output(this);
+	
+	var target = this.world.getPlayer(keyword);
+	
+	if(target === null) {
+		output.toActor.push( { text: "Nobody by that name here!" } );
+		return output;
+	}
+	else if(target === this) {
+		output.toActor.push( { text: "Summon yourself?  But you're already here!" } );
+		return output;
+	}
+	else if(target.isNoSummon === true) {
+		output.toActor.push( { text: target.Name + " has disabled " + target.getPossessivePronoun() + " 'SUMMON' option." } );
+		return output;
+	}
+	
+	var oldRoom = target.room;
+	
+	if(oldRoom !== null) {
+		var oldRoomId = target.room.id;
+		
+	 	target.room.removeCharacter(this);
+	 	this.room.addCharacter(this);
+		output = this.room.showRoomToCharacter(target);
+
+		output.toRoom.push( { roomId: oldRoomId, text: "ACTOR_NAME shimmers and vanishes." } );
+		output.toRoom.push( { roomId: this.room.id, text: "ACTOR_NAME shimmers and appears." } );
 	}
 
 	return output;

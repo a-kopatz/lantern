@@ -86,7 +86,7 @@ var COMMAND_LIST = [
           { command: "give"     , minimumPosition: global.POS_RESTING , functionPointer: do_give       , minimumLevel: 0, subCommand: 0 },
           { command: "glare"    , minimumPosition: global.POS_RESTING,  functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_GLARE },
           { command: "gossip"   , minimumPosition: global.POS_SLEEPING, functionPointer: do_gen_comm   , minimumLevel: 0, subCommand: global.SCMD_GOSSIP },
-          { command: "goto"     , minimumPosition: global.POS_RESTING , functionPointer: do_goto       , minimumLevel: 0, subCommand: 0 },
+          { command: "goto"     , minimumPosition: global.POS_STANDING, functionPointer: do_goto       , minimumLevel: 0, subCommand: 0 },
 //           { command: "group"    , minimumPosition: global.POS_RESTING , functionPointer: do_group      , minimumLevel: 0, subCommand: 0 },
           { command: "grats"    , minimumPosition: global.POS_SLEEPING, functionPointer: do_gen_comm   , minimumLevel: 0, subCommand: global.SCMD_GRATZ },
           { command: "gratz"    , minimumPosition: global.POS_SLEEPING, functionPointer: do_gen_comm   , minimumLevel: 0, subCommand: global.SCMD_GRATZ },
@@ -133,11 +133,13 @@ var COMMAND_LIST = [
           { command: "nuzzle"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NUZZLE },
           { command: "noauction" , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_auction, minimumLevel: 0, subCommand: 0 },
           { command: "nogossip"  , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_gossip , minimumLevel: 0, subCommand: 0 },
+          { command: "nogoto"    , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_goto, minimumLevel: 0, subCommand: 0 },
           { command: "nogratz"   , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_gratz  , minimumLevel: 0, subCommand: 0 },
           { command: "noholler"  , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_holler , minimumLevel: 0, subCommand: 0 },
-          { command: "noshout"   , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_shout  , minimumLevel: 0, subCommand: 0 },
           { command: "noimmobile", minimumPosition: global.POS_DEAD    , functionPointer: do_tog_immobility, minimumLevel: 0, subCommand: 0 },
-          { command: "nogoto"    , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_goto, minimumLevel: 0, subCommand: 0 },
+          { command: "noshout"   , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_shout  , minimumLevel: 0, subCommand: 0 },
+          { command: "nosummon"  , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_summon , minimumLevel: 0, subCommand: 0 },
+          
 //           { command: "notell"   , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_tell   , minimumLevel: 0, subCommand: 0 },
 
           { command: "open"     , minimumPosition: global.POS_RESTING , functionPointer: do_open_door  , minimumLevel: 0, subCommand: 0 },
@@ -198,6 +200,7 @@ var COMMAND_LIST = [
           { command: "steam"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_STEAM },
           { command: "strut"    , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_STRUT},
           { command: "sulk"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SULK },
+          { command: "summon"   , minimumPosition: global.POS_STANDING, functionPointer: do_summon     , minimumLevel: 0, subCommand: 0 },
 
           { command: "tackle"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_TACKLE },
           { command: "take"     , minimumPosition: global.POS_RESTING , functionPointer: do_take       , minimumLevel: 0, subCommand: 0 },
@@ -586,6 +589,23 @@ function do_tog_shout(character, command) {
     }
 }
 
+function do_tog_summon(character, command) {
+    if(command.tokens.length > 0) {
+        if(command.tokens[0].toLowerCase().trim() === "on") {
+            character.toggleSummon(true).emit();
+        }
+        else if(command.tokens[0].toLowerCase().trim() === "off") {
+            character.toggleSummon(false).emit();
+        }
+        else {
+            character.toggleSummon().emit();
+        }
+    }
+    else {
+        character.toggleSummon().emit();
+    }
+}
+
 function do_quit(character) {
      character.emitMessage("Goodbye friend.... Come back soon!");
      character.emitRoomMessage(character.name + " has quit the game.");
@@ -799,6 +819,15 @@ function do_goto(character, command) {
     }
     else {
         character.goToChararacter(command.tokens[0]).emit();
+    }
+}
+
+function do_summon(character, command) {
+    if(command.tokens.length === 0) {
+        character.emitMessage("Summon to who?");
+    }
+    else {
+        character.summonChararacter(command.tokens[0]).emit();
     }
 }
 
