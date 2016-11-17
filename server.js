@@ -453,7 +453,7 @@ function hourElapsed() {
                     gameWorld.players[i].using.using = null;
                 }
                 
-                gameWorld.players[i].emitRoomMessage(gameWorld.players[i] + " has been linkless for too long and extracted from the game!");
+                gameWorld.players[i].emitRoomMessage(gameWorld.players[i].name + " has been linkless for too long and extracted from the game!");
                 gameWorld.players[i].room.removeCharacter(gameWorld.players[i]);
                 gameWorld.players[i].world.removeCharacter(gameWorld.players[i]);
             }

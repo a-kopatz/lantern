@@ -392,6 +392,82 @@ playerSchema.methods.listScore = function() {
 	output.toActor.push( { text: "caloriesConsumedTodayTotal: " + this.getCaloriesConsumedToday() } );
 	output.toActor.push( { text: "maximumFullness: " + this.maximumFullness } );
 
+	var commToggles = "You have the following communication toggles: Gossip:";
+	
+	if(this.isNoGossip === true) {
+		commToggles = commToggles + "Off";
+	}
+	else {
+		commToggles = commToggles + "On";
+	}
+
+	commToggles = commToggles + " Auctions:";
+	
+	if(this.isNoAuction === true) {
+		commToggles = commToggles + "Off";
+	}
+	else {
+		commToggles = commToggles + "On";
+	}
+
+	commToggles = commToggles + " Holler:";
+	
+	if(this.isNoHoller === true) {
+		commToggles = commToggles + "Off";
+	}
+	else {
+		commToggles = commToggles + "On";
+	}
+
+	commToggles = commToggles + " Shout:";
+	
+	if(this.isNoShout === true) {
+		commToggles = commToggles + "Off";
+	}
+	else {
+		commToggles = commToggles + "On";
+	}
+	
+	commToggles = commToggles + " Congrats:";
+	
+	if(this.isNoGratz === true) {
+		commToggles = commToggles + "Off";
+	}
+	else {
+		commToggles = commToggles + "On";
+	}
+	
+	output.toActor.push( { text: commToggles } );
+	
+	var optionToggles = "You have the following option toggles: Immobility:";
+	
+	if(this.isNoImmobility === false) {
+		optionToggles = optionToggles + "On";
+	}
+	else {
+		optionToggles = optionToggles + "Off";
+	}
+	
+	optionToggles = optionToggles + " Goto:";
+	
+	if(this.isNoGoto === true) {
+		optionToggles = optionToggles + "Off";
+	}
+	else {
+		optionToggles = optionToggles + "On";
+	}
+	
+	optionToggles = optionToggles + " Summon:";
+	
+	if(this.isNoSummon === true) {
+		optionToggles = optionToggles + "Off";
+	}
+	else {
+		optionToggles = optionToggles + "On";
+	}
+	
+	output.toActor.push( { text: optionToggles } );
+	
 	return output;
 };
 
