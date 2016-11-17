@@ -11,7 +11,7 @@ var Food = require('./items/food').food;
 var Item = require('./item').item;
 var Furniture = require('./items/furniture').furniture;
 var Scale = require('./items/scale').scale;
-
+var DrinkContainer = require('./items/drinkcontainer').drinkContainer;
 
 var characterSchema = new schema({
 	name: String,
@@ -1149,6 +1149,14 @@ characterSchema.methods.tasteItem = function(keyword) {
 };
 
 
+
+
+
+
+
+
+
+
 characterSchema.methods.drinkFromObject = function(object) {
 	var messages = [];
 
@@ -1234,6 +1242,8 @@ characterSchema.methods.drinkItem = function(keyword) {
 	return output;
 };
 
+
+
 characterSchema.methods.sipFromObject = function(object) {
 	var messages = [];
 
@@ -1248,8 +1258,7 @@ characterSchema.methods.sipFromObject = function(object) {
 characterSchema.methods.sipItem = function(keyword) {
 	var output = new Output(this);
 
-	var searchable = this.inventory.concat(this.room.contents);
-	var target = searchable.findByKeyword(keyword);
+	var target = this.inventory.findByKeyword(keyword);
 
 	if(target.items.length === 0) {
 		output.toActor.push( { text: "Sip what?!?" } );
@@ -1257,16 +1266,11 @@ characterSchema.methods.sipItem = function(keyword) {
 	}
 	
  	for(var i = 0; i < target.items.length; i++) {
-		if(target.items[i].type !== global.ITEM_DRINKCONTAINER && target.items[i].type !== global.ITEM_FOUNTAIN) {
-			output.toActor.push( { text: target.items[i].shortDescription + " -- You can't sip THAT!" } );
+		if((target.items[i] instanceof DrinkContainer) === false) {
+			output.toActor.push( { text: target.items[i].shortDescription + " -- You can't take a sip from THAT!" } );
 			break;
 		}
 		else {
-			if(target.items[i].type === global.ITEM_DRINKCONTAINER && this.inventory.indexOf(target.items[i]) < 0) {
-				output.toActor.push( { text: "You have to be holding that to take a sip from it." } );
-				break;
-			}
-			
 			if(target.items[i].quantity < 1) {
 				output.toActor.push( { text: "It's empty!" } );
 				break;

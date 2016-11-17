@@ -4,6 +4,7 @@ var Exit = require("../room").exit;
 var Item = require('../item').item;
 var Clothes = require('../items/clothes').clothes;
 var World = require('../world');
+var DrinkContainer = require('../items/drinkcontainer').drinkContainer;
 
 /////////////////////////////////////////////////
 
@@ -45,7 +46,7 @@ exports.character_sipItemReturnsErrorWhenItemIsNotDrinkContainer = function(test
     actor.inventory.push(socks);
 
     var actual = actor.sipItem('socks');
-    test.equal(actual.toActor[0].text, "a pair of socks -- You can't sip THAT!");
+    test.equal(actual.toActor[0].text, "a pair of socks -- You can't take a sip from THAT!");
     test.equal(actor.inventory[0], socks);
     test.done();
 };
@@ -61,7 +62,7 @@ exports.character_sipItemDoesNotRemoveItemFromInventory = function(test) {
     var myWorld = new World();
     myWorld.addCharacter(actor);
     
-    var wineGlass = new Item();
+    var wineGlass = new DrinkContainer();
     wineGlass.keywords.push("wine");
     wineGlass.shortDescription = "a wine glass";
     wineGlass.type = global.ITEM_DRINKCONTAINER;
