@@ -304,6 +304,22 @@ playerSchema.methods.toggleImmobility = function(mode) {
 	return output;	
 };
 
+playerSchema.methods.toggleGoto = function(mode) {
+	var output = new Output(this);
+	
+	this.isNoGoto = this.toggle(mode, this.toggleGoto);
+	
+	if(this.toggleGoto === false) {
+		output.toActor.push( { text: "Other players will no longer be able to 'goto' you." } );
+	}
+	else {
+		output.toActor.push( { text: "Other players will now be able to 'goto' you." } );
+	}
+	
+	return output;	
+};
+
+
 playerSchema.methods.listInventory = function() {
 	var output = new Output(this);
 
@@ -384,9 +400,7 @@ playerSchema.methods.setTitle = function(title) {
 	return output;
 };
 
-playerSchema.methods.goto = function(keyword) {
-	// TODO: This is pretty powerful.... Restrict?
-	
+playerSchema.methods.goToRoom = function(keyword) {
 	var output = new Output(this);
 	
 	var newRoom = this.world.getRoom(parseInt(keyword, 10));
@@ -403,6 +417,40 @@ playerSchema.methods.goto = function(keyword) {
 		output.toRoom.push( { roomId: newRoom.id, text: "ACTOR_NAME shimmers and appears." } );
 	}
 	
+	return output;
+};
+
+playerSchema.methods.goToChararacter = function(keyword) {
+	var output = new Output(this);
+	
+	var target = this.world.getPlayer(keyword);
+	
+	if(target === null) {
+		output.toActor.push( { text: "Nobody by that name here!" } );
+		return output;
+	}
+	else if(target === this) {
+		output.toActor.push( { text: "Go to yourself?  But you're already here!" } );
+		return output;
+	}
+	else if(target.isNoGoto === true) {
+		output.toActor.push( { text: target.Name + " has disabled " + target.getPossessivePronoun() + " 'GOTO' option." } );
+		return output;
+	}
+	
+	var newRoom = target.room;
+	
+	if(newRoom !== null) {
+		var oldRoomId = this.room.id;
+		
+	 	this.room.removeCharacter(this);
+	 	newRoom.addCharacter(this);
+		output = newRoom.showRoomToCharacter(this);
+
+		output.toRoom.push( { roomId: oldRoomId, text: "ACTOR_NAME shimmers and vanishes." } );
+		output.toRoom.push( { roomId: newRoom.id, text: "ACTOR_NAME shimmers and appears." } );
+	}
+
 	return output;
 };
 

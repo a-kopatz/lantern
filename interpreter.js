@@ -137,6 +137,7 @@ var COMMAND_LIST = [
           { command: "noholler"  , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_holler , minimumLevel: 0, subCommand: 0 },
           { command: "noshout"   , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_shout  , minimumLevel: 0, subCommand: 0 },
           { command: "noimmobile", minimumPosition: global.POS_DEAD    , functionPointer: do_tog_immobility, minimumLevel: 0, subCommand: 0 },
+          { command: "nogoto"    , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_goto, minimumLevel: 0, subCommand: 0 },
 //           { command: "notell"   , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_tell   , minimumLevel: 0, subCommand: 0 },
 
           { command: "open"     , minimumPosition: global.POS_RESTING , functionPointer: do_open_door  , minimumLevel: 0, subCommand: 0 },
@@ -483,6 +484,23 @@ function do_tog_immobility(character, command) {
     }
 }
 
+function do_tog_goto(character, command) {
+    if(command.tokens.length > 0) {
+        if(command.tokens[0].toLowerCase().trim() === "on") {
+            character.toggleGoto(true).emit();
+        }
+        else if(command.tokens[0].toLowerCase().trim() === "off") {
+            character.toggleGoto(false).emit();
+        }
+        else {
+            character.toggleGoto().emit();
+        }
+    }
+    else {
+        character.toggleGoto().emit();
+    }
+}
+
 function do_tog_auction(character, command) {
     if(command.tokens.length > 0) {
         if(command.tokens[0].toLowerCase().trim() === "on") {
@@ -776,11 +794,16 @@ function do_report_typo(character, command) {
 }
 
 function do_goto(character, command) {
-    character.goto(command.subInput.trim()).emit();
+    if(command.tokens.length === 0) {
+        character.emitMessage("Go to who?");
+    }
+    else {
+        character.goToChararacter(command.tokens[0]).emit();
+    }
 }
 
 function do_home(character) {
-    character.goto(global.START_ROOM).emit();
+    character.goToRoom(global.START_ROOM).emit();
 }
 
 function do_datetime(character) {

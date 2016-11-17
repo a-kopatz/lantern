@@ -11,6 +11,8 @@ global.CON_RMOTD      = 50;
 global.CON_MENU       = 60;
 global.CON_BLOCKED    = 999; // Input is ignored; waiting for async server process
 
+global.MAX_LINKLESSTIME = 5;
+
 global.GENDER_NEUTRAL = 0;
 global.GENDER_MALE    = 1;
 global.GENDER_FEMALE  = 2;
