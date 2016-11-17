@@ -7,6 +7,7 @@ var Item = require('../item').item;
 var Shirt = require('./shirt').shirt;
 var Pants = require('./pants').pants;
 var Food = require('./food').food;
+var Drinkcontainer = require('./drinkcontainer').drinkcontainer;
 var utility = require("../utility");
 
 var vendingmachineSchema = itemSchema.extend({
@@ -109,6 +110,12 @@ vendingmachineSchema.methods.buyItem = function(character, command) {
 					var newPants = new Pants(targetItem);
 					character.inventory.push(newPants);
 				}
+			}
+			else if(targetItem instanceof Drinkcontainer === true) {
+				for(var i = 0; i < quantity; i++) {
+					var newDrink = new Drinkcontainer(targetItem);
+					character.inventory.push(newDrink);
+				}				
 			}
 		}
 	}

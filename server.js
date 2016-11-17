@@ -31,6 +31,7 @@ var clothes = require('./items/clothes');
 var shirt = require('./items/shirt');
 var pants = require('./items/pants');
 var food = require('./items/food');
+var drinkcontainer = require('./items/drinkcontainer');
 var note = require('./items/note');
 var pen = require('./items/pen');
 var key = require('./items/key');

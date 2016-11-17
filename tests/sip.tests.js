@@ -4,7 +4,7 @@ var Exit = require("../room").exit;
 var Item = require('../item').item;
 var Clothes = require('../items/clothes').clothes;
 var World = require('../world');
-var DrinkContainer = require('../items/drinkcontainer').drinkContainer;
+var Drinkcontainer = require('../items/drinkcontainer').drinkcontainer;
 
 /////////////////////////////////////////////////
 
@@ -62,7 +62,7 @@ exports.character_sipItemDoesNotRemoveItemFromInventory = function(test) {
     var myWorld = new World();
     myWorld.addCharacter(actor);
     
-    var wineGlass = new DrinkContainer();
+    var wineGlass = new Drinkcontainer();
     wineGlass.keywords.push("wine");
     wineGlass.shortDescription = "a wine glass";
     wineGlass.type = global.ITEM_DRINKCONTAINER;

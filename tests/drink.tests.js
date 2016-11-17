@@ -3,7 +3,7 @@ var Room = require("../room").room;
 var Exit = require("../room").exit;
 var Item = require('../item').item;
 var Clothes = require('../items/clothes').clothes;
-var DrinkContainer = require('../items/drinkcontainer').drinkContainer;
+var Drinkcontainer = require('../items/drinkcontainer').drinkcontainer;
 var World = require('../world');
 
 /////////////////////////////////////////////////
@@ -96,7 +96,7 @@ exports.character_drinkItemDoesNotRemoveItemFromInventory = function(test) {
     var myWorld = new World();
     myWorld.addCharacter(actor);
     
-    var wineGlass = new DrinkContainer();
+    var wineGlass = new Drinkcontainer();
     wineGlass.id = 1;
     wineGlass.keywords.push("wine");
     wineGlass.shortDescription = "a wine glass";
@@ -104,7 +104,7 @@ exports.character_drinkItemDoesNotRemoveItemFromInventory = function(test) {
     wineGlass.quantity = 4;
     actor.inventory.push(wineGlass);
 
-    var waterJug = new DrinkContainer();
+    var waterJug = new Drinkcontainer();
     waterJug.id = 2;
     waterJug.keywords.push("water");
     waterJug.shortDescription = "a water jug";

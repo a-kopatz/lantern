@@ -11,7 +11,7 @@ var Food = require('./items/food').food;
 var Item = require('./item').item;
 var Furniture = require('./items/furniture').furniture;
 var Scale = require('./items/scale').scale;
-var DrinkContainer = require('./items/drinkcontainer').drinkContainer;
+var Drinkcontainer = require('./items/drinkcontainer').drinkcontainer;
 
 var characterSchema = new schema({
 	name: String,
@@ -1172,7 +1172,7 @@ characterSchema.methods._handleDrink = function(quantity, keywordToken, itemArra
     // Sort of shitty -- only players have this concept (at the moment)
     var beforeFullnessIndex = (this.caloriesConsumed[0] + this.volumeConsumed[0]) / this.maximumFullness;
     
-	var itemMapResult = utility.buildItemMap(this, itemArray.items, DrinkContainer, quantity, mustStopDrinking, "drink", "You can't drink from that!");
+	var itemMapResult = utility.buildItemMap(this, itemArray.items, Drinkcontainer, quantity, mustStopDrinking, "drink", "You can't drink from that!");
 
 	var drinkArray = [];
 	
@@ -1308,7 +1308,7 @@ characterSchema.methods.sipItem = function(keyword) {
 	}
 	
  	for(var i = 0; i < target.items.length; i++) {
-		if((target.items[i] instanceof DrinkContainer) === false) {
+		if((target.items[i] instanceof Drinkcontainer) === false) {
 			output.toActor.push( { text: target.items[i].shortDescription + " -- You can't take a sip from THAT!" } );
 			break;
 		}

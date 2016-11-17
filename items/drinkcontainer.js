@@ -3,18 +3,18 @@ var schema = mongoose.Schema;
 var extend = require('mongoose-schema-extend');
 var itemSchema = require("../item").schema;
 
-var drinkContainerSchema = itemSchema.extend({
+var drinkcontainerSchema = itemSchema.extend({
 	quantity: Number,
 	containsLiquid: Number
 }, { collection : 'items' });
 
-drinkContainerSchema.methods.getType = function() {
+drinkcontainerSchema.methods.getType = function() {
 	return global.ITEM_DRINKCONTAINER;
 };
 
-var drinkContainerModel = mongoose.model('drinkContainer', drinkContainerSchema);
+var drinkcontainerModel = mongoose.model('drinkcontainer', drinkcontainerSchema);
 
 module.exports = {
-	schema: drinkContainerSchema,
-	drinkContainer: drinkContainerModel
+	schema: drinkcontainerSchema,
+	drinkcontainer: drinkcontainerModel
 };

@@ -669,10 +669,10 @@ function do_drink(character, command) {
     }
     else {
         if(command.tokens[0].toLowerCase() === 'from') {
-            character.drinkItem(command.tokens[1]);
+            character.drinkItem(command.tokens[1]).emit();
         }
         else {
-            character.drinkItem(command.tokens[0]);
+            character.drinkItem(command.tokens[0]).emit();
         }
     }
 }
@@ -683,10 +683,10 @@ function do_sip(character, command) {
     }
     else {
         if(command.tokens[0].toLowerCase() === 'from') {
-            character.sipItem(command.tokens[1]);
+            character.sipItem(command.tokens[1]).emit();
         }
         else {
-            character.sipItem(command.tokens[0]);
+            character.sipItem(command.tokens[0]).emit();
         }
     }
 }

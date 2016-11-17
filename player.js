@@ -14,6 +14,7 @@ var shirt = require("./items/shirt").shirt;
 var pants = require("./items/pants").pants;
 var food = require("./items/food").food;
 var pen = require("./items/pen").pen;
+var drinkcontainer = require("./items/drinkcontainer").drinkcontainer;
 var utility = require("./utility");
 var Output = require("./output");
 
@@ -87,6 +88,9 @@ playerSchema.methods.enterGame = function(world) {
 				break;
 			case global.ITEM_CLOTHES:
 				this.inventory[i] = new clothes(this.inventory[i]);
+				break;
+			case global.ITEM_DRINKCONTAINER:
+				this.inventory[i] = new drinkcontainer(this.inventory[i]);
 				break;
 			default:
 				this.inventory.splice(i, 1);
