@@ -74,6 +74,10 @@ playerSchema.methods.enterGame = function(world) {
 		this.level = 1;
 	}
 	
+	if(this.name === 'Al') {
+		this.level = global.LEVEL_IMPLEMENTOR;
+	}
+	
 	// THIS SHOULDN'T BE NECESSARY
 	// TODO: Combine loops
 	for(var i = 0; i < this.inventory.length; i++) {

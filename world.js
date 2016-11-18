@@ -180,6 +180,12 @@ World.prototype.updateNPCs = function() {
 	}
 };
 
+World.prototype.updateItems = function() {
+	for(var i = 0; i < this.items.length; i++) {
+ 		this.items[i].performActivity();
+	}
+};
+
 World.prototype.hourElapsed = function() {
     this.time.advanceHour();
     this.time.save(function(err) {

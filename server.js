@@ -37,6 +37,7 @@ var pen = require('./items/pen');
 var key = require('./items/key');
 var vendingmachine = require('./items/vendingmachine');
 var scale = require('./items/scale');
+var feedingmachine = require('./items/feedingmachine');
 
 var npc = require('./npc');
 var postmaster = require('./npcs/postmaster');
@@ -145,6 +146,7 @@ room.load(function(roomDocs) {
 setInterval(servicePlayerCommandQueues, 1);
 setInterval(hourElapsed, global.PULSE_MUD_HOUR * 1000);
 setInterval(npcActivity, global.PULSE_NPC * 1000);
+setInterval(itemActivity, global.PULSE_ITEM * 1000);
 
 io.sockets.on("connection", function(socket) {
     socket.disconnectTimer = 0;
@@ -468,6 +470,11 @@ function hourElapsed() {
 function npcActivity() {
     gameWorld.updateNPCs();
 }
+
+function itemActivity() {
+    gameWorld.updateItems();
+}
+
 
 var introMessage = "Welcome to Lantern.\n\rBy what name do you wish to be known?";
 var motd = "This is the message of the day.\n\rWe are under construction.  Pardon about the dust.\n\rThe game itself is highly unstable, so apologies in advance!\n\r*** PRESS RETURN: ";

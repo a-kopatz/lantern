@@ -106,6 +106,11 @@ itemSchema.methods.listCommands = function(character, command) {
 	return output;	
 };
 
+
+itemSchema.methods.performActivity = function() {
+	// Does nothing by default
+};
+
 function load(id, item, commands, world, previousThing, instructionNumber, callback) {
 	itemModel.find({id: id}, function(err, docs) {
 		console.log(err);

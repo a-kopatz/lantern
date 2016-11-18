@@ -27,6 +27,7 @@ global.DONATION_ROOM = 3063;
 
 global.PULSE_NPC      = 10;   // 10 real seconds
 global.PULSE_MUD_HOUR = 60;   // 60 real seconds
+global.PULSE_ITEM     = 6;    // 6 real seconds
 
 global.HOURLY_DOLLAR_BONUS = 1000;
 
@@ -155,6 +156,7 @@ global.ITEM_PANTS = "Pants";
 global.ITEM_SCALE = "Scale";
 global.ITEM_UNDERPANTS = "Underpants";
 global.ITEM_BRA = "Bra";
+global.ITEM_FEEDINGMACHINE = "FeedingMachine";
 
 global.MESSAGE_BUG = "Please report this using the 'bug' command.";
 global.CANNOT_DO_THAT_HERE = "Sorry, but you can't do that here.";

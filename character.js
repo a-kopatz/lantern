@@ -302,6 +302,11 @@ characterSchema.methods.sit = function() {
 characterSchema.methods.sitRestSleepOnFurniture = function(keyword, verb, endingPosition) {
 	var output = new Output(this);
 	
+	if(this.using !== undefined && this.using !== null) {
+		output.toActor.push( { text: "You're currently using " + this.using.shortDescription + ".  Stop using that first!" } );
+		return output;
+	}
+	
 	var result = this.room.contents.findByKeyword(keyword);
 	
 	if(result.items.length === 0) {
@@ -1701,6 +1706,8 @@ characterSchema.methods.lookTarget = function(keyword) {
 		}
 		
 		var detailedDescription = targetItem.getDetailedDescription();
+		
+		console.log(detailedDescription);
 		
 		for(var i = 0; i < detailedDescription.length; i++) {
 			output.toActor.push( { text: detailedDescription[i] } );
