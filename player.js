@@ -28,6 +28,7 @@ var playerSchema = characterSchema.extend({
 	drunkness: Number,
 
 	title: String,
+	level: Number,
 
 	isNoAuction: Boolean,
 	isNoGossip: Boolean,
@@ -67,6 +68,10 @@ playerSchema.methods.enterGame = function(world) {
 	
 	if(this.drunkness === undefined || this.drunkness === null) {
 		this.drunkness = 0;
+	}
+	
+	if(this.level === undefined || this.level === null || this.level === 0) {
+		this.level = 1;
 	}
 	
 	// THIS SHOULDN'T BE NECESSARY
@@ -157,6 +162,7 @@ playerSchema.methods.start = function() {
 	this.volumeConsumed = [ 0,0,0,0,0,0,0,0,0,0 ];
 	this.drunkness = 0;
 	
+	this.level = 1;
 	this.experience = 1;
 	
 	this.money = 10000;

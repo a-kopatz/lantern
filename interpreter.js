@@ -386,6 +386,9 @@ Interpreter.prototype.handleInput = function(character, input) {
                     break;                    
             }
         }
+        else if(character.level < command.minimumLevel) {
+            character.emitMessage("Huh?!?");
+        }
         else {
             if(command.isSpecial === true) {
                 var output = command.functionPointer(character, command);
@@ -928,7 +931,15 @@ function do_who(character) {
     
     // TODO: What if character can't see players[i]?
     for(var i = 0; i < character.world.players.length; i++) {
-        character.emitMessage(character.world.players[i].getNameAndTitle());
+        if(character.world.players[i].level < global.LEVEL_ADMINISTRATOR) {
+            character.emitMessage(character.world.players[i].getNameAndTitle());
+        }
+        else if(character.world.players[i].level < global.LEVEL_IMPLEMENTOR) {
+            character.emitMessage('[Admin] ' + character.world.players[i].getNameAndTitle(), 'Orange');
+        }
+        else {
+            character.emitMessage('[Implementor] ' + character.world.players[i].getNameAndTitle(), 'Magenta');
+        }
         playerCount++;
     }
     
@@ -1007,12 +1018,17 @@ function do_help(character, command) {
         
         // TODO: Generalize this, maybe?  Like a 'make into pretty columns' command?
         var output = '';
+        var counter = 0;
         for(var i = 1; i <= COMMAND_LIST.length; i++) {
-            output = output + utility.getPaddedWord(COMMAND_LIST[i - 1].command, 19);
-
-            if(i % 4 == 0) {
-                character.emitMessage("    " + output);
-                output = '';
+            
+            if(COMMAND_LIST[i - 1].minimumLevel >= character.level) {
+                output = output + utility.getPaddedWord(COMMAND_LIST[i - 1].command, 19);
+                counter++;
+    
+                if(counter % 4 == 0) {
+                    character.emitMessage("    " + output);
+                    output = '';
+                }
             }
         }
         

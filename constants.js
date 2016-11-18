@@ -39,6 +39,9 @@ global.MAX_INVENTORY_LENGTH = 50;
 
 global.CONDITION_BROKEN = 99;
 
+global.LEVEL_IMPLEMENTOR = 5010;
+global.LEVEL_ADMINISTRATOR = 5000;
+
 global.SCMD_NORTH	= "N";
 global.SCMD_EAST	= "E";
 global.SCMD_SOUTH	= "S";
