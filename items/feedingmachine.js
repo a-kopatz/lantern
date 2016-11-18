@@ -22,6 +22,9 @@ feedingmachineSchema.methods.getCommands = function() {
     ];
 };
 
+feedingmachineSchema.methods.weightUpdate = function(characterName, characterWeight) {
+};
+
 feedingmachineSchema.methods.useFeedingMachine = function(character, command) {
 	var output = new Output(character);
 
