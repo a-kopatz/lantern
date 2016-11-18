@@ -35,7 +35,7 @@ repairSchema.methods.performActivity = function(randomNumber) {
 	                // TODO: Change to global constant
 	                if(this.room.contents[i].condition === 1) {
 	                    this.room.contents[i].condition = 0;
-	                    this.emitRoomMessage(this.name + " fixes " + this.room.contents[0].shortDescription + ".");
+	                    this.emitRoomMessage(this.name + " fixes " + this.room.contents[i].shortDescription + ".");
 	                }
 	            }
 	        }
