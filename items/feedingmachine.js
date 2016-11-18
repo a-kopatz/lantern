@@ -60,7 +60,7 @@ feedingmachineSchema.methods.disconnectFeedingMachine = function(character, comm
 		command.item.using = null;
 	
 		output.toActor.push( { text: "You unhook yourself from " + command.item.shortDescription + "."} );
-		output.toRoom.push( { roomId: character.room.id, text: character.name + " hooks from " + command.item.shortDescription + "." } );
+		output.toRoom.push( { roomId: character.room.id, text: character.name + " unhooks from " + command.item.shortDescription + "." } );
 	}
 
 	return output;

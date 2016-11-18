@@ -932,13 +932,13 @@ function do_who(character) {
     // TODO: What if character can't see players[i]?
     for(var i = 0; i < character.world.players.length; i++) {
         if(character.world.players[i].level < global.LEVEL_ADMINISTRATOR) {
-            character.emitMessage(character.world.players[i].getNameAndTitle());
+            character.emitMessage("   " + character.world.players[i].getNameAndTitle());
         }
         else if(character.world.players[i].level < global.LEVEL_IMPLEMENTOR) {
-            character.emitMessage('[Admin] ' + character.world.players[i].getNameAndTitle(), 'Orange');
+            character.emitMessage('   [Admin] ' + character.world.players[i].getNameAndTitle(), 'Orange');
         }
         else {
-            character.emitMessage('[Implementor] ' + character.world.players[i].getNameAndTitle(), 'Magenta');
+            character.emitMessage('   [Implementor] ' + character.world.players[i].getNameAndTitle(), 'Yellow');
         }
         playerCount++;
     }
@@ -1021,7 +1021,7 @@ function do_help(character, command) {
         var counter = 0;
         for(var i = 1; i <= COMMAND_LIST.length; i++) {
             
-            if(COMMAND_LIST[i - 1].minimumLevel >= character.level) {
+            if(character.level >= COMMAND_LIST[i - 1].minimumLevel) {
                 output = output + utility.getPaddedWord(COMMAND_LIST[i - 1].command, 19);
                 counter++;
     
