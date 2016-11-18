@@ -1676,96 +1676,46 @@ characterSchema.methods.removeItem = function(keyword) {
 	return output;
 };
 
-characterSchema.methods.lookTarget = function(command) {
+characterSchema.methods.lookTarget = function(keyword) {
 	var output = new Output(this);
 	
-	if(command.allTokens[0] !== "in") {
-		var targetList = this.room.players.concat(this.room.npcs).concat(this.inventory)
-			.concat(this.wearing).concat(this.room.contents).concat(this.room.extras)
-			.concat(this.getWornExtras()).concat(this.getInventoryExtras())
-			.concat(this.room.getContentsExtras());
+ 	var targetList = this.room.players.concat(this.room.npcs).concat(this.inventory)
+ 		.concat(this.wearing).concat(this.room.contents);
 
-		var target = targetList.findByKeyword(command.tokens[0]);
-		
-		if(target.items.length > 0) {
-			
-			// output.toActor.push( { text: "Temporarily removed due to bug..." } );
-			
-			// if(target.items[0] instanceof Item) {
-			// 	output.toActor.push( { text: "You look at " + target.items[0].getShortDescription() + "." } );
-			// }
-			// // else if(target.items[0] instanceof character) {
-			// // 	output.toActor.push( { text: "You look at " + target.items[0].name + "." } );
-			// // }
-			
-			output.toActor.push ( { text: "You look at " + target.items[0].getShortDescription() + "." } );
-			
-			// console.log(target.items[0]);
-			
-			// CRASH BUG..... rented items?
-			// It's because a "key" isn't a proper object derived from the schema.  Fix when player un-rents.
-			var descriptionArray = target.items[0].getDetailedDescription();
-			
-			for(var i = 0; i < descriptionArray.length; i++) {
-				output.toActor.push( { text: descriptionArray[i] } );
-			}
-			
-			// //output.toRoom.push( { roomId: this.room.id, textArray: [ { text: "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.", items: [ target.items[0] ] } ] } );
-			// output.toRoomMessage(this.room.id, "ACTOR_NAME looks at FIRST_OBJECT_SHORTDESC.", target.items[0]);
+	var target = targetList.findByKeyword(keyword);
+
+	if(target.items.length > 0) {
+		var targetItem = target.items[0];
+	
+		if(this.inventory.indexOf(targetItem) > -1) {
+			output.toActor.push( { text: targetItem.getShortDescription() + " (carried): " } );
+		}
+		else if(this.wearing.indexOf(targetItem) > -1) {
+			output.toActor.push( { text: targetItem.getShortDescription() + " (worn): " } );
+		}
+		else if(this.room.contents.indexOf(targetItem) > -1){
+			output.toActor.push( { text: targetItem.getShortDescription() + " (here): " } );
 		}
 		else {
-			var exit = this.room.getExit(command.tokens[0]);
-			
-			if(exit === null) {
-				output.toActor.push( { text: "You do not see that here." } );
-			}
-			else {
-				// output.toActor.push( { text: exit.getDescription() } );
-			}
+			output.toActor.push( { text: "You look at " + targetItem.getShortDescription() + "." } );
 		}
-	}
-	else {
-		output = this.lookInTarget(command.tokens[0]);
-	}
-	
-	return output;
-};
+		
+		var detailedDescription = targetItem.getDetailedDescription();
+		
+		for(var i = 0; i < detailedDescription.length; i++) {
+			output.toActor.push( { text: detailedDescription[i] } );
+		}
+		
 
-characterSchema.methods.lookInTarget = function(keyword) {
-	var output = new Output(this);
+		return output;		
+	}
+		
+	// TODO: Put 'look north' / 'look east' / 'look <direction>' here
 	
- //   var targetList = this.inventory.concat(this.wearing).concat(this.room.contents);
-	// var target = targetList.findByKeyword(keyword);
-	
-	// if(target.items.length > 0) {
-	// 	var targetItem = target.items[0];
 		
-	// 	if(this.inventory.indexOf(targetItem) > -1) {
-	// 		output.toActorMessage("FIRST_OBJECT_SHORTDESC (carried): ", target.items[i]);
-	// 	}
-	// 	else if(this.wearing.indexOf(targetItem) > -1) {
-	// 		output.toActorMessage("FIRST_OBJECT_SHORTDESC (worn): ", target.items[i]);
-	// 	}
-	// 	else if(this.room.contents.indexOf(targetItem) > -1){
-	// 		output.toActorMessage("FIRST_OBJECT_SHORTDESC (here): ", target.items[i]);
-	// 	}
-		
-	// 	var contentsList = targetItem.listContents();
-		
-	// 	for(var i = 0; i < contentsList.length; i++) {
-	// 		output.toActor.push( { text: contentsList[i] });
-	// 	}
-		
-	// 	// output.toRoom.push( { roomId: this.room.id, textArray: [ { text: , items: [ target.items[i] ] } ] } );
-	// 	output.toRoomMessage(this.room.id, "ACTOR_NAME looks in FIRST_OBJECT_SHORTDESC.", target.items[i]);
 
-	// }
-	// else {
-	// 	return output.toActor.push( { text: "You do not see that here." } );
-	// }
-	
-	output.toActor( { text: "Removed until rewrite complete" } );
-	
+
+	output.toActor.push( { text: "You do not see that here." } );
 	return output;
 };
 

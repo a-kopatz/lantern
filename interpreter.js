@@ -739,7 +739,7 @@ function do_look(character, command) {
         character.room.showRoomToCharacter(character).emit();
     }
     else {
-        character.lookTarget(command).emit();
+        character.lookTarget(command.tokens[0]).emit();
     }
 }
 

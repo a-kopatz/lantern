@@ -370,20 +370,6 @@ exports.character_eatItemReturnsErrorWhenItemNotFound = function(test) {
 
 ///////////////////////////////////////////////////////////
 
-exports.character_lookTargetReturnsErrorWhenNothingFound = function(test) {
-    var actor = new Character();
-    actor.keywords = [];
-    
-    var room = new Room();
-    room.id = 1;
-
-    room.addCharacter(actor);
-    
-    // Player typed 'look at monkey'
-    var result = actor.lookTarget( { tokens: [ "monkey" ], allTokens: [ "look", "at", "monkey" ] } );
-    test.equal(result.toActor[0].text, "You do not see that here.");
-    test.done();
-};
 
 // FIXME
 // exports.character_lookTargetReturnsObjectDescriptionsWhenWorn = function(test) {

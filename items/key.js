@@ -6,9 +6,9 @@ var itemSchema = require("../item").schema;
 var keySchema = itemSchema.extend({
 }, { collection : 'items' });
 
-// keySchema.methods.getType = function() {
-// 	return global.ITEM_CLOTHES;
-// };
+keySchema.methods.getType = function() {
+	return global.ITEM_KEY;
+};
 
 var keyModel = mongoose.model('key', keySchema);
 
