@@ -842,7 +842,12 @@ function do_goto(character, command) {
         character.emitMessage("Go to who?");
     }
     else {
-        character.goToChararacter(command.tokens[0]).emit();
+        if(isNaN(command.tokens[0])) {
+            character.goToChararacter(command.tokens[0]).emit();
+        }
+        else {
+            character.goToRoom(command.tokens[0]).emit();
+        }
     }
 }
 

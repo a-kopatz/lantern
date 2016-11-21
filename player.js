@@ -565,6 +565,9 @@ playerSchema.methods.goToRoom = function(keyword) {
 		output.toRoom.push( { roomId: oldRoomId, text: "ACTOR_NAME shimmers and vanishes." } );
 		output.toRoom.push( { roomId: newRoom.id, text: "ACTOR_NAME shimmers and appears." } );
 	}
+	else {
+		output.toActor.push( { text: "No such room found!" } );
+	}
 	
 	return output;
 };
