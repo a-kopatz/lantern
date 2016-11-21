@@ -169,6 +169,7 @@ var COMMAND_LIST = [
           { command: "reply"    , minimumPosition: global.POS_DEAD    , functionPointer: do_reply      , minimumLevel: 0, subCommand: 0 },
           { command: "rest"     , minimumPosition: global.POS_RESTING , functionPointer: do_rest       , minimumLevel: 0, subCommand: 0 },
           { command: "roll"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_ROLL },
+          { command: "roomedit" , minimumPosition: global.POS_DEAD    , functionPointer: do_roomedit   , minimumLevel: global.LEVEL_ADMINISTRATOR },
           { command: "ruffle"   , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_RUFFLE },
 
           { command: "'"        , minimumPosition: global.POS_RESTING , functionPointer: do_say        , minimumLevel: 0, subCommand: 0 },
@@ -1138,7 +1139,11 @@ function do_helpedit(character, command) {
             character.emitMessage('Helpedit: add delete description addseealso removeseealso');
             break;
     }
-    
+}
+
+function do_roomedit(character, command) {
+    character.emitMessage("Not implemented, dude.");
+    return;
 }
 
 // Exports
