@@ -1,7 +1,5 @@
 var mongoose = require('mongoose');
 var schema = mongoose.Schema;
-// var constants = require("./constants");
-// var extra = require('./extra').schema;
 var autoIncrement = require('mongoose-auto-increment');
 
 var replySchema = new schema({

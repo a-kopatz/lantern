@@ -840,8 +840,6 @@ playerSchema.methods.writeNote = function(paperToken, penToken) {
 	return output;
 };
 
-playerSchema.methods
-
 playerSchema.methods.load = function(name, callback) {
 	playerModel.find({ name: name }, function(err, docs) {
 		callback(docs);

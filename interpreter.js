@@ -3,6 +3,7 @@ var bug = require("./bug").bug;
 var idea = require("./idea").idea;
 var typo = require("./typo").typo;
 var helpdoc = require("./helpdoc");
+var Helpdoc = require("./helpdoc").helpdoc;
 
 var Social =  require("./social");
 var Character = require("./character");
@@ -100,6 +101,7 @@ var COMMAND_LIST = [
 //           { command: "gtell"    , minimumPosition: global.POS_SLEEPING, functionPointer: go_gsay       , minimumLevel: 0, subCommand: 0 },
 
           { command: "help"     , minimumPosition: global.POS_DEAD    , functionPointer: do_help       , minimumLevel: 0, subCommand: 0 },
+          { command: "helpedit" , minimumPosition: global.POS_DEAD    , functionPointer: do_helpedit   , minimumLevel: global.LEVEL_ADMINISTRATOR },
 
           { command: "hiccup"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_HICCUP },
 //           { command: "hit"      , minimumPosition: global.POS_RESTING , functionPointer: do_hit        , minimumLevel: 0, subCommand: 0 },
@@ -1055,6 +1057,83 @@ function do_help(character, command) {
             }
         });
     }
+}
+
+function do_helpedit(character, command) {
+    console.log(command);
+    
+    if(command.tokens.length < 1) {
+        character.emitMessage('Ok... edit help, yes, but how?');
+        character.emitMessage('add, delete, description, addseealso, removeseealso');
+        return;
+    }
+    
+    switch(command.tokens[0].toLowerCase()) {
+        case 'add':
+            if(command.tokens.length < 2) {
+                character.emitMessage('Ok... but what topic do you want to add?');
+                return;
+            }
+            else {
+	           helpdoc.addTopic(command.tokens[1], character);
+            }
+            break;
+        case 'delete':
+            if(command.tokens.length < 2) {
+                character.emitMessage('Ok... but what topic do you want to delete?');
+                return;
+            }
+            else {
+                helpdoc.deleteTopic(command.tokens[1], character);
+            }
+            break;
+        case 'description':
+            if(command.tokens.length < 2) {
+                character.emitMessage('Ok... but what topic do you want to change?');
+                return;
+            }
+            else {
+                var helpdocValue = command.subInput.split(' ');
+                helpdocValue.shift();
+                helpdocValue.shift();
+                helpdoc.setDescription(command.tokens[1], helpdocValue.join(' '), character);
+            }
+            break;
+        case 'addseealso':
+            if(command.tokens.length < 2) {
+                character.emitMessage('Ok... but what topic do you want to change?');
+                return;
+            }
+            else {
+                if(command.tokens.length < 3) {
+                    character.emitMessage('Ok... but what "seealso" do you want to add to ' + command.tokens[1] + '?');
+                    return;
+                }
+                else {
+                    helpdoc.addSeeAlso(command.tokens[1], command.tokens[2], character);
+                }
+            }
+            break;
+        case 'removeseealso':
+            if(command.tokens.length < 2) {
+                character.emitMessage('Ok... but what topic do you want to change?');
+                return;
+            }
+            else {
+                if(command.tokens.length < 3) {
+                    character.emitMessage('Ok... but what "seealso" do you want to remove from ' + command.tokens[1] + '?');
+                    return;
+                }
+                else {
+                    helpdoc.removeSeeAlso(command.tokens[1], command.tokens[2], character);
+                }
+            }
+            break;
+        default:
+            character.emitMessage('Helpedit: add delete description addseealso removeseealso');
+            break;
+    }
+    
 }
 
 // Exports
