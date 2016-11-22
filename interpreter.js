@@ -9,6 +9,7 @@ var Social =  require("./social");
 var Character = require("./character");
 var Output = require("./output");
 var utility = require("./utility");
+var room = require("./room");
 
 // Object constructor
 function Interpreter() {
@@ -1066,8 +1067,6 @@ function do_help(character, command) {
 }
 
 function do_helpedit(character, command) {
-    console.log(command);
-    
     if(command.tokens.length < 1) {
         character.emitMessage('Ok... edit help, yes, but how?');
         character.emitMessage('add, delete, description, addseealso, removeseealso');
@@ -1141,9 +1140,81 @@ function do_helpedit(character, command) {
     }
 }
 
+//////////// ONLINE CREATION FUNCTIONS
+
 function do_roomedit(character, command) {
-    character.emitMessage("Not implemented, dude.");
-    return;
+    if(command.tokens.length < 1) {
+        character.emitMessage('Ok... edit a room, but how and which one?');
+        character.emitMessage('add, delete, settitle, setdescription, addexit, removeexit');
+        return;
+    }
+    switch(command.tokens[0].toLowerCase()) {
+        case 'add':
+            var roomTitle = command.subInput.split(' ');
+            roomTitle.shift();
+            room.addRoom(roomTitle.join(' '), character);
+            break;
+        case 'delete':
+            room.deleteRoom(command.tokens[1], character);
+            break;
+        case 'settitle':
+            if(command.tokens.length < 3) {
+                character.emitMessage('Usage: roomedit settitle roomid <room title here>');
+                return;
+            }
+            
+            if(isNaN(command.tokens[1])) {
+                character.emitMessage('Usage: roomedit settitle roomid <room title here>');
+                return;
+            }
+            
+            var roomTitle = command.subInput.split(' ');
+            roomTitle.shift();
+            roomTitle.shift();
+            roomTitle = roomTitle.join(' ');
+            room.setTitle(command.tokens[1], character, roomTitle);
+            break;
+        case 'setdescription':
+            if(command.tokens.length < 3) {
+                character.emitMessage('Usage: roomedit settitle roomid <room title here>');
+                return;
+            }
+            
+            if(isNaN(command.tokens[1])) {
+                character.emitMessage('Usage: roomedit settitle roomid <room title here>');
+                return;
+            }
+            
+            var roomDescription = command.subInput.split(' ');
+            roomDescription.shift();
+            roomDescription.shift();
+            roomDescription = roomDescription.join(' ');
+            room.setDescription(command.tokens[1], character, roomDescription);
+            break;
+        case 'addexit':
+            if(command.tokens.length < 4 || isNaN(command.tokens[1]) || isNaN(command.tokens[3])) {
+                character.emitMessage('Usage: roomedit addexit roomid <direction:N/S/E/W/U/D> <toRoomId>');
+                return;
+            }
+            
+            room.addExit(command.tokens[1], character, command.tokens[2], command.tokens[3]);
+            break;
+        case 'removeexit':
+            if(command.tokens.length < 4 || isNaN(command.tokens[1]) || isNaN(command.tokens[3])) {
+                character.emitMessage('Usage: roomedit removeexit roomid <direction:N/S/E/W/U/D>');
+                return;
+            }
+            
+            room.removeExit(command.tokens[1], character, command.tokens[2]);
+            break;
+        default:
+            character.emitMessage('Roomedit: add delete settitle setdescription, addexit, removeexit');
+            break;
+    }
+
+
+
+    // character.emitMessage("Must not be implemented yet...");
 }
 
 // Exports

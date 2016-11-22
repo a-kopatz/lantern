@@ -629,8 +629,11 @@ playerSchema.methods.summonChararacter = function(keyword) {
 	if(oldRoom !== null) {
 		var oldRoomId = target.room.id;
 		
-	 	target.room.removeCharacter(this);
-	 	this.room.addCharacter(this);
+	 	target.room.removeCharacter(target);
+	 	this.room.addCharacter(target);
+	 	
+		// TODO: Send message to target that player has summoned them!
+
 		output = this.room.showRoomToCharacter(target);
 
 		output.toRoom.push( { roomId: oldRoomId, text: "ACTOR_NAME shimmers and vanishes." } );

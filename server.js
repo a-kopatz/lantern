@@ -491,3 +491,6 @@ var consentMessage = "\r\nThis is an adult-themed game.  As such, it includes ma
     "Type CONSENT to indicate that you agree to these terms: ";
 
 exports.setConnectionModeMenu = setConnectionModeMenu;
+
+
+room.roomSchema.plugin(autoIncrement.plugin, { model: 'room', field: 'id', startAt: 1 });

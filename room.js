@@ -5,6 +5,7 @@ var arrayExtensions = require('./arrayExtensions');
 var constants = require('./constants');
 var utility = require("./utility");
 var Output = require("./output");
+var autoIncrement = require('mongoose-auto-increment');
 
 var exitSchema = new schema({
 	direction: String,
@@ -34,7 +35,7 @@ exitSchema.methods.getDescription = function() {
 };
 
 var roomSchema = new schema({
-	id: Number,
+	id: { type: Number, default: -1 },
 	title: String,
 	description: String,
 	exits: [ exitSchema ],
@@ -226,7 +227,13 @@ roomSchema.methods.showRoomToCharacter = function(character) {
 
 	output.toActor.push( { text: this.title, color: "Cyan" } );
 	
-	output.toActor.push( { text: utility.getFormattedLongString(this.description, true), color: "Gray" } );
+	if(character.level >= global.LEVEL_ADMINISTRATOR) {
+		output.toActor.push( { text: "{ Room ID:" + this.id + "}", color: "Yellow" } );
+	}
+	
+	if(this.description !== undefined && this.description !== null && this.description.length > 0) {
+		output.toActor.push( { text: utility.getFormattedLongString(this.description, true), color: "Gray" } );
+	}
 
 	var exitsMessage = "";
 
@@ -307,22 +314,235 @@ roomSchema.methods.showRoomToCharacter = function(character) {
 
 roomSchema.methods.isShop = function() {
 	return false;
-}
+};
+
 function load(callback) {
 	roomModel.find({}, function(err, docs) {
 		// TODO: log error
-		console.log(err);
+		// console.log(err);
 		callback(docs);
+	});
+}
+
+//////////// ONLINE CREATION FUNCTIONS
+
+function addRoom(roomTitle, character) {
+	var room = new roomModel();
+	room.title = roomTitle;
+	room.save(function(err) {
+        // TODO: Log error, I guess?
+        if(err !== null) {
+            console.log(err);
+        }
+        character.emitMessage('New room saved!');
+        
+        roomModel.find( { "_id":room._id }, function(err, docs) {
+			// TODO: Log error, I guess?
+			
+			if(docs.length > 0) {
+				character.world.rooms.push(docs[0]);
+				character.emitMessage('New room is ' + docs[0].id);
+			}
+        });
+    });
+}
+
+function deleteRoom(roomId, character) {
+	if(isNaN(roomId)) {
+		character.emitMessage('What room ID did you want to delete?');
+		return;
+	}
+	
+	var id = parseInt(roomId, 10);
+	var room = character.world.getRoom(id);
+	
+	if(room === null) {
+		character.emitMessage('That room does not seem to exist....');
+		return;
+	}
+	
+	if(room.contents.length !== 0 || room.players.length !== 0 || room.npcs.length !== 0) {
+		character.emitMessage('That room is not empty!');
+		return;
+	}
+	
+	roomModel.remove( { "id":id}, function(err) {
+        // TODO: Log error, I guess?
+        if(err !== null) {
+            console.log(err);
+        }
+        character.emitMessage('Room deleted!');
+        
+        for(var i = 0; i < character.world.rooms.length; i++) {
+			if(character.world.rooms[i].id === id) {
+				character.world.rooms.splice(i, 1);
+				break;
+			}
+		}
+	});
+}
+
+function setTitle(roomId, character, newTitle) {
+	if(isNaN(roomId)) {
+		character.emitMessage('What room ID did you want to re-title?');
+		return;
+	}
+	
+	var id = parseInt(roomId, 10);
+	var room = character.world.getRoom(id);
+	
+	if(room === null) {
+		character.emitMessage('That room does not seem to exist....');
+		return;
+	}
+	
+	room.title = newTitle;
+
+	roomModel.find( { "id":id }, function(err, docs) {
+		if(docs.length > 0) {
+			docs[0].title = newTitle;
+			docs[0].save(function(err) {
+		        // TODO: Log error, I guess?
+		        if(err !== null) {
+		            console.log(err);
+		        }
+		        character.emitMessage('Room updated.');
+			});
+		}
+	});
+}
+
+// TODO: This feels a lot like 'setTitle'....
+function setDescription(roomId, character, newDescription) {
+	if(isNaN(roomId)) {
+		character.emitMessage('What room ID did you want to update?');
+		return;
+	}
+	
+	var id = parseInt(roomId, 10);
+	var room = character.world.getRoom(id);
+	
+	if(room === null) {
+		character.emitMessage('That room does not seem to exist....');
+		return;
+	}
+	
+	room.description = newDescription;
+
+	roomModel.find( { "id":id }, function(err, docs) {
+		if(docs.length > 0) {
+			docs[0].description = newDescription;
+			docs[0].save(function(err) {
+		        // TODO: Log error, I guess?
+		        if(err !== null) {
+		            console.log(err);
+		        }
+		        character.emitMessage('Room updated.');
+			});
+		}
+	});
+}
+
+function addExit(roomId, character, direction, toRoomId) {
+	if(isNaN(roomId)) {
+		character.emitMessage('What room ID did you want to update?');
+		return;
+	}
+	
+	if(isNaN(toRoomId)) {
+		character.emitMessage('What room ID did you want to update?');
+		return;
+	}
+	
+	var id = parseInt(roomId, 10);
+	var room = character.world.getRoom(id);
+	var toId = parseInt(toRoomId, 10);
+	
+	if(room.exits === undefined || room.exits === null) {
+		room.exits = [];
+	}
+	
+	for(var i = 0; i < room.exits.length; i++) {
+		if(room.exits[i].direction.toLowerCase() === direction.toLowerCase()) {
+			character.emitMessage('That room already has a direction ' + direction + '.');
+			return;
+		}
+	}
+	
+	var exit = new exitModel();
+	exit.direction = direction.toUpperCase();
+	exit.toRoomId = toId;
+	
+	room.exits.push(exit);
+	
+	roomModel.find( { "id":id }, function(err, docs) {
+		if(docs.length > 0) {
+			docs[0].exits.push(exit);
+			docs[0].save(function(err) {
+		        if(err !== null) {
+		            console.log(err);
+		        }
+		        character.emitMessage('Exit added!');
+			});
+		}
+		else {
+			character.emitMessage("Could not find that room in DB.... weird!");
+		}
+	});
+}
+
+function removeExit(roomId, character, direction) {
+	if(isNaN(roomId)) {
+		character.emitMessage('What room ID did you want to update?');
+		return;
+	}
+	
+	var id = parseInt(roomId, 10);
+	var room = character.world.getRoom(id);
+
+	for(var i = 0; i < room.exits.length; i++) {
+		if(room.exits[i].direction.toLowerCase() === direction.toLowerCase()) {
+			room.exits.splice(i, 1);
+			break;
+		}
+	}
+	
+	roomModel.find( { "id":id }, function(err, docs) {
+		if(docs.length > 0) {
+			for(var i = 0; i < docs[0].exits.length; i++) {
+				if(docs[0].exits[i].direction.toLowerCase() === direction.toUpperCase()) {
+					docs[0].exits.splice(i, 1);
+					break;
+				}
+			}
+			
+			docs[0].save(function(err) {
+		        if(err !== null) {
+		            console.log(err);
+		        }
+		        character.emitMessage('Exit removed!');
+			});
+		}
+		else {
+			character.emitMessage("Could not find that room in DB.... weird!");
+		} 
 	});
 }
 
 var exitModel = mongoose.model('exit', exitSchema);
 var roomModel = mongoose.model('room', roomSchema);
 
+
 module.exports = {
 	roomSchema: roomSchema,
 	room: roomModel,
 	exitSchema: exitSchema,
 	exit: exitModel,
-	load: load
+	load: load,
+	addRoom: addRoom,
+	deleteRoom: deleteRoom,
+	setTitle: setTitle,
+	setDescription: setDescription,
+	addExit: addExit,
+	removeExit: removeExit
 };
