@@ -118,10 +118,81 @@ function load(id, item, commands, world, previousThing, instructionNumber, callb
 	});
 }
 
+function loadIntoInventory(id, item, character) {
+    itemModel.find({id: id}, function(err, docs) {
+        if(docs.length > 0) {
+            character.inventory.push(docs[0]);
+            character.emitMessage('Item loaded!');
+        }
+        else {
+            character.emitMessage('Item not found!');
+        }
+    });
+}
+
+//////////// ONLINE CREATION FUNCTIONS
+
+function addItem(itemType, character) {
+	var item = new itemModel();
+	
+	if(global.itemTypes.indexOf(itemType) < 0) {
+	    character.emitMessage('Sorry -- you cannot create that type of item (yet)');
+	    
+	    var msg = 'Item types are:'
+	    for(var i = 0; i < global.itemTypes.length; i++) {
+	        msg = msg + ' ' + global.itemTypes[i];
+	    }
+	    
+	    character.emitMessage(msg);
+	    return;
+	}
+	
+	item.type = itemType;
+	item.__t = itemType.toLowerCase();
+	
+	item.save(function(err) {
+        // TODO: Log error, I guess?
+        if(err !== null) {
+            console.log(err);
+        }
+        character.emitMessage('New item saved!');
+        
+        itemModel.find( { "_id":item._id }, function(err, docs) {
+			// TODO: Log error, I guess?
+			
+			if(docs.length > 0) {
+				character.emitMessage('New item is ' + docs[0].id);
+			}
+        });
+    });
+}
+
+function itemEdit(itemId, character) {
+	if(isNaN(itemId)) {
+		character.emitMessage('What item ID did you want to update?');
+		return;
+	}    
+	
+    var id = parseInt(itemId, 10);
+    
+    itemModel.find( { "id":id }, function(err, docs) {
+		if(docs.length > 0) {
+		    character.socket.editingItem = docs[0];
+		    character.socket.connectionState = global.CON_ITEMEDIT_KEYWORDS;
+		    character.emitMessage('Type a list of comma-delimited keywords for the item.', 'IndianRed', 'ITEM KEYWORDS: > ');
+		}
+		else {
+		    character.emitMessage('That item does not exist!!!');
+		}
+    }); 
+}
+
+
 var itemModel = mongoose.model('item', itemSchema);
 
 module.exports = {
 	schema: itemSchema,
 	item: itemModel,
-	load: load
+	load: load,
+	loadIntoInventory: loadIntoInventory
 };

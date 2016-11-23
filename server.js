@@ -226,6 +226,60 @@ io.sockets.on("connection", function(socket) {
                         break;
                 }
                 break;
+            case global.CON_DOOREDIT_KEYWORDS:
+                var array = message['input'].split(',');
+                socket.editingExit.keywords = [];
+                for(var i = 0; i < array.length; i++) {
+                    socket.editingExit.keywords.push(array[i]);
+                }
+                socket.connectionState = global.CON_DOOREDIT_CLOSABLE;
+                socket.emit('message', { message: 'Is the exit closable? (true/false)', prompt: "IsClosable: > " });
+                break;
+            case global.CON_DOOREDIT_CLOSABLE:
+                socket.editingExit.isClosable = message['input'];
+                socket.connectionState = global.CON_DOOREDIT_ISCLOSED;
+                socket.emit('message', { message: 'Is the exit currently closed? (true/false)', prompt: "IsClosed: > " });
+                break;
+            case global.CON_DOOREDIT_ISCLOSED:
+                socket.editingExit.isClosed = message['input'];
+                socket.connectionState = global.CON_DOOREDIT_LOCKABLE;
+                socket.emit('message', { message: 'Is the exit lockable? (true/false)', prompt: "IsLockable: > " });
+                break;
+            case global.CON_DOOREDIT_LOCKABLE:
+                socket.editingExit.isLockable = message['input'];
+                socket.connectionState = global.CON_DOOREDIT_ISLOCKED;
+                socket.emit('message', { message: 'Is the exit currently locked? (true/false)', prompt: "IsLocked: > " });
+                break;
+            case global.CON_DOOREDIT_ISLOCKED:
+                socket.editingExit.isLocked = message['input'];
+                socket.connectionState = global.CON_DOOREDIT_ISPICKPROOF;
+                socket.emit('message', { message: 'Can the doorlock pickproof? (true/false)', prompt: "IsPickProof: > " });
+                break;
+            case global.CON_DOOREDIT_ISPICKPROOF:
+                socket.editingExit.isPickproof = message['input'];
+                socket.connectionState = global.CON_DOOREDIT_KEYID;
+                socket.emit('message', { message: 'What is the ID of the key for the door? (-1 = no key)', prompt: "Key ID: > " });
+                break;                
+            case global.CON_DOOREDIT_KEYID:
+                socket.editingExit.keyId = message['input'];
+                socket.connectionState = global.CON_DOOREDIT_BMILIMIT;
+                socket.emit('message', { message: 'What is the BMI Limit to pass through the exit? (-1 = no limit)', prompt: "BMI Limit: > " });
+                break;
+            case global.CON_DOOREDIT_BMILIMIT:
+                socket.editingExit.bmiLimit = message['input'];
+                socket.connectionState = global.CON_PLAYING;
+                socket.emit('message', { message: 'OK!', prompt: "> " });
+                room.saveExit(socket.editingRoomId, socket.player, socket.editingExit);
+                break;
+            case global.CON_ITEMEDIT_KEYWORDS:
+                var array = message['input'].split(',');
+                socket.editingItem.keywords = [];
+                for(var i = 0; i < array.length; i++) {
+                    socket.editingItem.keywords.push(array[i]);
+                }
+                socket.connectionState = global.CON_ITEMEDIT_SHORTDESC;
+                socket.emit('message', { message: 'Enter the short description: (Ex: a hamburger)', prompt: "IsClosable: > " });
+                break;
         }
     }
     

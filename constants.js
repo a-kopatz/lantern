@@ -9,6 +9,33 @@ global.CON_QCLASS     = 8; // Class?
 global.CON_CONSENT    = 15;
 global.CON_RMOTD      = 50;
 global.CON_MENU       = 60;
+
+// DoorEdit
+	global.CON_DOOREDIT_KEYWORDS = 100;
+	global.CON_DOOREDIT_KEYID = 101;
+	global.CON_DOOREDIT_CLOSABLE = 102;
+	global.CON_DOOREDIT_ISCLOSED = 103;
+	global.CON_DOOREDIT_LOCKABLE = 104;
+	global.CON_DOOREDIT_ISLOCKED = 105;
+	global.CON_DOOREDIT_ISPICKPROOF = 106;
+	global.CON_DOOREDIT_BMILIMIT = 107;
+
+// ItemEdit
+	global.CON_ITEMEDIT_KEYWORDS = 200;
+	global.CON_ITEMEDIT_SHORTDESC = 201;
+	global.CON_ITEMEDIT_LONGDESC = 202;
+	global.CON_ITEMEDIT_PLURALDESC = 203;
+	global.CON_ITEMEDIT_DETAILEDDESC = 204;
+	global.CON_ITEMEDIT_TAKEABLE = 205;
+	global.CON_ITEMEDIT_COST = 206;
+	global.CON_FOODEDIT_CALORIES = 207;
+	global.CON_FURNITUREEDIT_CONDITION = 208;
+	global.CON_FURNITUREEDIT_MAXIMUMWEIGHT = 209;
+	global.CON_CLOTHESEDIT_WEARSLOTS = 210;
+	global.CON_CLOTHESEDIT_CONDITION = 211;
+	global.CON_CLOTHESEDIT_MAXIMUMBMI = 212;
+	
+
 global.CON_BLOCKED    = 999; // Input is ignored; waiting for async server process
 
 global.MAX_LINKLESSTIME = 5;
@@ -127,6 +154,39 @@ global.POS_RESTING    = 5;
 global.POS_SITTING    = 6;
 global.POS_FIGHTING   = 7;
 global.POS_STANDING   = 8;
+
+// TODO: Somehow fix this and other stuff
+global.itemTypes = [
+	global.ITEM_LIGHT,
+	global.ITEM_SCROLL,
+	global.ITEM_WAND,
+	global.ITEM_STAFF,
+	global.ITEM_WEAPON,
+	global.ITEM_TREASURE,
+	global.ITEM_ARMOR,
+	global.ITEM_POTION,
+	global.ITEM_OTHER,
+	global.ITEM_TRASH,
+	global.ITEM_CONTAINER,
+	global.ITEM_NOTE,
+	global.ITEM_DRINKCONTAINER,
+	global.ITEM_KEY,
+	global.ITEM_FOOD,
+	global.ITEM_MONEY,
+	global.ITEM_PEN,
+	global.ITEM_BOAT,
+	global.ITEM_FOUNTAIN,
+	global.ITEM_CORPSE,
+	global.ITEM_BANK,
+	global.ITEM_BULLETINBOARD,
+	global.ITEM_CLOTHES,
+	global.ITEM_SHIRT,
+	global.ITEM_PANTS,
+	global.ITEM_SCALE,
+	global.ITEM_UNDERPANTS,
+	global.ITEM_BRA,
+	global.ITEM_FEEDINGMACHINE
+];
 
 global.ITEM_LIGHT = "Light";
 global.ITEM_SCROLL = "Scroll";

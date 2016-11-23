@@ -11,6 +11,11 @@ var Output = require("./output");
 var utility = require("./utility");
 var room = require("./room");
 
+var Item = require('./item');
+var item = require('./item').item;
+var Npc = require('./npc');
+var npc = require('./npc').npc;
+
 // Object constructor
 function Interpreter() {
     
@@ -50,6 +55,7 @@ var COMMAND_LIST = [
 //           { command: "consider" , minimumPosition: global.POS_RESTING , functionPointer: do_consider   , minimumLevel: 0, subCommand: 0 },
           { command: "congrat"  , minimumPosition: global.POS_SLEEPING, functionPointer: do_gen_comm   , minimumLevel: 0, subCommand: global.SCMD_GRATZ },
           { command: "cough"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_COUGH },
+          { command: "create"   , minimumPosition: global.POS_RESTING , functionPointer: do_create     , minimumLevel: global.LEVEL_ADMINISTRATOR },
           { command: "cringe"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_CRINGE },
           { command: "cry"      , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_CRY },
           { command: "cuddle"   , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_CUDDLE },
@@ -62,6 +68,7 @@ var COMMAND_LIST = [
           { command: "daydream" , minimumPosition: global.POS_SLEEPING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_DAYDREAM },
           { command: "drink"    , minimumPosition: global.POS_RESTING , functionPointer: do_drink      , minimumLevel: 0  },
           { command: "donate"   , minimumPosition: global.POS_RESTING , functionPointer: do_donate     , minimumLevel: 0, subCommand: 0 },
+          { command: "dooredit" , minimumPosition: global.POS_DEAD    , functionPointer: do_dooredit   , minimumLevel: global.LEVEL_ADMINISTRATOR },
           { command: "drop"     , minimumPosition: global.POS_RESTING , functionPointer: do_drop       , minimumLevel: 0, subCommand: 0 },
           { command: "drool"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_DROOL },
 
@@ -113,7 +120,8 @@ var COMMAND_LIST = [
           { command: "inventory", minimumPosition: global.POS_DEAD    , functionPointer: do_inventory  , minimumLevel: 0, subCommand: 0 },
           { command: "idea"     , minimumPosition: global.POS_DEAD    , functionPointer: do_submit_idea, minimumLevel: 0, subCommand: 0 },
 //           { command: "insult"   , minimumPosition: global.POS_RESTING , functionPointer: do_insult     , minimumLevel: 0, subCommand: 0 },
-
+          { command: "itemedit" , minimumPosition: global.POS_DEAD    , functionPointer: do_itemedit   , minimumLevel: global.LEVEL_ADMINISTRATOR },
+          
           { command: "junk"     , minimumPosition: global.POS_RESTING , functionPointer: do_junk       , minimumLevel: 0, subCommand: 0 },
 
 //           { command: "kick"     , minimumPosition: global.POS_FIGHTING, functionPointer: do_kick       , minimumLevel: 0, subCommand: 0 },
@@ -122,7 +130,7 @@ var COMMAND_LIST = [
           { command: "look"     , minimumPosition: global.POS_RESTING , functionPointer: do_look       , minimumLevel: 0, subCommand: 0},
           { command: "laugh"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_LAUGH },
           { command: "lick"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_LICK },
-        //   { command: "list"     , minimumPosition: global.POS_RESTING , functionPointer: do_list       , minimumLevel: 0, subCommand: 0 },
+          { command: "listrooms", minimumPosition: global.POS_RESTING , functionPointer: do_listrooms  , minimumLevel: global.LEVEL_ADMINISTRATOR },
 
           { command: "lock"     , minimumPosition: global.POS_RESTING , functionPointer: do_lock_door  , minimumLevel: 0, subCommand: 0 },
           { command: "love"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_LOVE },
@@ -1148,6 +1156,7 @@ function do_roomedit(character, command) {
         character.emitMessage('add, delete, settitle, setdescription, addexit, removeexit');
         return;
     }
+    
     switch(command.tokens[0].toLowerCase()) {
         case 'add':
             var roomTitle = command.subInput.split(' ');
@@ -1200,7 +1209,7 @@ function do_roomedit(character, command) {
             room.addExit(command.tokens[1], character, command.tokens[2], command.tokens[3]);
             break;
         case 'removeexit':
-            if(command.tokens.length < 4 || isNaN(command.tokens[1]) || isNaN(command.tokens[3])) {
+            if(command.tokens.length < 3 || isNaN(command.tokens[1])) {
                 character.emitMessage('Usage: roomedit removeexit roomid <direction:N/S/E/W/U/D>');
                 return;
             }
@@ -1211,10 +1220,60 @@ function do_roomedit(character, command) {
             character.emitMessage('Roomedit: add delete settitle setdescription, addexit, removeexit');
             break;
     }
+}
 
+function do_dooredit(character, command) {
+    if(command.tokens.length < 2) {
+        character.emitMessage('Dooredit: roomid <direction:N/S/E/W/U/D>');
+        character.emitMessage('Then the wizard will ask for specific things.');
+    }
+    else {
+        room.doorEdit(command.tokens[0], character, command.tokens[1]);
+    }
+}
 
+function do_listrooms(character, command) {
+    for(var i = 0; i < character.world.rooms.length; i++) {
+        character.emitMessage(character.world.rooms[i].id + "::" + character.world.rooms[i].title);
+    }
+}
 
-    // character.emitMessage("Must not be implemented yet...");
+function do_itemedit(character, command) {
+    if(command.tokens.length < 1) {
+        character.emitMessage('Ok... edit an item, but how and which one?');
+        character.emitMessage('add, delete');
+        return;
+    }
+    
+    switch(command.tokens[0].toLowerCase()) {
+        case 'add':
+            if(command.tokens.length < 2) {
+                character.emitMessage('But what kind of item do you want to make?');
+            }
+            else {
+                
+            }
+            
+            break;
+        case 'delete':
+            character.emitMessage('Not done yet.');
+            break;
+    //     default:
+    //         character.emitMessage('Itemedit: add delete');
+    //         break;            
+    }
+    // character.emitMessage('Not done yet.');
+}
+
+function do_create(character, command) {
+    //var newItem = new item();
+    
+    if(command.tokens.length < 0) {
+        character.emitMessage("Usage: create <itemnumber>");
+    }
+    
+    var newItemId = parseInt(command.tokens[0], 10);
+    Item.loadIntoInventory(newItemId, character);
 }
 
 // Exports

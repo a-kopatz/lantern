@@ -500,6 +500,11 @@ function removeExit(roomId, character, direction) {
 	var id = parseInt(roomId, 10);
 	var room = character.world.getRoom(id);
 
+	if(room === null) {
+		character.emitMessage('That room does not exist!');
+		return;
+	}
+
 	for(var i = 0; i < room.exits.length; i++) {
 		if(room.exits[i].direction.toLowerCase() === direction.toLowerCase()) {
 			room.exits.splice(i, 1);
@@ -510,7 +515,7 @@ function removeExit(roomId, character, direction) {
 	roomModel.find( { "id":id }, function(err, docs) {
 		if(docs.length > 0) {
 			for(var i = 0; i < docs[0].exits.length; i++) {
-				if(docs[0].exits[i].direction.toLowerCase() === direction.toUpperCase()) {
+				if(docs[0].exits[i].direction.toLowerCase() === direction.toLowerCase()) {
 					docs[0].exits.splice(i, 1);
 					break;
 				}
@@ -521,6 +526,67 @@ function removeExit(roomId, character, direction) {
 		            console.log(err);
 		        }
 		        character.emitMessage('Exit removed!');
+			});
+		}
+		else {
+			character.emitMessage("Could not find that room in DB.... weird!");
+		} 
+	});
+}
+
+function doorEdit(roomId, character, direction) {
+	if(isNaN(roomId)) {
+		character.emitMessage('What room ID did you want to update?');
+		return;
+	}
+	
+	var id = parseInt(roomId, 10);
+	var room = character.world.getRoom(id);
+	
+	if(room === null) {
+		character.emitMessage('That room does not exist!');
+		return;
+	}
+	
+	var found = false;
+	
+	for(var i = 0; i < room.exits.length; i++) {
+		if(room.exits[i].direction.toLowerCase() === direction.toLowerCase()) {
+			character.socket.editingExit = room.exits[i];
+			character.socket.connectionState = global.CON_DOOREDIT_KEYWORDS;
+			character.socket.editingRoomId = id;
+			character.emitMessage('Type a list of comma-delimited keywords for the door.', 'IndianRed', 'DOOR KEYWORDS: > ');
+			found = true;
+			break;
+		}
+	}
+	
+	if(found === false) {
+		character.emitMessage('No door seems to exist in that direction in that room.');
+	}
+}
+
+function saveExit(roomId, character, exit) {
+	roomModel.find( { "id":roomId }, function(err, docs) {
+		if(docs.length > 0) {
+			for(var i = 0; i < docs[0].exits.length; i++) {
+				if(docs[0].exits[i].direction.toLowerCase() === exit.direction.toLowerCase()) {
+					docs[0].exits.splice(i, 1);
+					docs[0].exits.push(exit);
+					break;
+				}
+			}
+			
+			delete docs[0]['_id'];
+
+			docs[0].save(function(err) {
+				console.log('==>' + err);
+				
+		        if(err) {
+		            console.log(err);
+		        }
+		        
+		        character.emitMessage('Exit saved!');
 			});
 		}
 		else {
@@ -544,5 +610,7 @@ module.exports = {
 	setTitle: setTitle,
 	setDescription: setDescription,
 	addExit: addExit,
-	removeExit: removeExit
+	removeExit: removeExit,
+	doorEdit: doorEdit,
+	saveExit: saveExit
 };

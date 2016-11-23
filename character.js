@@ -64,6 +64,27 @@ characterSchema.methods.emitMessage = function(message, color) {
 	return "";
 };
 
+characterSchema.methods.emitMessage = function(message, color, prompt) {
+	if(message != undefined) {
+		if(message.length > 0) {
+			var formattedMessage = message.substring(0, 1).toUpperCase() + message.substring(1);
+		
+			if(this.socket !== undefined) {
+				if(color !== undefined) {
+					this.socket.emit('message', { message: formattedMessage, color: color, prompt: prompt });
+				}
+				else {
+					this.socket.emit('message', { message: formattedMessage, prompt: prompt });
+				}
+			}
+			
+			return formattedMessage;
+		}
+	}
+
+	return "";
+};
+
 characterSchema.methods.emitRoomMessages = function(messages) {
 	for(var i = 0; i < messages.length; i++) {
 		this.emitRoomMessage(messages[i].text, messages[i].color);
@@ -937,6 +958,7 @@ characterSchema.methods._handleEat = function(quantity, keywordToken, itemArray)
     
     if(itemMapResult.mapItems.length > 0) {
 		var randomizedSynonym = utility.getRandomSynonym('eat');
+		// TODO: Set the color here
 		output.toActor.push( { text: "You " + randomizedSynonym[0] + " " + itemMapResult.output + "." });
 		output.toRoom.push( { roomId: this.room.id, text: this.name + " " + randomizedSynonym[1] + " " + itemMapResult.output + "." } );
 		
