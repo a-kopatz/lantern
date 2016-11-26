@@ -1241,7 +1241,7 @@ function do_listrooms(character, command) {
 function do_itemedit(character, command) {
     if(command.tokens.length < 1) {
         character.emitMessage('Ok... edit an item, but how and which one?');
-        character.emitMessage('add, delete');
+        character.emitMessage('add delete edit');
         return;
     }
     
@@ -1251,16 +1251,24 @@ function do_itemedit(character, command) {
                 character.emitMessage('But what kind of item do you want to make?');
             }
             else {
-                
+                Item.itemAdd(command.tokens[1], character);
             }
             
             break;
         case 'delete':
             character.emitMessage('Not done yet.');
             break;
-    //     default:
-    //         character.emitMessage('Itemedit: add delete');
-    //         break;            
+        case 'edit':
+            if(command.tokens.length < 2) {
+                character.emitMessage('But what is the id of the item you want to edit?');
+            }
+            else {
+                Item.itemEdit(command.tokens[1], character);
+            }
+            break;
+        default:
+            character.emitMessage('Itemedit: add delete edit');
+            break;            
     }
     // character.emitMessage('Not done yet.');
 }

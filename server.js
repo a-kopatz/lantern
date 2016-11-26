@@ -25,6 +25,7 @@ var mail = require('./mail');
 
 var Post = require('./post').post;
 
+var item = require('./item');
 var bank = require('./items/bank');
 var bulletinboard = require('./items/bulletinboard');
 var clothes = require('./items/clothes');
@@ -267,9 +268,9 @@ io.sockets.on("connection", function(socket) {
                 break;
             case global.CON_DOOREDIT_BMILIMIT:
                 socket.editingExit.bmiLimit = message['input'];
-                socket.connectionState = global.CON_PLAYING;
                 socket.emit('message', { message: 'OK!', prompt: "> " });
                 room.saveExit(socket.editingRoomId, socket.player, socket.editingExit);
+                socket.connectionState = global.CON_PLAYING;
                 break;
             case global.CON_ITEMEDIT_KEYWORDS:
                 var array = message['input'].split(',');
@@ -278,7 +279,39 @@ io.sockets.on("connection", function(socket) {
                     socket.editingItem.keywords.push(array[i]);
                 }
                 socket.connectionState = global.CON_ITEMEDIT_SHORTDESC;
-                socket.emit('message', { message: 'Enter the short description: (Ex: a hamburger)', prompt: "IsClosable: > " });
+                socket.emit('message', { message: 'Enter the short description: (Ex: a hamburger)', prompt: "Short Description: > " });
+                break;
+            case global.CON_ITEMEDIT_SHORTDESC:
+                socket.editingItem.shortDescription = message['input'];
+                socket.connectionState = global.CON_ITEMEDIT_LONGDESC;
+                socket.emit('message', { message: 'Enter the long description: (Ex: A small hamburger has been left here.)', prompt: "Long Description: > " });
+                break;
+            case global.CON_ITEMEDIT_LONGDESC:
+                socket.editingItem.longDescription = message['input'];
+                socket.connectionState = global.CON_ITEMEDIT_PLURALDESC;
+                socket.emit('message', { message: 'Enter the plural description: (Ex: hamburgers)', prompt: "Plural Description: > " });
+                break;
+            case global.CON_ITEMEDIT_PLURALDESC:
+                socket.editingItem.pluralDescription = message['input'];
+                // socket.connectionState = global.CON_ITEMEDIT_DETAILEDDESC;
+                // socket.emit('message', { message: 'Enter the detailed description: (Ex: A double with ketchup and mayo... it looks delicious!)', prompt: "Detailed Description: > " }); 
+                socket.connectionState = global.CON_ITEMEDIT_TAKEABLE;
+                socket.emit('message', { message: 'Can the item be taken? (true/false)', prompt: "IsTakeable: > " });
+                break;
+            case global.CON_ITEMEDIT_TAKEABLE:
+                socket.editingItem.canBeTaken = message['input'];
+                
+                if(socket.editingItem.type === global.ITEM_FOOD) {
+                    socket.connectionState = global.CON_FOODEDIT_CALORIES;
+                    socket.emit('message', { message: 'How many calories are in the food?', prompt: "Calories: > " });
+                }
+                // Other item types go here
+                break;
+            case global.CON_FOODEDIT_CALORIES:
+                socket.editingItem.calories = message['input'];
+                socket.emit('message', { message: 'OK!', prompt: "> " });
+                item.itemSave(socket.player, socket.editingItem);
+                socket.connectionState = global.CON_PLAYING;
                 break;
         }
     }
@@ -548,3 +581,4 @@ exports.setConnectionModeMenu = setConnectionModeMenu;
 
 
 room.roomSchema.plugin(autoIncrement.plugin, { model: 'room', field: 'id', startAt: 1 });
+item.itemSchema.plugin(autoIncrement.plugin, { model: 'item', field: 'id', startAt: 1 });

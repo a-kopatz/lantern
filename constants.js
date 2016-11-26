@@ -155,39 +155,6 @@ global.POS_SITTING    = 6;
 global.POS_FIGHTING   = 7;
 global.POS_STANDING   = 8;
 
-// TODO: Somehow fix this and other stuff
-global.itemTypes = [
-	global.ITEM_LIGHT,
-	global.ITEM_SCROLL,
-	global.ITEM_WAND,
-	global.ITEM_STAFF,
-	global.ITEM_WEAPON,
-	global.ITEM_TREASURE,
-	global.ITEM_ARMOR,
-	global.ITEM_POTION,
-	global.ITEM_OTHER,
-	global.ITEM_TRASH,
-	global.ITEM_CONTAINER,
-	global.ITEM_NOTE,
-	global.ITEM_DRINKCONTAINER,
-	global.ITEM_KEY,
-	global.ITEM_FOOD,
-	global.ITEM_MONEY,
-	global.ITEM_PEN,
-	global.ITEM_BOAT,
-	global.ITEM_FOUNTAIN,
-	global.ITEM_CORPSE,
-	global.ITEM_BANK,
-	global.ITEM_BULLETINBOARD,
-	global.ITEM_CLOTHES,
-	global.ITEM_SHIRT,
-	global.ITEM_PANTS,
-	global.ITEM_SCALE,
-	global.ITEM_UNDERPANTS,
-	global.ITEM_BRA,
-	global.ITEM_FEEDINGMACHINE
-];
-
 global.ITEM_LIGHT = "Light";
 global.ITEM_SCROLL = "Scroll";
 global.ITEM_WAND = "Wand";

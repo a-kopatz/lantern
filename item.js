@@ -3,9 +3,10 @@ var schema = mongoose.Schema;
 var constants = require("./constants");
 var extra = require('./extra').schema;
 var Output = require("./output");
+var autoIncrement = require('mongoose-auto-increment');
 
 var itemSchema = new schema({
-    id: Number,
+	id: { type: Number, default: -1 },
     keywords: [ String ],
    	// category: { type: Number, default: global.CATEGORY_ITEM },
     shortDescription: String,
@@ -118,7 +119,7 @@ function load(id, item, commands, world, previousThing, instructionNumber, callb
 	});
 }
 
-function loadIntoInventory(id, item, character) {
+function loadIntoInventory(id, character) {
     itemModel.find({id: id}, function(err, docs) {
         if(docs.length > 0) {
             character.inventory.push(docs[0]);
@@ -132,22 +133,23 @@ function loadIntoInventory(id, item, character) {
 
 //////////// ONLINE CREATION FUNCTIONS
 
-function addItem(itemType, character) {
+function itemAdd(itemType, character) {
 	var item = new itemModel();
-	
-	if(global.itemTypes.indexOf(itemType) < 0) {
+	var itemTypes = [ "food" ];
+
+	if(itemTypes.indexOf(itemType) < 0) {
 	    character.emitMessage('Sorry -- you cannot create that type of item (yet)');
 	    
-	    var msg = 'Item types are:'
-	    for(var i = 0; i < global.itemTypes.length; i++) {
-	        msg = msg + ' ' + global.itemTypes[i];
+	    var msg = 'Valid item types are:';
+	    for(var i = 0; i < itemTypes.length; i++) {
+	        msg = msg + ' ' + itemTypes[i];
 	    }
 	    
 	    character.emitMessage(msg);
 	    return;
 	}
 	
-	item.type = itemType;
+	item.type = itemType.substr(0, 1).toUpperCase() + itemType.substr(1);
 	item.__t = itemType.toLowerCase();
 	
 	item.save(function(err) {
@@ -187,12 +189,26 @@ function itemEdit(itemId, character) {
     }); 
 }
 
+function itemSave(character, itemToSave) {
+    itemToSave.save(function(err) { 
+        // TODO: Log error, I guess?
+        if(err !== null) {
+            console.log(err);
+            character.emitMessage(err);
+        }
+        character.emitMessage('Item updated... probably');        
+    });
+}
+
 
 var itemModel = mongoose.model('item', itemSchema);
 
 module.exports = {
-	schema: itemSchema,
+	itemSchema: itemSchema,
 	item: itemModel,
 	load: load,
-	loadIntoInventory: loadIntoInventory
+	loadIntoInventory: loadIntoInventory,
+	itemEdit: itemEdit,
+	itemAdd: itemAdd,
+	itemSave: itemSave
 };

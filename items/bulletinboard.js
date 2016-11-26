@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Output = require("../output");
 var schema = mongoose.Schema;
 var extend = require('mongoose-schema-extend');
-var itemSchema = require("../item").schema;
+var itemSchema = require("../item").itemSchema;
 var Post = require('../post').post;
 
 var bulletinboardSchema = itemSchema.extend({

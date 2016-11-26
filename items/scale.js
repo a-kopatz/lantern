@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var schema = mongoose.Schema;
 var extend = require('mongoose-schema-extend');
-var itemSchema = require("../item").schema;
+var itemSchema = require("../item").itemSchema;
 var Output = require("../output");
 
 var scaleSchema = itemSchema.extend({
