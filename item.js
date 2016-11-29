@@ -4,6 +4,7 @@ var constants = require("./constants");
 var extra = require('./extra').schema;
 var Output = require("./output");
 var autoIncrement = require('mongoose-auto-increment');
+var Food = require('./items/food');
 
 var itemSchema = new schema({
 	id: { type: Number, default: -1 },
@@ -133,41 +134,6 @@ function loadIntoInventory(id, character) {
 
 //////////// ONLINE CREATION FUNCTIONS
 
-function itemAdd(itemType, character) {
-	var item = new itemModel();
-	var itemTypes = [ "food" ];
-
-	if(itemTypes.indexOf(itemType) < 0) {
-	    character.emitMessage('Sorry -- you cannot create that type of item (yet)');
-	    
-	    var msg = 'Valid item types are:';
-	    for(var i = 0; i < itemTypes.length; i++) {
-	        msg = msg + ' ' + itemTypes[i];
-	    }
-	    
-	    character.emitMessage(msg);
-	    return;
-	}
-	
-	item.type = itemType.substr(0, 1).toUpperCase() + itemType.substr(1);
-	item.__t = itemType.toLowerCase();
-	
-	item.save(function(err) {
-        // TODO: Log error, I guess?
-        if(err !== null) {
-            console.log(err);
-        }
-        character.emitMessage('New item saved!');
-        
-        itemModel.find( { "_id":item._id }, function(err, docs) {
-			// TODO: Log error, I guess?
-			
-			if(docs.length > 0) {
-				character.emitMessage('New item is ' + docs[0].id);
-			}
-        });
-    });
-}
 
 function itemEdit(itemId, character) {
 	if(isNaN(itemId)) {
@@ -200,7 +166,6 @@ function itemSave(character, itemToSave) {
     });
 }
 
-
 var itemModel = mongoose.model('item', itemSchema);
 
 module.exports = {
@@ -209,6 +174,5 @@ module.exports = {
 	load: load,
 	loadIntoInventory: loadIntoInventory,
 	itemEdit: itemEdit,
-	itemAdd: itemAdd,
 	itemSave: itemSave
 };

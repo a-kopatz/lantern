@@ -301,7 +301,8 @@ io.sockets.on("connection", function(socket) {
             case global.CON_ITEMEDIT_TAKEABLE:
                 socket.editingItem.canBeTaken = message['input'];
                 
-                if(socket.editingItem.type === global.ITEM_FOOD) {
+                //if(socket.editingItem.type === global.ITEM_FOOD) {
+                if(socket.editingItem instanceof food.food) {
                     socket.connectionState = global.CON_FOODEDIT_CALORIES;
                     socket.emit('message', { message: 'How many calories are in the food?', prompt: "Calories: > " });
                 }
@@ -582,3 +583,4 @@ exports.setConnectionModeMenu = setConnectionModeMenu;
 
 room.roomSchema.plugin(autoIncrement.plugin, { model: 'room', field: 'id', startAt: 1 });
 item.itemSchema.plugin(autoIncrement.plugin, { model: 'item', field: 'id', startAt: 1 });
+food.foodSchema.plugin(autoIncrement.plugin, { model: 'food', field: 'id', startAt: 5000 });

@@ -16,6 +16,8 @@ var item = require('./item').item;
 var Npc = require('./npc');
 var npc = require('./npc').npc;
 
+var Food = require('./items/food');
+
 // Object constructor
 function Interpreter() {
     
@@ -1251,9 +1253,16 @@ function do_itemedit(character, command) {
                 character.emitMessage('But what kind of item do you want to make?');
             }
             else {
-                Item.itemAdd(command.tokens[1], character);
+                switch(command.tokens[1]) {
+                    case "food":
+                        Food.addFood(character);
+                        break;
+                    default:
+                        character.emitMessage('Sorry -- you cannot create that type of item (yet)');
+                        character.emitMessage('Valid items types currently are: food');
+                        break;
+                }
             }
-            
             break;
         case 'delete':
             character.emitMessage('Not done yet.');
