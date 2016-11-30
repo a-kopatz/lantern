@@ -314,6 +314,30 @@ io.sockets.on("connection", function(socket) {
                 item.itemSave(socket.player, socket.editingItem);
                 socket.connectionState = global.CON_PLAYING;
                 break;
+            case global.CON_NPCEDIT_KEYWORDS:
+                var array = message['input'].split(',');
+                socket.editingNpc.keywords = [];
+                for(var i = 0; i < array.length; i++) {
+                    socket.editingNpc.push(array[i]);
+                }
+                socket.connectionState = global.CON_NPCEDIT_NAME;
+                socket.emit('message', { message: 'Enter the name of the NPC: (Ex: Fat Joe)', prompt: "Name: > "  });
+                break;
+            case global.CON_NPCEDIT_NAME:
+                socket.editingNpc.name = message['input'];
+                socket.connectionState = global.CON_NPCEDIT_SHORTDESC;
+                socket.emit('message', { message: 'Enter the short description: (Ex: A cat is here, being annoying.)', prompt: 'Short Descriptions: > ' });
+                break;
+            case global.CON_NPCEDIT_SHORTDESC:
+                socket.editingNpc.shortDescription = message['input'];
+                socket.connectionState = global.CON_NPCEDIT_LONGDESC;
+                socket.emit('message', { message: 'Enter the long description: (Ex: The cat seems to be happy, even if it does nothing.) ', prompt: 'Long Description: > ' });
+                break;
+            case global.CON_NPCEDIT_LONGDESC:
+                socket.editingNpc.longDescription = message['input'];
+                npc.npcSave(socket.player, socket.editingNpc);
+                socket.connectionState = global.CON_PLAYING;
+                break;
         }
     }
     

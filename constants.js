@@ -35,6 +35,11 @@ global.CON_MENU       = 60;
 	global.CON_CLOTHESEDIT_CONDITION = 211;
 	global.CON_CLOTHESEDIT_MAXIMUMBMI = 212;
 	
+// NPC Edit
+	global.CON_NPCEDIT_KEYWORDS = 300;
+	global.CON_NPCEDIT_NAME = 301;
+	global.CON_NPCEDIT_SHORTDESC = 302;
+	global.CON_NPCEDIT_LONGDESC = 303;
 
 global.CON_BLOCKED    = 999; // Input is ignored; waiting for async server process
 

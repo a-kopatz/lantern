@@ -84,12 +84,69 @@ function load(id, npc, commands, world, instructionNumber, callback) {
 	});
 }
 
+//////////// ONLINE CREATION FUNCTIONS
+
+
+
+function addNpc(character) {
+	var newNpc = new npcModel();
+	
+	newNpc.save(function(err) {
+        // TODO: Log error, I guess?
+        if(err !== null) {
+            console.log(err);
+        }
+        character.emitMessage('New npc saved!');
+        
+        npcModel.find( { "_id":newNpc._id }, function(err, docs) {
+			// TODO: Log error, I guess?
+			
+			if(docs.length > 0) {
+				character.emitMessage('New npc is ' + docs[0].id);
+			}
+        });
+    });
+}
+
+function npcEdit(npcId, character) {
+	if(isNaN(npcId)) {
+		character.emitMessage('What npc ID did you want to update?');
+		return;
+	}    
+	
+    var id = parseInt(itemId, 10);
+    
+    npcModel.find( { "id":id }, function(err, docs) {
+		if(docs.length > 0) {
+		    character.socket.editingNpc = docs[0];
+		    character.socket.connectionState = global.CON_NPCEDIT_KEYWORDS;
+		    character.emitMessage('Type a list of comma-delimited keywords for the NPC.', 'IndianRed', 'NPC KEYWORDS: > ');
+		}
+		else {
+		    character.emitMessage('That item does not exist!!!');
+		}
+    }); 
+}
+
+function npcSave(character, npcToSave) {
+    npcToSave.save(function(err) { 
+        // TODO: Log error, I guess?
+        if(err !== null) {
+            console.log(err);
+            character.emitMessage(err);
+        }
+        character.emitMessage('Npc updated... probably');        
+    });
+}
+
 var npcModel = mongoose.model('npc', npcSchema);
 
 module.exports = {
 	schema: npcSchema,
 	npc: npcModel,
-	load: load
+	load: load,
+	addNpc: addNpc,
+	npcSave: npcSave
 };
 
 

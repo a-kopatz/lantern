@@ -142,6 +142,7 @@ var COMMAND_LIST = [
 
           { command: "nibble"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NIBBLE },
           { command: "nod"       , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NOD },
+          { command: "npcedit"   , minimumPosition: global.POS_DEAD    , functionPointer: do_npcedit    , minimumLevel: global.LEVEL_ADMINISTRATOR },
           { command: "nudge"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NUDGE },
           { command: "nuzzle"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_NUZZLE },
           { command: "noauction" , minimumPosition: global.POS_DEAD    , functionPointer: do_tog_auction, minimumLevel: 0, subCommand: 0 },
@@ -1280,6 +1281,37 @@ function do_itemedit(character, command) {
             break;            
     }
     // character.emitMessage('Not done yet.');
+}
+
+function do_npcedit(character, command) {
+    if(command.tokens.length < 1) {
+        character.emitMessage('Ok... edit a NPC, but how and which one?');
+        character.emitMessage('add delete edit');
+        return;
+    }
+
+    switch(command.tokens[0].toLowerCase()) {
+        case 'add':
+            //character.emitMessage("Not done yet, bro.");
+            Npc.addNpc(character);
+            break;
+        case 'delete':
+            character.emitMessage('Not done yet.');
+            break;
+        case 'edit':
+            if(command.tokens.length < 2) {
+                character.emitMessage('But what is the id of the item you want to edit?');
+            }
+            else {
+                // character.emitMessage("Not done yet, bro.");
+                Npc.npcEdit(command.tokens[1], character);
+            }
+            break;
+        default:
+            character.emitMessage('NPCedit: add delete edit');
+            break;            
+    }
+
 }
 
 function do_create(character, command) {
