@@ -16,8 +16,14 @@ autoIncrement.initialize(mongoose.connection);
 var player = require('./player').player;
 var world = require('./world');
 var room = require('./room');
+
+// TODO: Remove shop
 var shop = require('./shop');
+// TODO: Remove zone
 var zone = require('./zone');
+
+var resetcommand = require('./resetcommand');
+
 var interpreter = require('./interpreter');
 var time = require('./time');
 var Time = require('./time').time;
@@ -141,6 +147,14 @@ room.load(function(roomDocs) {
         //         gameWorld.shops[i].initialize();
         //     }
         // });
+    });
+
+    resetcommand.load(function(resetcommandDocs) {
+        gameWorld.resetCommands = resetcommandDocs;
+
+        for(var i = 0; i < gameWorld.resetCommands.length; i++) {
+            gameWorld.resetCommands[i].reset(gameWorld);
+        }
     });
 });
 
@@ -608,3 +622,4 @@ exports.setConnectionModeMenu = setConnectionModeMenu;
 room.roomSchema.plugin(autoIncrement.plugin, { model: 'room', field: 'id', startAt: 1 });
 item.itemSchema.plugin(autoIncrement.plugin, { model: 'item', field: 'id', startAt: 1 });
 food.foodSchema.plugin(autoIncrement.plugin, { model: 'food', field: 'id', startAt: 5000 });
+resetcommand.resetcommandSchema.plugin(autoIncrement.plugin, { model: 'resetcommand', field: 'id', startAt: 1 });
