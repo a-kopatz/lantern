@@ -85,6 +85,7 @@ var COMMAND_LIST = [
 
           { command: "fart"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_FART },
           { command: "feed"     , minimumPosition: global.POS_RESTING , functionPointer: do_feed       , minimumLevel: 0, subCommand: 0 },
+          { command: "findroom" , minimumPosition: global.POS_DEAD    , functionPointer: do_findrooms  , minimumLevel: 0 },          
           { command: "finditem" , minimumPosition: global.POS_DEAD    , functionPointer: do_finditems  , minimumLevel: 0 },
           { command: "flip"     , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_FLIP },
           { command: "flirt"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_FLIRT },
@@ -217,6 +218,7 @@ var COMMAND_LIST = [
           { command: "spit"     , minimumPosition: global.POS_SITTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SPIT },
           { command: "stand"    , minimumPosition: global.POS_RESTING , functionPointer: do_stand      , minimumLevel: 0, subCommand: 0 },
           { command: "stare"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_STARE },
+          { command: "statroom" , minimumPosition: global.POS_DEAD    , functionPointer: do_statroom   , minomumLevel: 0 },
           { command: "statitem" , minimumPosition: global.POS_DEAD    , functionPointer: do_statitem   , minimumLevel: 0 },
           { command: "steam"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_STEAM },
           { command: "strut"    , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_STRUT},
@@ -1239,6 +1241,59 @@ function do_listrooms(character, command) {
     for(var i = 0; i < character.world.rooms.length; i++) {
         character.emitMessage(character.world.rooms[i].id + " :: " + character.world.rooms[i].title);
     }
+}
+
+function do_findrooms(character, command) {
+    if(command.tokens.length < 1) {
+        character.emitMessage('But what rooms do you want to search for?');
+        return;
+    }
+
+    for(var i = 0; i < character.world.rooms.length; i++) {
+        if(character.world.rooms[i].title.indexOf(command.tokens[0]) > -1) {
+            character.emitMessage(character.world.rooms[i].id + " :: " + character.world.rooms[i].title);
+        }
+    }
+}
+
+function do_statroom(character, command) {
+    if(command.tokens.length < 1) {
+        character.emitMessage('But what item do you want to get the stats on?');
+        return;
+    }
+
+    if(isNaN(command.tokens[0])) {
+        character.emitMessage('But what is the ID of the item you want to get the stats on?');
+        return;
+    }
+
+    var id = parseInt(command.tokens[0], 10);
+    Item.itemStat(character, id);
+}
+
+function do_statroom(character, command) {
+    // if(command.tokens.length < 1) {
+    //     character.emitMessage('But what room do you want to get the stats on?');
+    //     return;
+    // }
+
+    // if(isNaN(command.tokens[0])) {
+    //     character.emitMessage('But what is the ID of the room you want to get the stats on?');
+    //     return;
+    // }
+
+    // var id = parseInt(command.tokens[0], 10);
+
+    // for(var i = 0; i < character.world.rooms.length; i++) {
+    //     if(character.world.rooms[i].id === id) {
+    //         character.emitMessage(character.world.rooms[i].toString());
+    //         break;
+    //     }
+    // }
+
+    // TODO: Implement this but differently -- people can see password and other details :(
+
+    character.emitMessage('Not implemented at the moment.');
 }
 
 function do_listitems(character, command) {
