@@ -85,6 +85,7 @@ var COMMAND_LIST = [
 
           { command: "fart"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_FART },
           { command: "feed"     , minimumPosition: global.POS_RESTING , functionPointer: do_feed       , minimumLevel: 0, subCommand: 0 },
+          { command: "finditem" , minimumPosition: global.POS_DEAD    , functionPointer: do_finditems  , minimumLevel: 0 },
           { command: "flip"     , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_FLIP },
           { command: "flirt"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_FLIRT },
 //           { command: "follow"   , minimumPosition: global.POS_RESTING , functionPointer: do_follow     , minimumLevel: 0, subCommand: 0 },
@@ -134,7 +135,8 @@ var COMMAND_LIST = [
           { command: "look"     , minimumPosition: global.POS_RESTING , functionPointer: do_look       , minimumLevel: 0, subCommand: 0},
           { command: "laugh"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_LAUGH },
           { command: "lick"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_LICK },
-          { command: "listrooms", minimumPosition: global.POS_RESTING , functionPointer: do_listrooms  , minimumLevel: global.LEVEL_ADMINISTRATOR },
+          { command: "listrooms", minimumPosition: global.POS_RESTING , functionPointer: do_listrooms  , minimumLevel: 0 },
+          { command: "listitems", minimumPosition: global.POS_RESTING , functionPointer: do_listitems  , minimumLevel: 0 },
 
           { command: "lock"     , minimumPosition: global.POS_RESTING , functionPointer: do_lock_door  , minimumLevel: 0, subCommand: 0 },
           { command: "love"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_LOVE },
@@ -215,6 +217,7 @@ var COMMAND_LIST = [
           { command: "spit"     , minimumPosition: global.POS_SITTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SPIT },
           { command: "stand"    , minimumPosition: global.POS_RESTING , functionPointer: do_stand      , minimumLevel: 0, subCommand: 0 },
           { command: "stare"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_STARE },
+          { command: "statitem" , minimumPosition: global.POS_DEAD    , functionPointer: do_statitem   , minimumLevel: 0 },
           { command: "steam"    , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_STEAM },
           { command: "strut"    , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_STRUT},
           { command: "sulk"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_SULK },
@@ -1234,8 +1237,36 @@ function do_dooredit(character, command) {
 
 function do_listrooms(character, command) {
     for(var i = 0; i < character.world.rooms.length; i++) {
-        character.emitMessage(character.world.rooms[i].id + "::" + character.world.rooms[i].title);
+        character.emitMessage(character.world.rooms[i].id + " :: " + character.world.rooms[i].title);
     }
+}
+
+function do_listitems(character, command) {
+    Item.itemList(character);
+}
+
+function do_finditems(character, command) {
+    if(command.tokens.length < 1) {
+        character.emitMessage('But what item do you want to search for?');
+        return;
+    }
+
+    Item.itemFind(character, command.tokens[0]);
+}
+
+function do_statitem(character, command) {
+    if(command.tokens.length < 1) {
+        character.emitMessage('But what item do you want to get the stats on?');
+        return;
+    }
+
+    if(isNaN(command.tokens[0])) {
+        character.emitMessage('But what is the ID of the item you want to get the stats on?');
+        return;
+    }
+
+    var id = parseInt(command.tokens[0], 10);
+    Item.itemStat(character, id);
 }
 
 function do_itemedit(character, command) {

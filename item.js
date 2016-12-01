@@ -166,6 +166,37 @@ function itemSave(character, itemToSave) {
     });
 }
 
+function itemList(character) {
+    itemModel.find( { }, null, {sort: {id: 1}}, function(err, docs) {
+		for(var i = 0; i < docs.length; i++) {
+			character.emitMessage( docs[i].id + " :: " + docs[i].shortDescription );
+		}
+    }); 
+}
+
+function itemFind(character, textToFind) {
+    itemModel.find( { "shortDescription": new RegExp(textToFind, 'i') }, null, {sort: {id: 1}}, function(err, docs) {
+		for(var i = 0; i < docs.length; i++) {
+			character.emitMessage( docs[i].id + " :: " + docs[i].shortDescription );
+		}
+
+		if(docs.length === 0) {
+			character.emitMessage( "Item not found.");
+		}
+    }); 
+}
+
+function itemStat(character, itemId) {
+	itemModel.find( { "id":itemId }, function(err, docs) {
+		if(docs.length > 0) {
+		    character.emitMessage(docs[0].toString());
+		}
+		else {
+		    character.emitMessage('That item does not exist!!!');
+		}
+    }); 
+}
+
 var itemModel = mongoose.model('item', itemSchema);
 
 module.exports = {
@@ -174,5 +205,8 @@ module.exports = {
 	load: load,
 	loadIntoInventory: loadIntoInventory,
 	itemEdit: itemEdit,
-	itemSave: itemSave
+	itemSave: itemSave,
+	itemList: itemList,
+	itemFind: itemFind,
+	itemStat: itemStat
 };
