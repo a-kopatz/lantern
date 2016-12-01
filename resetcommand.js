@@ -9,6 +9,7 @@ var autoIncrement = require('mongoose-auto-increment');
 
 var resetcommandSchema = new schema({
     id: { type: Number, default: -1 },
+    description: String,
     command: String
     // TODO: Probably add a timer to say how often to attempt the command?
 });
@@ -21,8 +22,10 @@ function load(callback) {
 }
 
 resetcommandSchema.methods.reset = function(world) {
-    var commands = this.command.split(';');
-    executeResetCommands(commands, 0, world, null);
+    if(this.command !== undefined && this.command !== null) {
+        var commands = this.command.split(';');
+        executeResetCommands(commands, 0, world, null);
+    }
 };
 
 function executeResetCommands(commands, instructionNumber, world, lastThingLoaded) {
@@ -42,7 +45,7 @@ function executeResetCommands(commands, instructionNumber, world, lastThingLoade
                     Npc.load(npcId, thisNpc, commands, world, instructionNumber, afterNpcLoaded);
                 }
                 break;
-            case "O":  // Put item in a room
+            case "I":  // Put item in a room
                 var roomItem = new item();
                 var roomItemId = parseInt(command[1], 10);
                 maxExisting = parseInt(command[2], 10);
@@ -163,10 +166,64 @@ function afterPlacedItemLoaded(document, item, commands, world, containerItem, i
     executeResetCommands(commands, (instructionNumber + 1), world, containerItem);
 }
 
+function addResetcommand(character) {
+	var newResetcommand = new resetcommandModel();
+	
+	newResetcommand.save(function(err) {
+        // TODO: Log error, I guess?
+        if(err !== null) {
+            console.log(err);
+        }
+        character.emitMessage('New world configuration record saved!');
+        
+        resetcommandModel.find( { "_id":newResetcommand._id }, function(err, docs) {
+			// TODO: Log error, I guess?
+			
+			if(docs.length > 0) {
+				character.emitMessage('New command file id is ' + docs[0].id);
+			}
+        });
+    });
+}
+
+function resetcommandEdit(commandId, character) {
+	if(isNaN(commandId)) {
+		character.emitMessage('What command ID did you want to update?');
+		return;
+	}    
+	
+    var id = parseInt(commandId, 10);
+    
+    resetcommandModel.find( { "id":id }, function(err, docs) {
+		if(docs.length > 0) {
+		    character.socket.editingResetcommand = docs[0];
+            character.socket.editingResetcommandString = '';
+		    character.socket.connectionState = global.CON_RESETEDIT_COMMANDTYPE;
+		    character.emitMessage('What do you want this command to do? (N=NPC, I=Item, P=Put thing in thing, G=Give thing to NPC, V=Vends)', 'IndianRed', 'N / I / P / G / V: > ');
+		}
+		else {
+		    character.emitMessage('That command does not exist!!!');
+		}
+    }); 
+}
+
+function resetcommandSave(character, commandToSave) {
+    commandToSave.save(function(err) { 
+        // TODO: Log error, I guess?
+        if(err !== null) {
+            console.log(err);
+            character.emitMessage(err);
+        }
+        character.emitMessage('Reset command updated... probably');        
+    });
+}
+
 var resetcommandModel = mongoose.model('resetcommand', resetcommandSchema);
 
 module.exports = {
 	resetcommandSchema: resetcommandSchema,
 	resetcommand: resetcommandModel,
-	load: load
+	load: load,
+    addResetcommand: addResetcommand,
+    resetcommandEdit: resetcommandEdit
 };

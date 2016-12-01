@@ -307,15 +307,11 @@ io.sockets.on("connection", function(socket) {
                 break;
             case global.CON_ITEMEDIT_PLURALDESC:
                 socket.editingItem.pluralDescription = message['input'];
-                // socket.connectionState = global.CON_ITEMEDIT_DETAILEDDESC;
-                // socket.emit('message', { message: 'Enter the detailed description: (Ex: A double with ketchup and mayo... it looks delicious!)', prompt: "Detailed Description: > " }); 
                 socket.connectionState = global.CON_ITEMEDIT_TAKEABLE;
                 socket.emit('message', { message: 'Can the item be taken? (true/false)', prompt: "IsTakeable: > " });
                 break;
             case global.CON_ITEMEDIT_TAKEABLE:
                 socket.editingItem.canBeTaken = message['input'];
-                
-                //if(socket.editingItem.type === global.ITEM_FOOD) {
                 if(socket.editingItem instanceof food.food) {
                     socket.connectionState = global.CON_FOODEDIT_CALORIES;
                     socket.emit('message', { message: 'How many calories are in the food?', prompt: "Calories: > " });
@@ -350,6 +346,90 @@ io.sockets.on("connection", function(socket) {
             case global.CON_NPCEDIT_LONGDESC:
                 socket.editingNpc.longDescription = message['input'];
                 npc.npcSave(socket.player, socket.editingNpc);
+                socket.connectionState = global.CON_PLAYING;
+                break;
+            case global.CON_RESETEDIT_COMMANDTYPE:
+                switch(message['input'].toUpperCase()) {
+                    case "N":
+                        socket.editingResetcommandString = socket.editingResetcommandString + "N";
+                        socket.connectionState = global.CON_RESETEDIT_NPC;
+                        socket.emit('message', { message: 'What is the ID of the NPC?', prompt: 'NPC ID: > ' });
+                        break;
+                    case "I":
+                        socket.editingResetcommandString = socket.editingResetcommandString + "I";
+                        socket.connectionState = global.CON_RESETEDIT_ITEM;
+                        socket.emit('message', { message: 'What is the ID of the Item?', prompt: 'Item ID: > ' });
+                        break;
+                    case "P":
+                        socket.editingResetcommandString = socket.editingResetcommandString + "I";
+                        socket.connectionState = global.CON_RESETEDIT_PUTITEMINITEM;
+                        socket.emit('message', { message: 'What is the ID of the Item?', prompt: 'Item ID: > ' });
+                        break;
+                    case "V":
+                        socket.editingResetcommandString = socket.editingResetcommandString + "V";
+                        socket.connectionState = global.CON_RESETEDIT_NPCVENDING_ITEM;
+                        socket.emit('message', { message: 'What is the ID of the Item?', prompt: 'Item ID: > ' });
+                        break;
+                    default:
+                        socket.emit('message', { message: 'That is apparently not supported yet!' });
+                        break;
+                }
+                break;
+            case global.CON_RESETEDIT_NPC:
+                socket.editingResetcommandString = socket.editingResetcommandString + " " + message['input'];
+                socket.connectionState = global.CON_RESETEDIT_NPC_MAX_ALLOWED;
+                socket.emit('message', { message: 'What is maximum allowed to exist in the game at once?', prompt: 'Maximum Allowed: > ' });
+                break;
+            case global.CON_RESETEDIT_ITEM:
+                socket.editingResetcommandString = socket.editingResetcommandString + " " + message['input'];
+                socket.connectionState = global.CON_RESETEDIT_ITEM_MAX_ALLOWED;
+                socket.emit('message', { message: 'What is maximum allowed to exist in the game at once?', prompt: 'Maximum Allowed: > ' });
+                break;
+            case global.CON_RESETEDIT_NPC_MAX_ALLOWED:
+                socket.editingResetcommandString = socket.editingResetcommandString + " " + message['input'];
+                socket.connectionState = global.CON_RESETEDIT_NPC_ROOMID;
+                socket.emit('message', { message: 'What room number do you want the NPC to load into?', prompt: 'Room ID: > ' });
+                break;
+            case global.CON_RESETEDIT_ITEM_MAX_ALLOWED:
+                socket.editingResetcommandString = socket.editingResetcommandString + " " + message['input'];
+                socket.connectionState = global.CON_RESETEDIT_ITEM_ROOMID;
+                socket.emit('message', { message: 'What room number do you want the Item to load into?', prompt: 'Room ID: > ' });
+                break;
+            case global.CON_RESETEDIT_PUTITEMINITEM:
+                socket.editingResetcommandString = socket.editingResetcommandString + " " + message['input'];
+                socket.connectionState = global.CON_RESETITEM_PUTITEMINITEM_MAX_ALLOWED;
+                socket.emit('message', { message: 'What is maximum allowed to exist in the game at once?', prompt: 'Maximum Allowed: > ' });
+                break;
+            case global.CON_RESETEDIT_NPCVENDING_ITEM:
+                socket.editingResetcommandString = socket.editingResetcommandString + " " + message['input'];
+                socket.connectionState = global.CON_RESETEDIT_NPCVENDING_MAX_ALLOWED;
+                socket.emit('message', { message: 'What is maximum allowed to exist in the game at once?', prompt: 'Maximum Allowed: > ' });
+                break;
+            case global.CON_RESETEDIT_NPC_ROOMID:
+            case global.CON_RESETEDIT_ITEM_ROOMID:
+            case global.CON_RESETITEM_PUTITEMINITEM_MAX_ALLOWED:
+            case global.CON_RESETEDIT_NPCVENDING_MAX_ALLOWED:
+                socket.editingResetcommandString = socket.editingResetcommandString + " " + message['input'];
+                socket.connectionState = global.CON_RESETEDIT_DONE;
+                socket.emit('message', { message: 'Are you done? (yes/no)', prompt: 'Enter yes or no: > ' });
+                break;
+            case global.CON_RESET_DONE:
+                if(message['input'].toLowerCase() === 'yes') {
+                    socket.connectionState = global.CON_RESETEDIT_DESCRIPTION;
+                    socket.emit('message', { message: 'Please add a short comment or description to what this does.'} );
+                    socket.emit('message', { message: 'Example: "Put Shopkeeper Willie in the Friend Zone (Room 17)"', prompt: 'Comment: > '} );
+                }
+                else if(message['input'].toLowerCase() === 'no') {
+                    socket.editingResetcommandString = socket.editingResetcommandString + ";";
+                    socket.emit('message', { message: 'Next command in this sequence?', prompt: 'N / I / P / G / V: > ' });
+                    character.socket.connectionState = global.CON_RESETEDIT_COMMANDTYPE;
+                }
+                break;
+
+
+            case global.CON_RESETEDIT_DESCRIPTION: 
+                socket.emit('message', { message: 'OK!', prompt: "> " });
+                resetcommand.resetcommandSave(socket.player, socket.editingItem);
                 socket.connectionState = global.CON_PLAYING;
                 break;
         }

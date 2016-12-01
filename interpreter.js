@@ -16,6 +16,8 @@ var item = require('./item').item;
 var Npc = require('./npc');
 var npc = require('./npc').npc;
 
+var Resetcommand = require('./resetcommand');
+
 var Food = require('./items/food');
 
 // Object constructor
@@ -248,6 +250,7 @@ var COMMAND_LIST = [
           { command: "wiggle"   , minimumPosition: global.POS_STANDING, functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WIGGLE },
           { command: "wink"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WINK },
           { command: "worship"  , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_WORSHIP },
+          { command: "worldedit", minimumPosition: global.POS_DEAD    , functionPointer: do_worldedit  , minimumLevel: global.LEVEL_ADMINISTRATOR },
           { command: "write"    , minimumPosition: global.POS_RESTING , functionPointer: do_write      , minimumLevel: 0, subCommand: 0 },
 
           { command: "yawn"     , minimumPosition: global.POS_RESTING , functionPointer: do_action     , minimumLevel: 0, subCommand: global.SCMD_YAWN },
@@ -1292,7 +1295,6 @@ function do_npcedit(character, command) {
 
     switch(command.tokens[0].toLowerCase()) {
         case 'add':
-            //character.emitMessage("Not done yet, bro.");
             Npc.addNpc(character);
             break;
         case 'delete':
@@ -1311,18 +1313,38 @@ function do_npcedit(character, command) {
             character.emitMessage('NPCedit: add delete edit');
             break;            
     }
-
 }
 
 function do_create(character, command) {
-    //var newItem = new item();
-    
     if(command.tokens.length < 0) {
         character.emitMessage("Usage: create <itemnumber>");
     }
     
     var newItemId = parseInt(command.tokens[0], 10);
     Item.loadIntoInventory(newItemId, character);
+}
+
+function do_worldedit(character, command) {
+    if(command.tokens.length < 1) {
+        character.emitMessage('Ok... edit a world reset command... but how?');
+        character.emitMessage('add delete edit');
+        return;
+    }
+
+    switch(command.tokens[0].toLowerCase()) {
+        case 'add':
+            Resetcommand.addResetcommand(character);
+            break;
+        case 'delete':
+            character.emitMessage('Not done yet.');
+            break;
+        case 'edit':
+            Resetcommand.resetcommandEdit(command.tokens[1], character);
+            break;
+        default:
+            character.emitMessage('WorldEdit: add delete edit');
+            break;
+    }
 }
 
 // Exports
