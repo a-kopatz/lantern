@@ -53,6 +53,36 @@ function getFormattedLongString(originalString, startWithIndent) {
 	return result;
 }
 
+function makeFormattedColumns(inputArray, numberOfColumns, columnWidth, indent) {
+	var outputArray = [];
+	var counter = 0;
+	var output = '';
+
+	var padding = '';
+
+	for(var i = 0; i < indent; i++) {
+		padding = padding + ' ';
+	}
+
+	for(var i = 0; i < inputArray.length; i++) {
+		output = output + getPaddedWord(inputArray[i], columnWidth);
+		counter++;
+
+		if(counter % numberOfColumns == 0) {
+			output = padding + output;
+			outputArray.push(output);
+			output = '';
+		}
+	}
+
+	if(output.length > 0) {
+		output = padding + output;
+		outputArray.push(output);
+	}
+
+	return outputArray;
+}
+
 function getPastTenseOfWord(word) {
 	switch(word.toUpperCase()) {
 		case "OPEN":
@@ -483,3 +513,4 @@ exports.alreadyWearing = alreadyWearing;
 exports.wearMessage = wearMessage;
 exports.buildItemMap = buildItemMap;
 exports.prettifyItemArray = prettifyItemArray;
+exports.makeFormattedColumns = makeFormattedColumns;

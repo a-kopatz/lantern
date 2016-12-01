@@ -1039,24 +1039,18 @@ function do_help(character, command) {
     if(command.tokens.length < 1) {
         character.emitMessage("The following commands are available: ");
         
-        // TODO: Generalize this, maybe?  Like a 'make into pretty columns' command?
-        var output = '';
-        var counter = 0;
+        var commandArrayForOutput = [];
+
         for(var i = 1; i <= COMMAND_LIST.length; i++) {
-            
             if(character.level >= COMMAND_LIST[i - 1].minimumLevel) {
-                output = output + utility.getPaddedWord(COMMAND_LIST[i - 1].command, 19);
-                counter++;
-    
-                if(counter % 4 == 0) {
-                    character.emitMessage("    " + output);
-                    output = '';
-                }
+                commandArrayForOutput.push(COMMAND_LIST[i - 1].command);
             }
         }
-        
-        if(output.length > 0) {
-            character.emitMessage("    " + output);
+
+        var helpColumnsArray = utility.makeFormattedColumns(commandArrayForOutput, 5, 19, "    ");
+
+        for(var i = 0; i < helpColumnsArray.length; i++) {
+            character.emitMessage(helpColumnsArray[i]);
         }
     }
     else {
